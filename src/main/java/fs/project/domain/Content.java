@@ -53,7 +53,6 @@ public class Content {
 
     /* 생성 메서드 */
     public static Content createContent(User user, Team team, ContentInputVO contentInput){
-
         Content content = new Content();
         content.setUser(user);
         content.setTeam(team);
