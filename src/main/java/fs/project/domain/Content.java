@@ -1,5 +1,6 @@
 package fs.project.domain;
 
+import fs.project.web.ContentInputVO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,4 +39,29 @@ public class Content {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="tID")
     private Team team;
+
+    /* 연관 관계 메서드 */
+    public void setUser(User user){
+        this.user = user;
+        user.getContents().add(this);
+    }
+
+    public void setTeam(Team team){
+        this.team = team;
+        team.getContents().add(this);
+    }
+
+    /* 생성 메서드 */
+    public static Content createContent(User user, Team team, ContentInputVO contentInput){
+        Content content = new Content();
+        content.setUser(user);
+        content.setTeam(team);
+        content.setPhotoRoute(contentInput.getPhotoRoute());
+        content.setExplanation(contentInput.getExplanation());
+        content.setLocation(contentInput.getLocation());
+        content.setWhen(contentInput.getWhen());
+        content.setUploadTime(LocalDateTime.now());
+
+        return content;
+    }
 }
