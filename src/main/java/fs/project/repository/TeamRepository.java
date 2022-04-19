@@ -99,12 +99,12 @@ public class TeamRepository {
     }
 
     public void changeMainTeam(Long uid, Long changeMainTeam) {
-        String s = "update User u set u.mainTeamID = :changeMainTeam where u.uID= :uid";
+        String s = "update User u set u.mainTid = :changeMainTeam where u.uID= :uid";
         em.createQuery(s).setParameter("changeMainTeam", Long.toString(changeMainTeam)).setParameter("uid", uid).executeUpdate();
     }
 
     public void updateMainTeamID(Long uid, Long tID) {
-        String s = "update User u set u.mainTeamID = :tID where u.uID = :uid";
+        String s = "update User u set u.mainTid = :tID where u.uID = :uid";
         em.createQuery(s).setParameter("tID", tID).setParameter("uid", uid).executeUpdate();
     }
 }
