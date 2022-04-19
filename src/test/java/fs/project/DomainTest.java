@@ -1,11 +1,13 @@
 package fs.project;
 
 import fs.project.domain.*;
+import fs.project.repository.TeamRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +21,7 @@ import java.time.LocalDateTime;
 public class DomainTest {
 
     @Autowired
-    DomainRepository domainRepository;
+    TeamRepository domainRepository;
 
     @Test
     @Transactional
@@ -48,13 +50,14 @@ public class DomainTest {
 
     @Test
     @Transactional
+    @Commit
     public void testTeam() throws Exception{
         Team team = new Team();
         team.setTeamID("asdf");
         team.setTeamName("우리가족");
 
         Long savedId = domainRepository.saveTeam(team);
-        Team findTeam = domainRepository.findTeam(savedId);
+        Team findTeam = domainRepository.findTeams(savedId);
 
         Assertions.assertThat(findTeam.getTID()).isEqualTo(team.getTID());
         Assertions.assertThat(findTeam.getTeamID()).isEqualTo(team.getTeamID());
@@ -63,13 +66,14 @@ public class DomainTest {
 
     @Test
     @Transactional
+    @Commit
     public void testTeamEvent() throws Exception{
         Team team = new Team();
-        team.setTeamID("asdf");
-        team.setTeamName("우리가족");
+        team.setTeamID("asdfg");
+        team.setTeamName("우리가족1");
 
         Long savedId11 = domainRepository.saveTeam(team);
-        Team findTeam = domainRepository.findTeam(savedId11);
+        Team findTeam = domainRepository.findTeams(savedId11);
 
         TeamEvent teamEvent = new TeamEvent();
         teamEvent.setTeam(findTeam);
@@ -105,7 +109,7 @@ public class DomainTest {
         team.setTeamName("우리가족");
 
         Long savedId11 = domainRepository.saveTeam(team);
-        Team findTeam = domainRepository.findTeam(savedId11);
+        Team findTeam = domainRepository.findTeams(savedId11);
 
         Content content = new Content();
         content.setUser(user);
@@ -146,7 +150,7 @@ public class DomainTest {
         team.setTeamName("우리가족");
 
         Long savedId11 = domainRepository.saveTeam(team);
-        Team findTeam = domainRepository.findTeam(savedId11);
+        Team findTeam = domainRepository.findTeams(savedId11);
 
         UserTeam userTeam = new UserTeam();
         userTeam.setUser(user);

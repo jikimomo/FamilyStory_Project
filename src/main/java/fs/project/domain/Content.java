@@ -1,6 +1,5 @@
 package fs.project.domain;
 
-import fs.project.form.ContentInputVO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -63,5 +62,17 @@ public class Content {
         content.setUploadTime(LocalDateTime.now());
 
         return content;
+    }
+
+    @Data
+    public static class UploadFile {
+
+        private String uploadFileName;
+        private String storeFileName; //uuid
+
+        public UploadFile(String uploadFileName, String storeFileName){
+            this.uploadFileName = uploadFileName;
+            this.storeFileName = storeFileName;
+        }
     }
 }

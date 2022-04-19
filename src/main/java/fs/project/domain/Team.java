@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(name="TEAMID", columnNames="teamID")})
 @Getter @Setter
-public class Team {
-
+public class Team{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tID;
 
     @NotNull
@@ -32,4 +32,8 @@ public class Team {
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<Content> contents = new ArrayList<>();
+
+    @NotNull
+    private String boss;
+
 }

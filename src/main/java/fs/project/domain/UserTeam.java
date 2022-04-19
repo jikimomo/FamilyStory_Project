@@ -25,4 +25,7 @@ public class UserTeam {
 
     @NotNull
     private LocalDateTime joinTime;
+
+    private boolean joinUs;
+
 }

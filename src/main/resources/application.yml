@@ -39,3 +39,6 @@ spring:
 logging.level:
   org.hibernate.SQL: debug
 # org.hibernate.type: trace
+
+file:
+  path: C:/FamilyStory_Project/src/main/resources/static/TeamImage/
