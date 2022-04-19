@@ -39,7 +39,8 @@ public class User {
     private LocalDate birthday;
 
     private String userImage;
-    private String mainTeamID;
+
+    private Long mainTid;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserTeam> teams = new ArrayList<>();

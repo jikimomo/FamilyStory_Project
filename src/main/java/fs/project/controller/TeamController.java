@@ -1,5 +1,6 @@
 package fs.project.controller;
 
+import fs.project.argumentresolver.Login;
 import fs.project.form.TeamForm;
 import fs.project.repository.TeamRepository2;
 import fs.project.domain.*;
@@ -85,16 +86,16 @@ public class TeamController extends BaseEntity {
     // ( 폼 데이터 : TeamName(NN), TeamId(NN), users, eventName, eventDate )
     @ResponseBody
     @PostMapping(value = "/CreateTeam")
-    public void  CreateTeamForm(@Valid TeamForm teamForm) {
+    public void  CreateTeamForm(@Login User loginUser, @Valid TeamForm teamForm) {
         System.out.println("CreateTeam Controller");
 //        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
-        User findU = teamService.findUser(1l);
+        User findU = teamService.findUser(loginUser.getUID());
 
         // 전달받은 데이터를 Team 테이블에 저장
         Team team = new Team();
         team.setTeamID(teamForm.getTeamId());
         team.setTeamName(teamForm.getTeamName());
-        team.setBoss(findU.getUserID());
+        team.setBoss(Long.parseLong(findU.getUserID()));
         Long saveId = teamService.saveTeam(team);
 
 
@@ -125,7 +126,7 @@ public class TeamController extends BaseEntity {
 
             // 메인 그룹 체크 시, user 테이블의 MainTeamID를 업데이트.
             if (teamForm.isMainTeamChecked()) {
-                findU.setMainTeamID(teamForm.getTeamId());
+                findU.setMainTid(Long.parseLong(teamForm.getTeamId()));
                 teamService.saveUser(findU);
             }
 
@@ -135,7 +136,7 @@ public class TeamController extends BaseEntity {
                     // 추가한 구성원의 정보
                     User userInfo = teamService.findByUserID(teamForm.getUsers()[i]).get(0);
                     // 그룹을 만들 때 추가된 구성원은 그룹에 소속됨과 동시에 해당 그룹이 구성원의 메인 그룹으로 설정된다.
-                    userInfo.setMainTeamID(teamForm.getTeamId());
+                    userInfo.setMainTid(Long.parseLong(teamForm.getTeamId()));
                     Long userUID = teamService.saveUser(userInfo);
                     userInfo = teamService.findUser(userUID);
 
