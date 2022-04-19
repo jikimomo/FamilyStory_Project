@@ -61,6 +61,11 @@ public class TeamService {
         List<User> res = domainRepository.findByUserID(id);
         return res;
     }
+    @Transactional
+    public void updateMainTeamID(Long uid, Long tid){
+        domainRepository.updateMainTeamID(uid,tid);
+    }
+
 
     // Userteam
     @Transactional

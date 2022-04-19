@@ -5,6 +5,7 @@ import fs.project.form.TeamForm;
 import fs.project.repository.TeamRepository2;
 import fs.project.domain.*;
 import fs.project.service.TeamService;
+import fs.project.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
@@ -47,13 +50,13 @@ public class TeamController extends BaseEntity {
 
     // 페이지 이동 _ 그룹 생성 클릭 후 페이지로 이동
     @GetMapping("/CreateTeam")
-    public String CreateTeam(Model model) {
+    public String CreateTeam(Model model,@Login User loginUser) {
         System.out.println("CreateTeam Page");
         model.addAttribute("TeamForm", new Team());
 //        ===============임시! 앞단이랑 합치면 로그인한 회원의 아이디를 넣는다.=========================
         // 구성원에 자기 자신을 넣으면 안되니까 자신의 아이디를 보내줬다.
         // 로그인 연결하면, 캐시값 끌어오면 되니까 아마도 필요없을 부분...
-        model.addAttribute("user", "aa");
+        model.addAttribute("user", loginUser.getUserID());
         return "/CreateTeam";
     }
 
@@ -86,17 +89,24 @@ public class TeamController extends BaseEntity {
     // ( 폼 데이터 : TeamName(NN), TeamId(NN), users, eventName, eventDate )
     @ResponseBody
     @PostMapping(value = "/CreateTeam")
-    public void  CreateTeamForm(@Login User loginUser, @Valid TeamForm teamForm) {
+    public void  CreateTeamForm(@Valid TeamForm teamForm,@Login User loginUser, HttpServletRequest request) {
         System.out.println("CreateTeam Controller");
 //        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
-        User findU = teamService.findUser(loginUser.getUID());
+
 
         // 전달받은 데이터를 Team 테이블에 저장
         Team team = new Team();
         team.setTeamID(teamForm.getTeamId());
         team.setTeamName(teamForm.getTeamName());
-        team.setBoss(Long.parseLong(findU.getUserID()));
+        team.setBoss(loginUser.getUID());
         Long saveId = teamService.saveTeam(team);
+        Team findTeam = teamService.findTeam(saveId);
+        teamService.updateMainTeamID(loginUser.getUID(),findTeam.getTID());
+
+        User user = teamService.findUser(loginUser.getUID());
+
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConst.LOGIN_USER, user);
 
 
         if (saveId != 0) {
@@ -119,16 +129,11 @@ public class TeamController extends BaseEntity {
             // User와 Team을 조인한 UserTeam테이블 업데이트. (User(join), Team(join), joinTime, joinUs )
             UserTeam ut = new UserTeam();
             ut.setTeam(findT);
-            ut.setUser(findU);
+            ut.setUser(loginUser);
             ut.setJoinUs(true); // 팀을 만든 사람은 가입 허락이 필요없다.
             ut.setJoinTime(LocalDateTime.now());
             teamService.saveUserTeam(ut);
 
-            // 메인 그룹 체크 시, user 테이블의 MainTeamID를 업데이트.
-            if (teamForm.isMainTeamChecked()) {
-                findU.setMainTid(Long.parseLong(teamForm.getTeamId()));
-                teamService.saveUser(findU);
-            }
 
             // 구성원 저장 ( 데이터가 여러개 일 수 있어서 반복문 사용 )
             for (int i = 0; i < teamForm.getUsers().length; i++) {
@@ -136,7 +141,6 @@ public class TeamController extends BaseEntity {
                     // 추가한 구성원의 정보
                     User userInfo = teamService.findByUserID(teamForm.getUsers()[i]).get(0);
                     // 그룹을 만들 때 추가된 구성원은 그룹에 소속됨과 동시에 해당 그룹이 구성원의 메인 그룹으로 설정된다.
-                    userInfo.setMainTid(Long.parseLong(teamForm.getTeamId()));
                     Long userUID = teamService.saveUser(userInfo);
                     userInfo = teamService.findUser(userUID);
 
@@ -177,7 +181,7 @@ public class TeamController extends BaseEntity {
             Team team = teamService.findTeam(teamService.findByTeamID(tid));
             // DB에 올릴 경로를 짧게 잡아준다. ( static/example.jpg )
             String[] dir = fileDir.split("/");
-            fullPath = File.separator + dir[6] + File.separator + fileName;
+            fullPath = File.separator + dir[0] + File.separator + fileName;
 
             // 팀 테이블에 이미지 경로 세팅 후
             team.setTeamImage(fullPath);
@@ -185,7 +189,7 @@ public class TeamController extends BaseEntity {
             teamService.saveTeam(team);
             model.addAttribute("img",fullPath);
         }
-        return "redirect:/";
+        return "redirect:/loginHome";
     }
 
     // 기능 _ 파일 업로드시 파일명 재정의하는 메서드 구현
