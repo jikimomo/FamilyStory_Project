@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 560px;
+        }
+
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+
+    <div class="py-1 text-center">
+        <img src="images/logo2.jpg" width="300px" height="300px">
+    </div>
+
+    <div>
+        <h1>탈퇴가 성공적으로 완료되었습니다!</h1>
+    </div>
+    <div>
+        <button class="w-100 btn btn-warning btn-lg" onclick="location.href='SettingUserTeam.html'" type="button">설정으로
+            돌아가기
+        </button>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="container">
+
+    <p>찾은 아이디 : <h1 th:text="${findId}">찾은 아이디</h1> </p>
+
+    <div class="row">
+
+        <div class="py-5 text-center">
+            <a class="btn btn-lg btn-light" onclick="location.href='home.html'" th:onclick="|location.href='@{/}'|">로그인 하기</a>
+            <a class="btn btn-lg btn-light" href="/users/findPw">비밀번호 찾기</a>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

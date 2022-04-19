@@ -41,6 +41,11 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	//not empty 안돼서 추가함.
+
+
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	//gradle 메일 보내기 의존성 추가
+
 }
 
 tasks.named('test') {
