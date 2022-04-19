@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 560px;
+        }
+
+        #container {
+            width: 80%;
+            margin: 20px auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 10px;
+        }
+
+        #container > div,
+        #container > form {
+            text-align: center;
+            align-items: center;
+        }
+
+        #container > div > h1 {
+            color: black;
+        }
+
+        #container > div > h3 {
+            color: rgb(75, 74, 74);
+            margin-bottom: 20px;
+        }
+
+        #settingUserComplete {
+            margin-top: 20px;
+            padding-top: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            border: 0;
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+            color: black;
+            background: #C3EFBE;
+        }
+
+        #home {
+            margin-top: 20px;
+            padding-top: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            background: #C3EFBE;
+            border: 0;
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+            color: black;
+
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="py-1 text-center">
+        <img src="images/logo2.jpg" width="300px" height="300px">
+    </div>
+
+    <div>
+        <form method="post" action="/users/settingUserComplete">
+            <div id="container">
+                <div class="col-12">
+                    <td>
+                        <tr>
+                            <h1>내 정보 변경이 완료되었습니다!</h1>
+                        </tr>
+                    </td>
+                </div>
+
+                <div class="col-12">
+
+
+                    <button type="button" id="settingUserComplete" th:onclick="|location.href='@{/users/settinguser}'|">
+                        <h3>내정보로 돌아가기</h3>
+                    </button>
+                    </br>
+                    <button type="button" id="home" th:onclick="|location.href='@{/loginHome}'|">
+                        <h5>홈으로 돌아가기</h5>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+<!-- 위치 수정 필요 <div th:replace="fragments/footer :: footer"/>-->
+</div>
+</body>
+</html>
