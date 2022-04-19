@@ -48,7 +48,7 @@ public class LoginController {
         // 세션에 LOGIN_USER라는 이름(SessionConst.class에 LOGIN_USER값을 "loginUser")을 가진 상자에 loginUser 객체를 담음.
         // 즉, 로그인 회원 정보를 세션에 담아놓는다.
         session.setAttribute(SessionConst.LOGIN_USER, loginUser);
-
+//"loginUser"
         // users/login으로 매핑하는 컨트롤러를 찾아간다. (HomeController에 있다)
         return "redirect:/loginHome";
     }

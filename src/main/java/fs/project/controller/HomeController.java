@@ -6,14 +6,13 @@ import fs.project.service.MainPageService;
 import fs.project.argumentresolver.Login;
 import fs.project.domain.User;
 import fs.project.form.LoginForm;
-import fs.project.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
 
 @Slf4j
 @Controller
@@ -45,17 +44,24 @@ public class HomeController {
         }
         //세션에 정보가 있다면 loginHome.html로 보낸다.
         model.addAttribute("loginUser", loginUser);
-        return "loginHome";
+        if(loginUser.getMainTid()!=null){
+            return "redirect:/mainPage";
+        }
+        else return "AfterJoin";
     }
 
 
     @GetMapping("/mainPage")
-    public String mainPage(Model model){
-        Team team = contentService.findTeam(1L);
+    public String mainPage(@Login User loginUser, Model model){
+
+        Long uid = loginUser.getUID();
+        User user = contentService.findUser(uid);
+
+        Team team = contentService.findTeam(user.getMainTid());
         List<Content> content = contentService.findAllByT(team.getTID());
-        List<TeamEvent> teamEvent = mainPageService.findTeamEvent(1L); // 오늘 해당되는 기념일에 관한 정보
-        List<User> userTodayBirthday = mainPageService.findBirthday(1L); //오늘 생일인 사람에 관한 정보
-        List<Team> currentTeams = mainPageService.findCurrentTeamsByU(1L); //현재 로그인된 유저가 포함된 팀
+        List<TeamEvent> teamEvent = mainPageService.findTeamEvent(user.getMainTid()); // 오늘 해당되는 기념일에 관한 정보
+        List<User> userTodayBirthday = mainPageService.findBirthday(user.getMainTid()); //오늘 생일인 사람에 관한 정보
+        List<Team> currentTeams = mainPageService.findCurrentTeamsByU(user.getUID()); //현재 로그인된 유저가 포함된 팀
 
         model.addAttribute("team", team);
         model.addAttribute("contents", content);
@@ -64,6 +70,4 @@ public class HomeController {
         model.addAttribute("currentTeams", currentTeams);
         return "mainPage";
     }
-
-
 }
