@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>family story</title>
+</head>
+<body>
+<div th:replace="./fragments/bodyHeader :: bodyHeader"/>
+<div class="container">
+    <a href="/reject">요청 거절</a>
+    <a href="/accept">요청 수락</a>
+    <a href="/withdraw">그룹 탈퇴 </a> // 세 가지다. 본인이 그룹장일때 그룹원일때...그룹장이 그룹원 탈퇴시킬때
+    <a href="/modifyTeam">그룹 정보 수정</a>
+</div>
+<div th:replace="./fragments/footer :: footer"/>
+
+</body>
+</html>

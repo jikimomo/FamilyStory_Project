@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>패밀리 스토리</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="http://madalla.kr/js/jquery-1.8.3.min.js"></script>
+    <script src="/templates/js/createTeamForm.js"></script>
+    <style>
+        .btnx-indigo{
+            background: var(--bs-indigo); background: #C3EFBE; border: none;);
+            color: #2D7100;
+            font-weight: bold;
+        }
+    </style>
+<!--    이미지 미리 보여주기-->
+    <script type="text/javascript">
+        $(function() {
+            $("#file").on('change', function(){
+                readURL(this);
+            });
+        });
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#View').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }else{
+                $('#View').attr('src', "/TeamImage/temp.png");
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            let me = '[[${user}]]'; // 나의 계정
+            let members= [];
+            let isIdValid=false;
+
+            // 구성원 추가 누르면 텍스트+버튼 요소 생성
+            function plusMem (sendData){
+                let div = document.querySelector('#pu');
+                let group = document.createElement('div');
+                group.setAttribute('class','btn-group');
+                group.setAttribute('role','group');
+
+                let userdiv = document.createElement('div');
+                userdiv.setAttribute('class','col-sm-10');
+                let usertxt = document.createElement('input');
+                usertxt.setAttribute('type', 'text');
+                usertxt.setAttribute('name', 'users');
+                usertxt.setAttribute('id', 'users');
+                usertxt.setAttribute('class', 'form-control');
+                usertxt.setAttribute('value', sendData);
+                usertxt.setAttribute('readonly',true);
+                userdiv.append(usertxt);
+
+                let btndiv = document.createElement('div');
+                btndiv.setAttribute('class','col-sm-2')
+                let btn = document.createElement('input');
+                btn.setAttribute('type', 'button');
+                btn.setAttribute('value', '삭제');
+                btn.setAttribute('name', 'usersminus');
+                btn.setAttribute('class', 'btn btn-outline-secondary');
+                btndiv.append(btn);
+
+                group.append(userdiv);
+                group.append(btndiv);
+
+                div.append(group);
+            }
+            // 기념일 추가 누르면 텍스트+버튼 요소 생성
+            function plusEvt (evttitle,evtday){
+                let div2 = document.querySelector('#plusevents');
+                let group2 = document.createElement('div');
+                group2.setAttribute('class','btn-group');
+                group2.setAttribute('role','group');
+
+                let evttxtdiv = document.createElement('div');
+                evttxtdiv.setAttribute('class','col-sm-6')
+                let evttxt = document.createElement('input');
+                evttxt.setAttribute('type','text');
+                evttxt.setAttribute('name','eventName')
+                evttxt.setAttribute('value',evttitle);
+                evttxt.setAttribute('class','form-control');
+                evttxt.setAttribute('style','display:inline-block')
+                evttxt.setAttribute('readonly',true)
+                evttxtdiv.append(evttxt);
+
+                let evtdatediv = document.createElement('div');
+                evtdatediv.setAttribute('class','col-sm-5')
+                let evtdate = document.createElement('input');
+                evtdate.setAttribute('type','date');
+                evtdate.setAttribute('name','eventDate');
+                evtdate.setAttribute('class','form-control');
+                evtdate.setAttribute('style','color:#00000090;');
+                evtdate.setAttribute('value',evtday)
+                evtdate.setAttribute('readonly',true)
+                evtdatediv.append(evtdate)
+
+                let evtbtndiv = document.createElement('div');
+                evtbtndiv.setAttribute('class','col-sm-1');
+                let btn2 = document.createElement('input');
+                btn2.setAttribute('type', 'button');
+                btn2.setAttribute('value', '삭제');
+                btn2.setAttribute('name', 'eventminus');
+                btn2.setAttribute('class','btn btn-outline-secondary');
+                evtbtndiv.append(btn2);
+
+                group2.append(evtdatediv);
+                group2.append(evttxtdiv);
+                group2.append(evtbtndiv)
+                console.log('?')
+
+                div2.append(group2);
+            }
+
+            // 구성원 추가 및 삭제, 유효성 체크 ( 본인 선택 X, 없는 계정 X, 이미 추가된 계정 X )
+            $('#usersplus').click(function (evt){
+                let sendData = document.querySelector('#users').value;
+                $('#users').attr('placeholder','구성원 아이디를 입력해주세요.');
+                console.log("??");
+                $.ajax({
+                    type: "POST",
+                    url: "validateMem",
+                    data: {sendData:sendData},
+                    success: function (data) {
+                        if(data == 1){
+                            // console.log("넘어갔다.")
+                            if (me == sendData) {
+                                $('#users').focus();
+                                $('#users').val("");
+                                $('#users').attr('placeholder','본인은 선택할 수 없습니다.');
+                                evt.preventDefault();
+                                return;
+                            }else{
+                                if(!members.includes(sendData)){
+                                    members.push(sendData);
+                                    plusMem(sendData);
+                                    $('#users').focus();
+                                    $('#users').val("");
+                                }else{
+                                    $('#users').val("");
+                                    $('#users').focus();
+                                }
+                            }
+                            $('input[name="usersminus"]').click(function(){
+                                // 현재 삭제할 구성원
+                                var remuser=members.indexOf($(this).parent().siblings().children().val());
+                                members.splice(remuser,1);
+                                $(this).parent().siblings().remove()
+                                $(this).remove();
+                            })
+                        }else if(data==-1){
+                            $('#users').focus();
+                            $('#users').val("");
+                        }else{
+                            $('#users').val("");
+                            $('#users').focus();
+                            $('#users').attr('placeholder','존재하지 않는 구성원입니다.');
+                        }
+                    },
+                    error: function (error) {
+                        console.log("ajax error");
+                        console.log(error)
+                    }
+                });
+            })
+
+            // 이벤트 추가 및 삭제, 유효성 체크(비어있는 값이면 안된다.)
+            $('#eventplus').click(function (evt) {
+                let eventName = document.querySelector('input[name="eventName"]').value;
+                let eventDate = document.querySelector('input[name="eventDate"]').value;
+
+                if(eventName != "" && eventDate != "" ){
+                    plusEvt(eventName,eventDate);
+                    document.querySelector('input[name="eventDate"]').focus();
+                    // events.set(eventName,eventDate);
+                    document.querySelector('input[name="eventName"]').value="";
+                    document.querySelector('input[name="eventDate"]').value="";
+                }
+                if(eventName == ""){
+                    document.querySelector('input[name="eventName"]').focus();
+                }
+                if(eventDate == ""){
+                    document.querySelector('input[name="eventDate"]').focus();
+                }
+
+                $('input[name="eventminus"]').click(function(){
+                    $(this).parent().parent().remove();
+                })
+            })
+
+            // 그룹아이디 유효성 체크
+            $('#teamId').focusout(function (evt){
+                let teamId = document.querySelector('#teamId')
+                if(/\W/.test(teamId.value)){
+                    isIdValid=false;
+                    $('#teamId').val("")
+                    $('#teamId').focus()
+                }
+                sendData = $('#teamId').val();
+                $.ajax({
+                    type: "POST",
+                    url : "validateTeam",
+                    data : {sendData:sendData},
+                    success: function(data) {
+                        if (data == 0) {
+                            isIdValid=true;
+                            console.log('아이디 가능')
+                        }else if(data == -1) {
+                            teamId.setAttribute('placeholder','아이디는 알파벳, 숫자, 언더바(_)만 가능합니다.')
+                        } else{
+                            $('#teamId').val("")
+                            $('#teamId').focus()
+                            teamId.setAttribute('placeholder','이미 존재하는 아이디입니다.')
+                            isIdValid=false;
+                            console.log('존재하는 아이디')
+                        }
+                        if(isIdValid){
+                            teamId.classList.remove("is-invalid");
+                            teamId.classList.add("is-valid");
+                        }else{
+                            teamId.classList.remove("is-valid");
+                            teamId.classList.add("is-invalid");
+                        }
+                    }
+                })
+                console.log("ddd");
+            })
+
+            // 서버로 데이터 전송
+            $('#submit').click(function (evt) {
+                let edate = document.querySelector('input[name="eventDate"]')
+                let ename = document.querySelector('input[name="eventName"]')
+                let teamName = document.querySelector('input[name="teamName"]');
+                if (!teamName.value) {
+                    teamName.focus();
+                    evt.preventDefault();
+                    return;
+                }
+                let teamId = document.querySelector('input[name="teamId"]');
+                if (!teamId.value) {
+                    teamId.focus();
+                    evt.preventDefault();
+                    return;
+                }
+                evt.preventDefault();
+                let res = confirm("그룹을 생성하시겠습니까?");
+                $('#users').val("");
+                edate.value="";
+                ename.value="";
+                if (res == true) {
+                    let qs = $('#CreateForm').serialize();
+                    console.log("예");
+
+                    $.ajax({
+                        type: "POST",
+                        url: "CreateTeam",
+                        data: qs,
+                        success: function (data) {
+                            alert('가입이 완료되었습니다.');
+                            $('#hidden').val(teamId.value);
+                            $('#imgf').submit();
+                        },
+                        error: function (error) {
+                            console.log(error)
+                        }
+                    });
+                }
+            })
+        })
+
+    </script>
+</head>
+<body>
+<div th:replace="./fragments/bodyHeader :: bodyHeader"/>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <form id="imgf" action="upload" method="post" enctype="multipart/form-data">
+                <div class="mb-3"><img src="/AdminImage/temp.png" id="View" class="rounded img-thumbnail mx-auto d-block" ></div>
+                <div class="mb-3">
+                    <div>
+                        <input class="form-control" type="file" name="file" id="file"/>
+                    </div>
+                    <input type="text" id="hidden" value="" name="tid" hidden>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-7">
+            <form class="form-horizontal needs-validation" id="CreateForm" novalidate>
+                <div class="mb-3 row">
+                </div>
+                <div class="mb-3 row">
+                    <label class="col-sm-2 control-label">*그룹명</label>
+                    <div class="col-sm-10"><input type="text" name="teamName" placeholder="그룹명을 입력해주세요."
+                                                  class="form-control" required/></div>
+                </div>
+                <div class="mb-3 row">
+                    <label class="col-sm-2 control-label">*그룹 ID</label>
+                    <div class="col-sm-10"><input type="text" name="teamId" id="teamId" placeholder="아이디는 알파벳, 숫자, 언더바(_)만 가능합니다."
+                                                  class="form-control" required/></div>
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-sm-2">
+                        <label class="control-label">구성원</label>
+                    </div>
+                    <div class="col-sm-10 row" id="plususers" >
+                        <div class="btn-group" role="group">
+                            <div class="col-sm-10" ><input type="text" name="users" id="users" class="form-control" placeholder="구성원 아이디를 입력해주세요."/></div>
+                            <div class="col-sm-2" ><input type="button" value="추가" id="usersplus" class="btn btn-outline-secondary"/></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row" id="pu">
+
+                </div>
+                <div class="mb-3 row ">
+                    <div class="col-sm-2">
+                        <label class="control-label">기념일</label>
+                    </div>
+                    <div class="col-sm-10" id="plusevents">
+                        <div class="btn-group" role="group">
+                            <div class="col-sm-5">
+                                <input type="date" name="eventDate" class="form-control" style="color:#00000090" />
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="text" name="eventName" placeholder="기념일을 입력해주세요." class="form-control " />
+                            </div>
+                            <div class="col-sm-1">
+                                <input type="button" value="추가" id="eventplus" class="btn btn-outline-secondary"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <div class="input-group mb-3">
+                        <div class="input-group-text">
+                            <input class="form-check-input mt-0" type="checkbox" name="mainTeamChecked" checked/>
+                        </div>
+                         <input type="text" class="form-control" placeholder="메인 그룹으로 설정하기 (소속 그룹이 없는 경우엔 필수체크입니다.)" readonly/>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <div class="d-grid gap-2 col-12 mx-auto">
+                        <button type="submit" class="btn btn-success btn-lg btnx-indigo" id="submit">그룹 생성</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:replace="./fragments/footer :: footer"/>
+</body>
+</html>
