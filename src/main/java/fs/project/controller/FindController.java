@@ -92,9 +92,9 @@ public class FindController {
 
             userService.mailSend(fpf);
 
-            log.info("{}", findUser.get().getEmail());
-            log.info("{}", fpf.getEmail());
-            log.info("{}", fpf.getName());
+//            log.info("{}", findUser.get().getEmail());
+//            log.info("{}", fpf.getEmail());
+//            log.info("{}", fpf.getName());
 
             userService.editPassword(findUser.get().getUID(), str);
 
