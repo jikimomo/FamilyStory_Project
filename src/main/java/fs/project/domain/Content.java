@@ -1,5 +1,6 @@
 package fs.project.domain;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,4 +39,16 @@ public class Content {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="tID")
     private Team team;
+
+    @Data
+    public static class UploadFile {
+
+        private String uploadFileName;
+        private String storeFileName; //uuid
+
+        public UploadFile(String uploadFileName, String storeFileName){
+            this.uploadFileName = uploadFileName;
+            this.storeFileName = storeFileName;
+        }
+    }
 }

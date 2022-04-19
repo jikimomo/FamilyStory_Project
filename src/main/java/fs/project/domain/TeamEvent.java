@@ -12,16 +12,15 @@ import java.time.LocalDate;
 public class TeamEvent {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long teID;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="tID")
+    @ManyToOne
+    @JoinColumn(name = "tID")
     private Team team;
 
-    @NotNull
+
     private String eventName;
 
-    @NotNull
     private LocalDate eventDate;
 }
