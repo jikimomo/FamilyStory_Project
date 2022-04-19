@@ -25,7 +25,7 @@ public class ContentController {
     private final ContentService contentService;
 
     //uploadContentForm.html을 띄우는 컨트롤러 부분
-    @GetMapping(value="/upload")
+    @GetMapping(value="/uploadContent")
     public String uploadForm(Model model){
         User user = contentService.findUser(1L);
         Team team = contentService.findTeam(1L);
@@ -37,7 +37,7 @@ public class ContentController {
     }
 
     //uploadContentForm.html에서 보낸 content 관련 데이터들을 저장하는 컨트롤러 부분
-    @PostMapping(value="/upload")
+    @PostMapping(value="/uploadContent")
     public String upload(@RequestParam("photoRoute") List<MultipartFile> images,
                          @RequestParam("explanation") String explanation,
                          @RequestParam("location") String location,

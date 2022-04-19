@@ -1,5 +1,7 @@
 package fs.project.domain;
 
+import fs.project.form.ContentInputVO;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

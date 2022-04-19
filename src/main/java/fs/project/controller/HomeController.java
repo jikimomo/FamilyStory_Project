@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -48,7 +50,7 @@ public class HomeController {
 
 
     @GetMapping("/mainPage")
-    public String home(Model model){
+    public String mainPage(Model model){
         Team team = contentService.findTeam(1L);
         List<Content> content = contentService.findAllByT(team.getTID());
         List<TeamEvent> teamEvent = mainPageService.findTeamEvent(1L); // 오늘 해당되는 기념일에 관한 정보
