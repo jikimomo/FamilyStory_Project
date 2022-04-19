@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+    <div class="container">
+        <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+        <h2>개인 페이지</h2>
+        <h4>현재 로그인 아이디 & 소속된 팀</h4>
+        <div>
+            현재 접속한 아이디 : <span th:text="${user.userID}"></span><br>
+            현재 함께하는 가족 : <span th:text="${team.teamID}"></span><br>
+        </div>
+        <br>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>사진</th> <th>설명</th> <th>장소</th> <th>시간</th>
+                <th>유저아이디</th> <th>가족아이디</th> <th>수정</th> <th>삭제</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="content : ${contents}">
+                <td th:text="${content.cID}"></td>
+                <td>
+                    <block th:each="photo : ${#strings.arraySplit(content.photoRoute,' ')}" th:remove="tag">
+                        <img th:src="${photo}" width="150"/>
+                    </block>
+                </td>
+                <td th:text="${content.explanation}"></td>
+                <td th:text="${content.location}"></td>
+                <td th:text="${content.when}"></td>
+                <td th:text="${content.user.userID}"></td>
+                <td th:text="${content.team.teamID}"></td>
+                <td>
+                    <a th:href="'javascript:changeContent('+${content.cID}+')'" class="btn btn-danger">
+                        수정
+                    </a>
+                </td>
+                <td>
+                    <a href="#"
+                       th:href="'javascript:deleteContent('+${content.cID}+')'" class="btn btn-danger">
+                        삭제
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+        <br/>
+        <div th:replace="fragments/footer :: footer" />
+    </div> <!-- /container -->
+</body>
+<script>
+
+    function changeContent(id) {
+        var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/uploadList/" + id + "/changeForm");
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function deleteContent(id) {
+        var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/uploadList/" + id + "/delete");
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+</html>
