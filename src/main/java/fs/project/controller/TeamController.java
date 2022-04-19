@@ -181,7 +181,7 @@ public class TeamController extends BaseEntity {
             Team team = teamService.findTeam(teamService.findByTeamID(tid));
             // DB에 올릴 경로를 짧게 잡아준다. ( static/example.jpg )
             String[] dir = fileDir.split("/");
-            fullPath = File.separator + dir[0] + File.separator + fileName;
+            fullPath = File.separator + dir[6] + File.separator + fileName;
 
             // 팀 테이블에 이미지 경로 세팅 후
             team.setTeamImage(fullPath);
