@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+
+<body>
+<div class="container">
+
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+
+
+    <!--    <h2><span th:text="${loginMember.userId}"></span>님 반갑습니다</h2>-->
+
+    <h4 th:text="|${loginUser.userID}님 반갑습니다!!|">로그인 사용자 이름</h4>
+
+    <li><a th:href="@{/myPage}">마이페이지(세션으로만) </a></li>
+
+    <br><br>
+
+
+
+
+    <li><a th:href="@{/users/settinguser}">내 정보 수정하기</a></li>
+
+
+
+    <div class="col">
+        <form th:action="@{/logout}" method="post">
+            <button class="w-100 btn btn-dark btn-lg"
+                    onclick="location.href='home.html'" type="submit">
+                로그아웃
+            </button>
+        </form>
+    </div>
+
+    <div th:replace="fragments/footer :: footer" />
+</div>
+</body>
+</html>
+
+
+
