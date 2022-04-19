@@ -15,26 +15,33 @@ public class TeamRepository {
     private final EntityManager em;
 
     // Team
-    public Long saveTeam(Team team){ em.persist(team);return team.getTID(); }
-    public Team findTeams(Long id){
+    public Long saveTeam(Team team) {
+        em.persist(team);
+        return team.getTID();
+    }
+
+    public Team findTeams(Long id) {
         return em.find(Team.class, id);
     }
 
     public List<Team> findByTeamID(String teamID) {
-        List<Team> res = em.createQuery("SELECT t FROM Team t WHERE t.teamID =:teamId" , Team.class).setParameter("teamId",teamID).getResultList();
+        List<Team> res = em.createQuery("SELECT t FROM Team t WHERE t.teamID =:teamId", Team.class).setParameter("teamId", teamID).getResultList();
         return res;
     }
 
-    public List<Team> searchTeam(String teamId){
-        List<Team> result = em.createQuery("SELECT t FROM Team t WHERE t.teamID LIKE concat('%',:teamId,'%')" , Team.class).setParameter("teamId",teamId).getResultList();
+    public List<Team> searchTeam(String teamId) {
+        List<Team> result = em.createQuery("SELECT t FROM Team t WHERE t.teamID LIKE concat('%',:teamId,'%')", Team.class).setParameter("teamId", teamId).getResultList();
         return result;
     }
 
 
     // User
-    public Long saveUser(User user){ em.persist(user);return user.getUID(); }
+    public Long saveUser(User user) {
+        em.persist(user);
+        return user.getUID();
+    }
 
-    public User findUser(Long id){
+    public User findUser(Long id) {
         return em.find(User.class, id);
     }
 
@@ -50,50 +57,55 @@ public class TeamRepository {
         em.persist(userTeam);
         return userTeam.getUtID();
     }
-    public UserTeam findUserTeam(Long id){
+
+    public UserTeam findUserTeam(Long id) {
         return em.find(UserTeam.class, id);
     }
-    public List<UserTeam> findByUID(Long id){
-        List<UserTeam> res = em.createQuery("select ut from UserTeam ut where ut.user.uID=:id",UserTeam.class).setParameter("id",id).getResultList();
+
+    public List<UserTeam> findByUID(Long id) {
+        List<UserTeam> res = em.createQuery("select ut from UserTeam ut where ut.user.uID=:id", UserTeam.class).setParameter("id", id).getResultList();
         return res;
     }
-    public int removeUTID(long utid){
-        int res = em.createQuery("delete from UserTeam ut where ut.utID=:utid").setParameter("utid",utid).executeUpdate();
+
+    public int removeUTID(long utid) {
+        int res = em.createQuery("delete from UserTeam ut where ut.utID=:utid").setParameter("utid", utid).executeUpdate();
         return res;
     }
 
 
     //teamevent
-    public Long saveTeamEvent(TeamEvent teamEvent){
+    public Long saveTeamEvent(TeamEvent teamEvent) {
         em.persist(teamEvent);
         return teamEvent.getTeID();
     }
-    public TeamEvent findTeamEvent(Long id){
+
+    public TeamEvent findTeamEvent(Long id) {
         return em.find(TeamEvent.class, id);
     }
 
     //content
-    public Long saveContent(Content content){
+    public Long saveContent(Content content) {
         em.persist(content);
         return content.getCID();
     }
 
     public Content findContent(Long id) {
-        return em.find(Content.class, id);}
-
-
-        public List<Team> findTeam (Long userId){
-
-            return em.createQuery("select t from Team t, User u, UserTeam ut where ut.user.uID=u.uID and t.tID=ut.team.tID and ut.user.uID = :uId", Team.class).setParameter("uId", userId).getResultList();
-
-        }
-
-        public void changeMainTeam (Long uid, Long changeMainTeam){
-
-
-            String s = "update User u set u.mainTeamID = :changeMainTeam where u.uID= :uid";
-            em.createQuery(s).setParameter("changeMainTeam", Long.toString(changeMainTeam)).setParameter("uid", uid).executeUpdate();
-
-        }
+        return em.find(Content.class, id);
     }
+
+
+    public List<Team> findTeam(Long userId) {
+        return em.createQuery("select t from Team t, User u, UserTeam ut where ut.user.uID=u.uID and t.tID=ut.team.tID and ut.user.uID = :uId", Team.class).setParameter("uId", userId).getResultList();
+    }
+
+    public void changeMainTeam(Long uid, Long changeMainTeam) {
+        String s = "update User u set u.mainTeamID = :changeMainTeam where u.uID= :uid";
+        em.createQuery(s).setParameter("changeMainTeam", Long.toString(changeMainTeam)).setParameter("uid", uid).executeUpdate();
+    }
+
+    public void updateMainTeamID(Long uid, Long tID) {
+        String s = "update User u set u.mainTeamID = :tID where u.uID = :uid";
+        em.createQuery(s).setParameter("tID", tID).setParameter("uid", uid).executeUpdate();
+    }
+}
 

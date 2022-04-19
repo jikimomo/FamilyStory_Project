@@ -34,6 +34,6 @@ public class Team{
     private List<Content> contents = new ArrayList<>();
 
     @NotNull
-    private String boss;
+    private Long boss;
 
 }

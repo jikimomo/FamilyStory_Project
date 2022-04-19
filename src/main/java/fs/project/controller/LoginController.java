@@ -50,7 +50,8 @@ public class LoginController {
         session.setAttribute(SessionConst.LOGIN_USER, loginUser);
 
         // users/login으로 매핑하는 컨트롤러를 찾아간다. (HomeController에 있다)
-        return "redirect:/loginHome";
+//        return "redirect:/loginHome";
+        return "/AfterJoin";
     }
 
     //로그아웃 버튼 클릭 시
