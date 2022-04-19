@@ -1,6 +1,5 @@
 package fs.project.controller;
 
-import fs.project.argumentresolver.Login;
 import fs.project.form.TeamForm;
 import fs.project.repository.TeamRepository2;
 import fs.project.domain.*;
@@ -89,7 +88,7 @@ public class TeamController extends BaseEntity {
     public void  CreateTeamForm(@Valid TeamForm teamForm,@Login User loginUser) {
         System.out.println("CreateTeam Controller");
 //        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
-//        User findU = teamService.findUser(1l);
+
 
         // 전달받은 데이터를 Team 테이블에 저장
         Team team = new Team();
@@ -97,10 +96,6 @@ public class TeamController extends BaseEntity {
         team.setTeamName(teamForm.getTeamName());
         team.setBoss(loginUser.getUID());
         Long saveId = teamService.saveTeam(team);
-
-        Team findTeam = teamService.findTeam(saveId);
-        loginUser.setMainTeamID(findTeam.getTID());
-        teamService.updateMainTeamID(loginUser.getUID(),findTeam.getTID());
 
 
         if (saveId != 0) {
@@ -123,7 +118,7 @@ public class TeamController extends BaseEntity {
             // User와 Team을 조인한 UserTeam테이블 업데이트. (User(join), Team(join), joinTime, joinUs )
             UserTeam ut = new UserTeam();
             ut.setTeam(findT);
-            ut.setUser(loginUser);
+            ut.setUser(findU);
             ut.setJoinUs(true); // 팀을 만든 사람은 가입 허락이 필요없다.
             ut.setJoinTime(LocalDateTime.now());
             teamService.saveUserTeam(ut);
@@ -175,7 +170,7 @@ public class TeamController extends BaseEntity {
             Team team = teamService.findTeam(teamService.findByTeamID(tid));
             // DB에 올릴 경로를 짧게 잡아준다. ( static/example.jpg )
             String[] dir = fileDir.split("/");
-            fullPath = File.separator + dir[0] + File.separator + fileName;
+            fullPath = File.separator + dir[6] + File.separator + fileName;
 
             // 팀 테이블에 이미지 경로 세팅 후
             team.setTeamImage(fullPath);
@@ -205,16 +200,16 @@ public class TeamController extends BaseEntity {
 
     // 페이지 이동 & 기능 _ 아이디로 그룹 검색하는 페이지
     @GetMapping("/SearchingTeam")
-    public String SearchingTeam(@Login User loginUser,@PageableDefault(page=0,size = 10,sort = "tID", direction = Sort.Direction.ASC) Pageable pageable, Model model, @RequestParam(required = false, defaultValue = "", name = "teamId") String id ) {
+    public String SearchingTeam(@PageableDefault(page=0,size = 10,sort = "tID", direction = Sort.Direction.ASC) Pageable pageable, Model model, @RequestParam(required = false, defaultValue = "", name = "teamId") String id ) {
         System.out.println("SearchingTeam Controller");
 
 
 //        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
-//        User findU = teamService.findUser(1l);
+        User findU = teamService.findUser(1l);
 
 
         // 유저가 가입 및 가입 신청한 팀을 찾을 목적 ( 중복 신청을 방지하기 위함 )
-        List<UserTeam> ut = teamService.findByUID(loginUser.getUID());
+        List<UserTeam> ut = teamService.findByUID(findU.getUID());
         // 유저가 속한 그룹 리스트
         List<String> myTeam = new ArrayList<>();
         // 유저의 그룹 가입 요청 여부
@@ -251,15 +246,15 @@ public class TeamController extends BaseEntity {
     // 기능 _ 그룹 요청하기
     @ResponseBody
     @PostMapping("/RequestTeam")
-    public int RequestTeam(@RequestParam String id,@Login User loginUser) { // 요청한 그룹의 id값이 들어온다.
+    public int RequestTeam(@RequestParam String id) { // 요청한 그룹의 id값이 들어온다.
         System.out.println("requestTeam");
 
 //        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
-//        User findU = teamService.findUser(1l);
+        User findU = teamService.findUser(1l);
 
         // 요청과 동시에 유저팀 테이블에 소속된다.
         UserTeam ut = new UserTeam();
-        ut.setUser(loginUser); // 현재 계정의 user 정보 세팅
+        ut.setUser(findU); // 현재 계정의 user 정보 세팅
         ut.setTeam(teamService.findTeam(teamService.findByTeamID(id))); // 요청 그룹의 정보 세팅
         ut.setJoinTime(LocalDateTime.now()); // 신청 시간 세팅
         ut.setJoinUs(false); // 아직 그룹장이 수락하지 않아서 false
@@ -268,7 +263,7 @@ public class TeamController extends BaseEntity {
         int res = 0;
 
         // 중복에 대한 유효성 체크 ( 이미 요청되있거나, 그룹원인 상태면 테이블을 업데이트 하지 않는다. )
-        int check = teamService.UserTeamIdCheck(loginUser.getUID(), teamService.findByTeamID(id));
+        int check = teamService.UserTeamIdCheck(findU.getUID(), teamService.findByTeamID(id));
         if (check == 0) {
             // 해당하는 리스트가 없으므로, 유저-팀 테이블 업데이트.
             teamService.saveUserTeam(ut);
@@ -280,15 +275,15 @@ public class TeamController extends BaseEntity {
     // 기능 _ 그룹 요청취소하기
     @ResponseBody
     @PostMapping("/RequestTeamCancel")
-    public int RequestTeamCancel(@RequestParam String id, @Login User loginUser) { // 요청한 그룹의 id값이 들어온다.
+    public int RequestTeamCancel(@RequestParam String id, Model model) { // 요청한 그룹의 id값이 들어온다.
         System.out.println("RequestTeamCancel");
 
 //        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
-//        User findU = teamService.findUser(1l);
+        User findU = teamService.findUser(1l);
 
         // 전달받은 팀 정보와 유저정보를 통해 해당하는 내역을 삭제한다.
         Long Tid=teamService.findByTeamID(id);
-        Long utid=teamService.findUTID(loginUser.getUID(),Tid);
+        Long utid=teamService.findUTID(findU.getUID(),Tid);
         int res = teamService.removeUTID(utid);
         return res;
     }

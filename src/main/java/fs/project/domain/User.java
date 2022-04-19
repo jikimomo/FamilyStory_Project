@@ -40,7 +40,7 @@ public class User {
 
     private String userImage;
 
-    private long mainTeamID;
+    private Long mainTid;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserTeam> teams = new ArrayList<>();
