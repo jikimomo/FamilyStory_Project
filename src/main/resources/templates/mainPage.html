@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div class="jumbotron">
+        <h1>Family Story</h1>
+        <h2>메인 페이지</h2>
+        현재 함께하는 가족 : <span th:text="${team.teamID}"></span><br>
+        <hr/>
+        <p class="lead">게시물 관련 기능</p>
+        <p>
+            <a class="btn btn-lg btn-info" href="/uploadContent">게시물 등록</a>
+            <a class="btn btn-lg btn-info" href="/uploadList">개인 페이지</a>
+        </p>
+    </div>
+    <hr>
+
+    <div>
+        <h5>내가 속한 가족그룹들</h5>
+<!--        이부분-->
+        <table class="table table-striped">
+            <tr th:each="team : ${currentTeams}">
+                <td th:text="${team.teamName}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div>
+        <h5>알림 기능</h5>
+        <table class="table table-striped">
+            <tr th:each="te : ${teamEvent}">
+                <td th:text="${te.eventName}"></td>
+                <td th:text="${te.eventDate}"></td>
+            </tr>
+        </table>
+        <table class="table table-striped">
+            <tr th:each="u : ${userTodayBirthday}">
+                <td th:text="${u.name}"></td>
+                <td th:text="${u.birthday}"></td>
+            </tr>
+        </table>
+    </div>
+    <hr>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>사진</th> <th>설명</th> <th>장소</th> <th>시간</th>
+            <th>유저아이디</th> <th>가족아이디</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="content : ${contents}">
+            <td th:text="${content.cID}"></td>
+            <td>
+                <block th:each="photo : ${#strings.arraySplit(content.photoRoute,' ')}" th:remove="tag">
+                    <img th:src="${photo}" width="100"/>
+                </block>
+            </td>
+            <td th:text="${content.explanation}"></td>
+            <td th:text="${content.location}"></td>
+            <td th:text="${content.when}"></td>
+            <td th:text="${content.user.userID}"></td>
+            <td th:text="${content.team.teamID}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:replace="fragments/footer :: footer" /> <!-- fragments/footer에 있는 파일이 대체됨 -->
+</div> <!-- /container -->
+</body>
+</html>

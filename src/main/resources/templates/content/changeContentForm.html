@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+    <form role="form" id="changeContentForm" enctype="multipart/form-data">
+        <div class="formBox">
+            <div class="titleBox">
+                <h2 class="title">게시물을 변경해주세요</h2>
+            </div>
+
+            <div class="form-group imageInputBox">
+                <h5 class="title">이미지 미리보기</h5>
+                <div id="preview" >
+                    <block th:each="photo : ${#strings.arraySplit(content.photoRoute,' ')}" th:remove="tag">
+                        <img th:src="${photo}" width="170" height="120" style="margin:12px;"/>
+                    </block>
+                </div>
+                <br>
+
+                <label th:for="photoRoute" class="subTitle">사진을 변경하고 싶은 경우 선택하세요!</label>
+                <input type="file" id="photoRoute" name="photoRoute" multiple="multiple" class="form-control">
+                <span class="alertMessage" id="photoMessage">alert message</span>
+            </div>
+
+            <div class="textInputBox">
+                <div>
+                    <h5>현재 소속된 팀</h5>
+                    현재 함께하는 가족 : <span th:text="${team.teamID}"></span><br>
+                </div>
+                <br>
+
+                <div class="form-group">
+                    <label th:for="explanation" class="subTitle">설명</label>
+                    <textarea id="explanation" rows="4" name="explanation" th:text="${content.explanation}" class="form-control" ></textarea>
+                    <span class="alertMessage" id="explanationMessage">alert message</span>
+                </div>
+                <div class="form-group">
+                    <label th:for="location" class="subTitle">장소</label>
+                    <input type="text" id="location" name="location" th:value="${content.location}" class="form-control" >
+                    <span class="alertMessage" id="locationMessage">alert message</span>
+                </div>
+                <div class="form-group">
+                    <label th:for="when" class="subTitle">날짜</label>
+                    <input type="date" id="when" name="when" th:value="${content.when}" class="form-control" >
+                    <span class="alertMessage" id="whenMessage">alert message</span>
+                </div>
+            </div>
+
+            <div class="buttonBox">
+                <br>
+                <button type="button" onclick="history.back()" class="backButton">돌아가기</button>
+                <a th:href="'javascript:changeContent('+${content.cID}+')'" id="submitA">
+                    수정하기
+                </a>
+            </div>
+        </div>
+    </form>
+    <br>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+<script type="text/javascript" th:src="@{/js/changeContentImage.js}"></script>
+<script>
+
+    function changeContent(id) {
+        const alertMessage = document.getElementsByClassName('alertMessage');
+        for(var i=0; i<alertMessage.length; i++){
+            alertMessage[i].style.display = 'none';
+        }
+
+        const explanation = document.querySelector('#explanation');
+        const location = document.querySelector('#location');
+        const when = document.querySelector('#when');
+
+        if(!explanation.value){
+            document.querySelector('#explanationMessage').innerHTML = "설명을 입력하세요.";
+            document.querySelector('#explanationMessage').style.display = 'block';
+            explanation.focus();
+        }
+        else if(!location.value){
+            document.querySelector('#locationMessage').innerHTML = "장소를 입력하세요.";
+            document.querySelector('#locationMessage').style.display = 'block';
+            location.focus();
+        }
+        else if(!when.value){
+            document.querySelector('#whenMessage').innerHTML = "날짜를 입력하세요.";
+            document.querySelector('#whenMessage').style.display = 'block';
+            when.focus();
+        }
+        else{
+            const formElem = document.querySelector('#changeContentForm');
+            formElem.setAttribute("action", "/uploadList/" + id + "/change");
+            formElem.setAttribute('method', 'post');
+            formElem.submit();
+        }
+    }
+</script>
+</html>
