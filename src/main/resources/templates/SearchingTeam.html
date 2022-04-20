@@ -16,9 +16,13 @@
     <script th:inline="javascript">
         let myTeam = [[${myTeam}]];
         let joinCheck = [[${joinCheck}]];
+
     </script>
     <script>
         jQuery(document).ready(function () {
+            console.log("Dddd")
+
+            console.log(joinCheck.length)
             // 사용자가 이미 팀에 소속되어 있거나, 요청을 한 상태면 버튼을 비활성화
             if (myTeam != null || joinCheck != null) {
                 for (var i = 0; i < myTeam.length; i++) {
@@ -75,6 +79,7 @@
                         data: {id: id},
                         success: function (res) {
                             // console.log("넘어갔다");
+                                console.log("res " + res)
                             if (res == 1) {
                                 alert("요청이 취소되었습니다.");
                                 this2.val("가입 요청")
@@ -112,19 +117,17 @@
             <th>그룹번호</th>
             <th>그룹 ID</th>
             <th>그룹명</th>
-            <th>그룹장</th>
             <th>가입하기</th>
         </thead>
         <tbody>
-            <tr th:each="team, idx : ${teams}" id="dataTable">
+            <tr th:each="team : ${teams}" id="dataTable">
                 <th th:text="${team.TID}">1</th>
                 <td th:text="${team.TeamID}"></td>
-                <td th:text="${team.boss}"></td>
                 <td th:text="${team.TeamName}"></td>
                 <td><input type="button" value="가입 요청" id="join" th:name="${team.TeamID}"></td>
             </tr>
             <tr th:if="${size==0}">
-                <td colspan="5" style="text-align: center">해당하는 그룹 아이디가 존재하지 않습니다.</td>
+                <td colspan="4" style="text-align: center">해당하는 그룹 아이디가 존재하지 않습니다.</td>
             </tr>
         </tbody>
     </table>

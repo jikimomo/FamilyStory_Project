@@ -53,9 +53,7 @@ public class TeamController extends BaseEntity {
     public String CreateTeam(Model model,@Login User loginUser) {
         System.out.println("CreateTeam Page");
         model.addAttribute("TeamForm", new Team());
-//        ===============임시! 앞단이랑 합치면 로그인한 회원의 아이디를 넣는다.=========================
-        // 구성원에 자기 자신을 넣으면 안되니까 자신의 아이디를 보내줬다.
-        // 로그인 연결하면, 캐시값 끌어오면 되니까 아마도 필요없을 부분...
+
         model.addAttribute("user", loginUser.getUserID());
         return "/CreateTeam";
     }
@@ -107,6 +105,8 @@ public class TeamController extends BaseEntity {
 
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_USER, user);
+
+
 
 
         if (saveId != 0) {
@@ -211,29 +211,31 @@ public class TeamController extends BaseEntity {
 
     // 페이지 이동 & 기능 _ 아이디로 그룹 검색하는 페이지
     @GetMapping("/SearchingTeam")
-    public String SearchingTeam(@PageableDefault(page=0,size = 10,sort = "tID", direction = Sort.Direction.ASC) Pageable pageable, Model model, @RequestParam(required = false, defaultValue = "", name = "teamId") String id ) {
+    public String SearchingTeam(@Login User loginUser,@PageableDefault(page=0,size = 10,sort = "tID", direction = Sort.Direction.ASC) Pageable pageable, Model model, @RequestParam(required = false, defaultValue = "", name = "teamId") String teamId ) {
         System.out.println("SearchingTeam Controller");
 
 
 //        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
-        User findU = teamService.findUser(1l);
+//        User findU = teamService.findUser(1l);
 
 
         // 유저가 가입 및 가입 신청한 팀을 찾을 목적 ( 중복 신청을 방지하기 위함 )
-        List<UserTeam> ut = teamService.findByUID(findU.getUID());
+        List<UserTeam> ut = teamService.findByUID(loginUser.getUID());
         // 유저가 속한 그룹 리스트
         List<String> myTeam = new ArrayList<>();
         // 유저의 그룹 가입 요청 여부
         List<Boolean> joinCheck = new ArrayList<>();
 
+        model.addAttribute("ut",ut);
         for (int i = 0; i < ut.size(); i++) {
             myTeam.add(ut.get(i).getTeam().getTeamID());
             joinCheck.add(ut.get(i).isJoinUs());
-            System.out.println(myTeam.get(i));
+            System.out.println("===================");
+            System.out.println(joinCheck.get(i));
         }
 //        Page<Team> all = boardRepository.findAll(pageable);
         // Spring Data JPA를 사용해 페이징을 구현
-        Page<Team> all = teamRepository2.findByTeamIDContaining(id,pageable);
+        Page<Team> all = teamRepository2.findByTeamIDContaining(teamId,pageable);
         model.addAttribute("teams",all);
 
         int currentPage=all.getPageable().getPageNumber()+1; // 현재 페이지 넘버 _ 인덱스는 1부터니까 +1
@@ -244,7 +246,7 @@ public class TeamController extends BaseEntity {
         model.addAttribute("endPage",endPage);
 
         // 해당하는 팀이 있는지 없는지 크기값을 전달.
-        List<Team> teamsort = teamService.searchTeam(id);
+        List<Team> teamsort = teamService.searchTeam(teamId);
         model.addAttribute("size",teamsort.size());
         // 유저가 속한 그룹아이디 목록
         model.addAttribute("myTeam", myTeam);
@@ -257,13 +259,10 @@ public class TeamController extends BaseEntity {
     // 기능 _ 그룹 요청하기
     @ResponseBody
     @PostMapping("/RequestTeam")
-    public int RequestTeam(@Login User LoginUser, @RequestParam String id) { // 요청한 그룹의 id값이 들어온다.
+    public int RequestTeam(@RequestParam String id,@Login User loginUser) { // 요청한 그룹의 id값이 들어온다.
         System.out.println("requestTeam");
 
-//        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
-        User findU = teamService.findUser(LoginUser.getUID());
-
-        log.info("--------------{} --------------", id);
+        User findU = teamService.findUser(loginUser.getUID());
 
 
         // 요청과 동시에 유저팀 테이블에 소속된다.
@@ -294,11 +293,13 @@ public class TeamController extends BaseEntity {
     // 기능 _ 그룹 요청취소하기
     @ResponseBody
     @PostMapping("/RequestTeamCancel")
+
     public int RequestTeamCancel(@Login User LoginUser , @RequestParam String id, Model model) { // 요청한 그룹의 id값이 들어온다.
         System.out.println("RequestTeamCancel");
 
 //        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
         User findU = teamService.findUser(LoginUser.getUID());
+
 
         // 전달받은 팀 정보와 유저정보를 통해 해당하는 내역을 삭제한다.
         Long Tid=teamService.findByTeamID(id);
@@ -334,7 +335,6 @@ public class TeamController extends BaseEntity {
 
 
         //        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
-        User findU = teamService.findUser(1l);
 
 
 
