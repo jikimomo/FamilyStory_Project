@@ -88,14 +88,23 @@ public class UserService {
         return teamRepository.findTeam(userId);
     }
 
-    public void changeMainTeam(Long uid, Long changeMainTeam) {
-        teamRepository.changeMainTeam(uid, changeMainTeam);
+    public void changeMainTeam(Long uid, Long tid) {
+        teamRepository.changeMainTeam(uid, tid);
     }
 
-    public void dropTeam(Long uid, Long dropTeam) {
 
-        userTeamRepository.dropTeam(uid,dropTeam);
+    public void dropTeam(Long uid, Long tid) {
 
+        userTeamRepository.dropUserTeam(uid,tid); // user가 속한 팀을 드랍했다.
+        //근데, 현재 팀에 아무도 없다면, 그냥 팀 자체를 소멸시키자.
+
+        boolean check = userTeamRepository.findDropTeam(tid);
+
+        if(check==false){//team 을 그냥 지워라.
+
+            userTeamRepository.dropTeam(tid);
+
+        }
     }
 
 
@@ -150,4 +159,15 @@ public class UserService {
     }
 
 
+    public Long findBoss(Long tid) {
+        return userRepository.findBoss(tid);
+    }
+
+    public List<User> findTeamMember(Long tId) {
+        return userRepository.findTeamMember(tId);
+    }
+
+    public User findTeamBoss(Long tId) {
+        return userRepository.findTeamBoss(tId);
+    }
 }

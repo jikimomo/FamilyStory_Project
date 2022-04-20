@@ -264,6 +264,7 @@ public class TeamController extends BaseEntity {
 
         User findU = teamService.findUser(loginUser.getUID());
 
+
         // 요청과 동시에 유저팀 테이블에 소속된다.
         UserTeam ut = new UserTeam();
         ut.setUser(findU); // 현재 계정의 user 정보 세팅
@@ -281,16 +282,24 @@ public class TeamController extends BaseEntity {
             teamService.saveUserTeam(ut);
             res = 1; // 뷰에 전달
         }
+
+
+
+
+
         return res;
     }
 
     // 기능 _ 그룹 요청취소하기
     @ResponseBody
     @PostMapping("/RequestTeamCancel")
-    public int RequestTeamCancel(@RequestParam String id,@Login User loginUser) { // 요청한 그룹의 id값이 들어온다.
+
+    public int RequestTeamCancel(@Login User LoginUser , @RequestParam String id, Model model) { // 요청한 그룹의 id값이 들어온다.
         System.out.println("RequestTeamCancel");
 
-        User findU = teamService.findUser(loginUser.getUID());
+//        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
+        User findU = teamService.findUser(LoginUser.getUID());
+
 
         // 전달받은 팀 정보와 유저정보를 통해 해당하는 내역을 삭제한다.
         Long Tid=teamService.findByTeamID(id);

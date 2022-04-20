@@ -1,5 +1,7 @@
 package fs.project.repository;
+import fs.project.domain.Team;
 import fs.project.domain.User;
+import fs.project.domain.UserTeam;
 import fs.project.form.LoginForm;
 import fs.project.form.UserSetForm;
 import lombok.extern.slf4j.Slf4j;
@@ -79,6 +81,28 @@ public class UserRepository {
 
         String s = "update User u set u.password = :newPassword where u.uID = :uid";
         em.createQuery(s).setParameter("newPassword",newPassword).setParameter("uid", uid).executeUpdate();
+    }
+
+    public Team findTeam(Long tid){
+        return em.find(Team.class, tid);
+    }
+
+    public Long findBoss(Long tid) {
+        Team t = findTeam(tid);
+        return t.getBoss();
+    }
+
+    public List<User> findTeamMember(Long tId) {
+
+        List<User> result = em.createQuery("select ut.user from UserTeam ut where ut.team.tID=:tid")
+                .setParameter("tid",tId).getResultList();
+        return result;
+    }
+
+    public User findTeamBoss(Long tId) {
+
+        Team team= em.find(Team.class, tId);
+        return em.find(User.class, team.getBoss());
 
     }
 }

@@ -6,11 +6,16 @@ import fs.project.service.MainPageService;
 import fs.project.argumentresolver.Login;
 import fs.project.domain.User;
 import fs.project.form.LoginForm;
+import fs.project.service.UserService;
+import fs.project.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 
@@ -22,6 +27,7 @@ import java.util.List;
 public class HomeController {
     private final ContentService contentService;
     private final MainPageService mainPageService;
+    private final UserService userService;
 
     // 최초 접근 시 해당 GetMapping을 통해서 home.html로 보여준다.
     @GetMapping("/")
@@ -36,18 +42,32 @@ public class HomeController {
     //세션의 정보가 들어있으면 그 내용을 User user객체에 넣어준다.
     //원래 코드는 @SessionAttribute(name = SessionConst.LOGIN_USER, required = false)
     //이건데 @Login 으로 축약시켜놨다.
-    public String homeLogin(@Login User loginUser, Model model) {
+    public String homeLogin(@Login User loginUser, Model model, HttpServletRequest request) {
 
         //세션에 정보가 없으면 home.html로 보낸다.
         if (loginUser == null) {
             return "home";
         }
         //세션에 정보가 있다면 loginHome.html로 보낸다.
-        model.addAttribute("loginUser", loginUser);
-        if(loginUser.getMainTid()!=null){
+
+        HttpSession session = request.getSession();
+
+        // 세션에 LOGIN_USER라는 이름(SessionConst.class에 LOGIN_USER값을 "loginUser")을 가진 상자에 loginUser 객체를 담음.
+        // 즉, 로그인 회원 정보를 세션에 담아놓는다.
+
+        User user = userService.findOne(loginUser.getUID());
+        session.setAttribute(SessionConst.LOGIN_USER, user);
+
+
+        model.addAttribute("loginUser", user);
+        if(user.getMainTid()!=null){
+            log.info("------------null이 아니래 ----------");
             return "redirect:/mainPage";
         }
-        else return "AfterJoin";
+        else {
+            log.info("------------null이래-----------");
+            return "AfterJoin";
+        }
     }
 
 
