@@ -56,27 +56,31 @@
 
 
 
+    나는 그룹장이 아니야
 
+
+    <td>
+        <a href="#" th:href="@{/{tid}/teamEdit1 (tid=${tId})}" class="btn btn-primary" role="button">메인 그룹 변경</a>
+    </td>
+
+    <td>
+        <a href="#" th:href="@{/{tid}/teamEdit2 (tid=${tId})}" class="btn btn-primary" role="button">그룹 탈퇴하기</a>
+    </td>
     <div>
 
         <div>
             <table class="table">
                 <thead>
                 <tr>
-                    <th>team_ID</th>
-                    <th>team_Name</th>
-                    <th>그룹관리</th>
-
+                    <th>닉네임</th>
+                    <th>이름</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="team : ${teams}">
-                    <td th:text="${team.teamID}">10000</td>
-                    <td th:text="${team.teamName}">10</td>
 
-                    <td>
-                        <a href="#" th:href="@{/{tid}/teamEdit (tid=${team.getTID()})}" class="btn btn-primary" role="button">그룹 관리</a>
-                    </td>
+                <tr th:each="member : ${teamMember}">
+                    <td th:text="${member.nickName}">10000</td>
+                    <td th:text="${member.name}">10000</td>
 
                 </tr>
                 </tbody>
@@ -84,6 +88,7 @@
         </div>
 
     </div>
+
 
 
 
@@ -98,35 +103,3 @@
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->
 </body>
-
-<script type="text/javascript">
-    // function button_event(){
-    //
-    //     if (confirm("00 그룹을 탈퇴하시겠습니까??") == true){    //확인
-    //
-    //         document.form.submit();
-    //
-    //     }else{   //취소
-    //
-    //         return "/users/settingUserTeam.html";
-    //
-    //     }
-    //
-    // }
-    // $(document).ready(function(){
-    //
-    //     $('#Btn').click(function() {
-    //
-    //         var result = confirm('00 그룹을 탈퇴하시겠습니까??');
-    //
-    //         if(result) {
-    //             //yes
-    //             location.replace('SettingUserTeamComplete.html');
-    //         } else {
-    //          //no
-    //         }
-    //     });
-    // });
-</script>
-
-</html>

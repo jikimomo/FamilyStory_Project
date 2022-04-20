@@ -36,8 +36,6 @@ public class LoginController {
         //이후 일치한다면 그 객체를 반환해서 loginUser에 담아주고 일치하지않는다면 null값을 넣어준다.
         User loginUser = userService.login(form.getLoginId(), form.getPassword());
 
-
-
         if (loginUser == null) {
             //오류 출력
             result.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다. ");

@@ -10,7 +10,6 @@ import javax.validation.constraints.NotEmpty;
 @Setter
 public class GroupEditForm {
 
-    private Long changeMainTeam;
-    private Long dropTeam;
+    private Long tid;
 
 }
