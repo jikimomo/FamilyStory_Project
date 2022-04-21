@@ -284,9 +284,6 @@ public class TeamController extends BaseEntity {
         }
 
 
-
-
-
         return res;
     }
 
@@ -335,7 +332,6 @@ public class TeamController extends BaseEntity {
 
 
         //        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
-
 
 
         return "redirect:/";
