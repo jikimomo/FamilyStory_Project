@@ -102,6 +102,7 @@ public class UserService {
 
         if(check==false){//team 을 그냥 지워라.
 
+
             userTeamRepository.dropTeam(tid);
 
         }

@@ -60,7 +60,7 @@ public class UserTeamRepository {
     public boolean findDropTeam(Long tid) {
         List<UserTeam> all = findAll();
         for (UserTeam ut : all) {
-            if (ut.getTeam().getTID().equals(tid)) {
+            if (ut.getTeam().getTID().equals(tid)&&ut.isJoinUs()==true) { //현재 가입요청을 제외한 사람들만
                 //Team의 boss를 찾은 uid 값을 넣는다.
                 String s = "update Team t set t.boss = :uid where t.tID = :tid";
                 em.createQuery(s).setParameter("uid",ut.getUser().getUID()).setParameter("tid", tid).executeUpdate();
@@ -73,5 +73,14 @@ public class UserTeamRepository {
     public void dropTeam(Long tid) {
         String s = "delete from Team t where t.tID = :tid ";
         em.createQuery(s).setParameter("tid",tid).executeUpdate();
+        //만약 팀이 사라졌다면 가입요청한 사람들 모두 지우기
+        List<UserTeam> all = findAll();
+        for (UserTeam ut : all) {
+            if (ut.getTeam().getTID().equals(tid)&&ut.isJoinUs()==false) {
+                //Team의 boss를 찾은 uid 값을 넣는다.
+                String s1 = "delete from UserTeam ut where t.tID = :tid";
+                em.createQuery(s).setParameter("tid",tid).executeUpdate();
+            }
+        }
     }
 }
