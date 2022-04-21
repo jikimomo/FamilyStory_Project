@@ -107,5 +107,14 @@ public class TeamRepository {
         String s = "update User u set u.mainTid = :tID where u.uID = :uid";
         em.createQuery(s).setParameter("tID", tID).setParameter("uid", uid).executeUpdate();
     }
+
+    public List<User> findBossName(Long boss){
+        return em.createQuery("select u from User u where u.uID=:boss").setParameter("boss",boss).getResultList();
+    }
+
+    public List<UserTeam> findUserTeam(String userId, Long tId) {
+        String s = "select ut from UserTeam ut where ut.user.userID=:userId and ut.team.tID =:tId";
+        return em.createQuery(s).setParameter("userId", userId).setParameter("tId", tId).getResultList();
+    }
 }
 

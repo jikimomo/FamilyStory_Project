@@ -26,18 +26,20 @@ public class UserTeamRepository {
 
     public void dropUserTeam(Long uid, Long tid) {
 
+        // 유저팀에서 나를 삭제
         String s = "delete from UserTeam ut where ut.team.tID = :tid and ut.user.uID = :uid";
         em.createQuery(s).setParameter("tid",tid).setParameter("uid", uid).executeUpdate();
 
 /*        user의 main_tid가삭제할 user_team 의 tid와 같다면 user가 속한 uid값을 들고 있는
         user_team의 uid가 일치하는 값이 하나라도 존재한다면 그걸 main_tid로 둔다.
         */
+        // 나
         User u = em.find(User.class, uid);
-        if(u.getMainTid()==tid){
+        if(u.getMainTid()==tid){ //
             List<UserTeam> mainTeamChange = findAll();
             boolean check =false;
             for (UserTeam mtc : mainTeamChange) {
-                if (mtc.getUser().getUID()==uid) {
+                if (mtc.getUser().getUID()==uid) { // 다른팀을 나의 메인팀으로 바꿔줘
                     String s1 = "update User u set u.mainTid = :tid where u.uID = :uid";
                     //Team의 boss를 찾은 uid 값을 넣는다.
                     em.createQuery(s1).setParameter("tid",mtc.getTeam().getTID()).setParameter("uid", uid).executeUpdate();
@@ -45,7 +47,7 @@ public class UserTeamRepository {
                     break;
                 }
             }
-            if(check==false){
+            if(check==false){ // 다른팀이 없으면 내 메인팀은 널이야.
                 String s2 = "update User u set u.mainTid = :tid where u.uID = :uid";
                 //Team의 boss를 찾은 uid 값을 넣는다.
                 em.createQuery(s2).setParameter("tid",null).setParameter("uid", uid).executeUpdate();
@@ -57,30 +59,31 @@ public class UserTeamRepository {
         return em.find(Team.class, tid);
     }
 
-    public boolean findDropTeam(Long tid) {
+    public boolean findDropTeam(Long tid) { // 유저팀에 새 보스 준다.
         List<UserTeam> all = findAll();
         for (UserTeam ut : all) {
-            if (ut.getTeam().getTID().equals(tid)&&ut.isJoinUs()==true) { //현재 가입요청을 제외한 사람들만
+            if (ut.getTeam().getTID().equals(tid)&&ut.isJoinUs()==true) { // 현재 가입요청을 제외한 팀 사람들만!
                 //Team의 boss를 찾은 uid 값을 넣는다.
                 String s = "update Team t set t.boss = :uid where t.tID = :tid";
                 em.createQuery(s).setParameter("uid",ut.getUser().getUID()).setParameter("tid", tid).executeUpdate();
-              return true; //팀 테이블 지울 필요 없어
+                return true; //팀 테이블 지울 필요 없어
             }
         }
         return false; //팀 테이블을 지워
     }
 
     public void dropTeam(Long tid) {
-        String s = "delete from Team t where t.tID = :tid ";
-        em.createQuery(s).setParameter("tid",tid).executeUpdate();
-        //만약 팀이 사라졌다면 가입요청한 사람들 모두 지우기
         List<UserTeam> all = findAll();
         for (UserTeam ut : all) {
             if (ut.getTeam().getTID().equals(tid)&&ut.isJoinUs()==false) {
                 //Team의 boss를 찾은 uid 값을 넣는다.
-                String s1 = "delete from UserTeam ut where t.tID = :tid";
-                em.createQuery(s).setParameter("tid",tid).executeUpdate();
+                String s1 = "delete from UserTeam ut where ut.team.tID = :tid";
+                em.createQuery(s1).setParameter("tid",tid).executeUpdate();
             }
         }
+        String s = "delete from Team t where t.tID = :tid ";
+        em.createQuery(s).setParameter("tid",tid).executeUpdate();
+        //만약 팀이 사라졌다면 가입요청한 사람들 모두 지우기
+
     }
 }

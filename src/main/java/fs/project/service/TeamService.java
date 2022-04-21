@@ -66,7 +66,6 @@ public class TeamService {
         domainRepository.updateMainTeamID(uid,tid);
     }
 
-
     // Userteam
     @Transactional
     public Long saveUserTeam(UserTeam userTeam){
@@ -110,6 +109,11 @@ public class TeamService {
         return res;
     }
 
+    @Transactional
+    public List<UserTeam> findUserTeam(String userId, Long tId){
+        System.out.println("updateUserTeamID");
+        return domainRepository.findUserTeam(userId,tId);
+    }
 
 
     // === 유효성 체크 === //

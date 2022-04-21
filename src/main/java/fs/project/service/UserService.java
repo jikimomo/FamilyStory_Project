@@ -102,7 +102,6 @@ public class UserService {
 
         if(check==false){//team 을 그냥 지워라.
 
-
             userTeamRepository.dropTeam(tid);
 
         }
@@ -170,5 +169,11 @@ public class UserService {
 
     public User findTeamBoss(Long tId) {
         return userRepository.findTeamBoss(tId);
+    }
+    public List<User> waitMember(Long tId){
+        return userRepository.waitMember(tId);
+    }
+    public List<User> attendMember(Long tId) {
+        return userRepository.attendMember(tId);
     }
 }

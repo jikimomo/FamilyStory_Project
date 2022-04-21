@@ -105,6 +105,18 @@ public class UserRepository {
         return em.find(User.class, team.getBoss());
 
     }
+
+    public List<User> waitMember(Long tId){
+        List<User> user = em.createQuery("select ut.user from UserTeam ut where ut.joinUs=false and ut.team.tID=:tid").setParameter("tid",tId).getResultList();
+        return user;
+    }
+
+    public List<User> attendMember(Long tId) {
+
+        List<User> user = em.createQuery("select ut.user from UserTeam ut where ut.joinUs=true and ut.team.tID=:tid")
+                .setParameter("tid",tId).getResultList();
+        return user;
+    }
 }
 
 

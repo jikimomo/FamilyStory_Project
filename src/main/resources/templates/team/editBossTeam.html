@@ -1,13 +1,16 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <meta charset="utf-8">
     <link th:href="@{/css/bootstrap.min.css}"
           href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container {
-            max-width: 560px;
+            /*max-width: 560px;*/
+            max-width: 700px;
         }
+
         .field-error {
             border-color: #dc3545;
             color: #dc3545;
@@ -40,10 +43,48 @@
         }
 
     </style>
+    <script type="text/javascript">
+        $(document).ready(function (){
+            $('input[type="button"]').click(function (){
+                // console.log($(this).val())
+                // console.log(this.name)
+                let userId=this.name;
+                if($(this).val()=="예"){
+                    $.ajax({
+                        type: "POST",
+                        url: "/[[${tid}]]/teamEdit",
+                        data: {userId: userId, tId:[[${tid}]]},
+                        success: function (res) {
+                            console.log("승인 처리 완료")
+                            // $('#'+userId).remove()
+                            history.go(0)
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                }else{
+                    $.ajax({
+                        type: "POST",
+                        url: "/[[${tid}]]/deniedMember",
+                        data: {userId: this.name, tId:[[${tid}]]},
+                        success: function (res) {
+                            console.log("거부 처리 완료")
+                            // $('#'+userId).remove()
+                            history.go(0)
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                }
+            })
+        })
+    </script>
 </head>
 <body>
 <div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
     <div class="py-1 text-center">
         <img src="images/logo2.jpg" width="300px" height="300px">
@@ -65,43 +106,56 @@
     </td>
 
 
-
     <div>
-
-        <h1> 그룹장은 이 친구입니다 </h1>
-        <h1><td th:text = "${teamBoss.nickName}"></td></h1>
-        <h1><td th:text = "${teamBoss.name}"></td></h1>
-        <div>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>닉네임</th>
-                    <th>이름</th>
-                </tr>
-                </thead>
-                <tbody>
-
-                <tr th:each="member : ${teamMember}">
-                    <td th:text="${member.nickName}">10000</td>
-                    <td th:text="${member.name}">10000</td>
-
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
+        <tr th:each="user:${user}">
+            <div th:id="${user.userID}">
+            <td th:text="${user.name}+'('+${user.userID}+')님이 그룹가입을 요청하셨습니다. 수락하시겠습니까?'"/>
+            <input type="button" value="예" th:name="${user.userID}"/>
+            <input type="button" value="아니오" th:name="${user.userID}"/><br/>
+            </div>
+        </tr>
     </div>
 
+    <div>
+        <h1> 그룹장은 이 친구입니다 </h1>
+        <h1>
+            <td th:text="${teamBoss.nickName}"></td>
+        </h1>
+        <h1>
+            <td th:text="${teamBoss.name}"></td>
+        </h1>
+    </div>
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>닉네임</th>
+                <th>이름</th>
+                <th>아이디</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr th:each="member : ${teamMember}">
+                <td th:text="${member.nickName}">10000</td>
+                <td th:text="${member.name}">10000</td>
+                <td th:text="${member.userID}">10000</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
 
 
-    <form th:action="@{/logout}" method="post">
-        <button class="w-100 btn btn-dark btn-lg"
-                type="submit">
-            로그아웃
-            <!--                    onclick="location.href='home.html'"-->
-        </button>
-    </form>
+<form th:action="@{/logout}" method="post">
+    <button class="w-100 btn btn-dark btn-lg"
+            type="submit">
+        로그아웃
+        <!--                    onclick="location.href='home.html'"-->
+    </button>
+</form>
 
-    <div th:replace="fragments/footer :: footer" />
+<div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>

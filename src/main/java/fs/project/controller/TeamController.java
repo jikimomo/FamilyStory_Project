@@ -53,7 +53,6 @@ public class TeamController extends BaseEntity {
     public String CreateTeam(Model model,@Login User loginUser) {
         System.out.println("CreateTeam Page");
         model.addAttribute("TeamForm", new Team());
-
         model.addAttribute("user", loginUser.getUserID());
         return "/CreateTeam";
     }
@@ -89,7 +88,6 @@ public class TeamController extends BaseEntity {
     @PostMapping(value = "/CreateTeam")
     public void  CreateTeamForm(@Valid TeamForm teamForm,@Login User loginUser, HttpServletRequest request) {
         System.out.println("CreateTeam Controller");
-//        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
 
 
         // 전달받은 데이터를 Team 테이블에 저장
@@ -99,15 +97,13 @@ public class TeamController extends BaseEntity {
         team.setBoss(loginUser.getUID());
         Long saveId = teamService.saveTeam(team);
         Team findTeam = teamService.findTeam(saveId);
-        teamService.updateMainTeamID(loginUser.getUID(),findTeam.getTID());
+        if(teamForm.isMainTeamChecked()){
+            teamService.updateMainTeamID(loginUser.getUID(),findTeam.getTID());
+            User user = teamService.findUser(loginUser.getUID());
 
-        User user = teamService.findUser(loginUser.getUID());
-
-        HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_USER, user);
-
-
-
+            HttpSession session = request.getSession();
+            session.setAttribute(SessionConst.LOGIN_USER, user);
+        }
 
         if (saveId != 0) {
             Team findT = teamService.findTeam(saveId);
@@ -125,8 +121,7 @@ public class TeamController extends BaseEntity {
                 }
             }
 
-
-            // User와 Team을 조인한 UserTeam테이블 업데이트. (User(join), Team(join), joinTime, joinUs )
+            // UserTeam테이블에도 관련 사항을 저장해준다. (User(join), Team(join), joinTime, joinUs )
             UserTeam ut = new UserTeam();
             ut.setTeam(findT);
             ut.setUser(loginUser);
@@ -140,10 +135,10 @@ public class TeamController extends BaseEntity {
                 if( teamForm.getUsers()[i] != ""){
                     // 추가한 구성원의 정보
                     User userInfo = teamService.findByUserID(teamForm.getUsers()[i]).get(0);
-                    // 그룹을 만들 때 추가된 구성원은 그룹에 소속됨과 동시에 해당 그룹이 구성원의 메인 그룹으로 설정된다.
-                    Long userUID = teamService.saveUser(userInfo);
-                    userInfo = teamService.findUser(userUID);
-
+                    // 그룹을 만들 때 추가된 구성원은 메인그룹이 없으면 해당 그룹이 메인그룹으로 지정된다.
+                    if(userInfo.getMainTid()==null){
+                        teamService.updateMainTeamID(userInfo.getUID(),findTeam.getTID());
+                    }
                     // 그룹의 구성원이 추가되었으므로, 유저-팀테이블을 업데이트 해준다.
                     ut = new UserTeam();
                     ut.setTeam(findT);
@@ -158,8 +153,8 @@ public class TeamController extends BaseEntity {
     }
 
     // 파일 업로드 경로 ( properties에 저장되어 있다.)
-    @Value("${file.path}")
-    private String fileDir;
+//    @Value("${file.path}")
+//    private String fileDir;
 
     // 기능 _ 팀 그룹 생성 시 이미지 업로드 & DB 저장
     @PostMapping("/upload")
@@ -173,19 +168,20 @@ public class TeamController extends BaseEntity {
             // 업로드된 파일의 파일명을 변경 ( 중복 파일명이 될 수 있으므로, 중복되지 않을 문자로 변경해준다. )
             String fileName = renameFiles(file);
             // 실제 업로드 될 파일의 경로를 지정해준다.
-            String fullPath = fileDir + fileName;
+//            String fullPath = fileDir + fileName;
+            String fullPath = new File("").getAbsolutePath()+File.separator+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"static"+File.separator+"TeamImage"+File.separator+ fileName;
             // 해당 경로에 파일을 업로드 한다.
             file.transferTo(new File(fullPath));
 
             // 넘겨받은 팀아이디 정보로 TID를 찾고, TID로 팀을 찾는다.
             Team team = teamService.findTeam(teamService.findByTeamID(tid));
             // DB에 올릴 경로를 짧게 잡아준다. ( static/example.jpg )
-            String[] dir = fileDir.split("/");
-            fullPath = File.separator + dir[6] + File.separator + fileName;
+//            String[] dir = fileDir.split("/");
+//            fullPath = File.separator + dir[6] + File.separator + fileName;
+            fullPath = File.separator + "TeamImage" + File.separator + fileName;
 
-            // 팀 테이블에 이미지 경로 세팅 후
+            // 팀 테이블에 이미지 경로 저장
             team.setTeamImage(fullPath);
-            // 팀 테이블 업데이트
             teamService.saveTeam(team);
             model.addAttribute("img",fullPath);
         }
@@ -214,11 +210,6 @@ public class TeamController extends BaseEntity {
     public String SearchingTeam(@Login User loginUser,@PageableDefault(page=0,size = 10,sort = "tID", direction = Sort.Direction.ASC) Pageable pageable, Model model, @RequestParam(required = false, defaultValue = "", name = "teamId") String teamId ) {
         System.out.println("SearchingTeam Controller");
 
-
-//        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
-//        User findU = teamService.findUser(1l);
-
-
         // 유저가 가입 및 가입 신청한 팀을 찾을 목적 ( 중복 신청을 방지하기 위함 )
         List<UserTeam> ut = teamService.findByUID(loginUser.getUID());
         // 유저가 속한 그룹 리스트
@@ -226,14 +217,13 @@ public class TeamController extends BaseEntity {
         // 유저의 그룹 가입 요청 여부
         List<Boolean> joinCheck = new ArrayList<>();
 
-        model.addAttribute("ut",ut);
         for (int i = 0; i < ut.size(); i++) {
             myTeam.add(ut.get(i).getTeam().getTeamID());
             joinCheck.add(ut.get(i).isJoinUs());
-            System.out.println("===================");
-            System.out.println(joinCheck.get(i));
         }
-//        Page<Team> all = boardRepository.findAll(pageable);
+        model.addAttribute("myTeam", myTeam);
+        model.addAttribute("joinCheck",joinCheck);
+
         // Spring Data JPA를 사용해 페이징을 구현
         Page<Team> all = teamRepository2.findByTeamIDContaining(teamId,pageable);
         model.addAttribute("teams",all);
@@ -244,14 +234,6 @@ public class TeamController extends BaseEntity {
         model.addAttribute("currentPage",currentPage);
         model.addAttribute("startPage",startPage);
         model.addAttribute("endPage",endPage);
-
-        // 해당하는 팀이 있는지 없는지 크기값을 전달.
-        List<Team> teamsort = teamService.searchTeam(teamId);
-        model.addAttribute("size",teamsort.size());
-        // 유저가 속한 그룹아이디 목록
-        model.addAttribute("myTeam", myTeam);
-        // 유저의 그룹 가입 요청 여부
-        model.addAttribute("joinCheck",joinCheck);
 
         return "/SearchingTeam";
     }

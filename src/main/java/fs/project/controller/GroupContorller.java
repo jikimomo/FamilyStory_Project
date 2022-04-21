@@ -3,18 +3,17 @@ package fs.project.controller;
 import fs.project.argumentresolver.Login;
 import fs.project.domain.Team;
 import fs.project.domain.User;
+import fs.project.domain.UserTeam;
 import fs.project.form.GroupEditForm;
 import fs.project.form.LoginForm;
+import fs.project.service.TeamService;
 import fs.project.service.UserService;
 import fs.project.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -28,6 +27,8 @@ public class GroupContorller {
 
 
     private final UserService userService;
+    private final TeamService teamService;
+
     // 최초 접근 시 해당 GetMapping을 통해서 home.html로 보여준다.
     @GetMapping("/teamEdit")
     public String groupEditPage(@Login User loginUser, Model model) {
@@ -61,9 +62,12 @@ public class GroupContorller {
 
         //만약 현재 사용자가 그룹의 boss라면 그룹의 관리자 페이지 (그룹 탈퇴하기, 메인 그룹 설정화면, 이벤트 추가 등등)
 
+        // joinUs가 False인 유저를 가져온다.
+        List<User> users = userService.waitMember(tId);
+        model.addAttribute("user",users);
 
-
-        List<User> teamMember =  userService.findTeamMember(tId);
+        // joinUs가 true인 유저를 가져온다.
+        List<User> teamMember =  userService.attendMember(tId);
         User GroupBoss = userService.findTeamBoss(tId);
         model.addAttribute("tId", tId);
         model.addAttribute("teamMember", teamMember);
@@ -80,6 +84,25 @@ public class GroupContorller {
 
     }
 
+    @PostMapping("/{tid}/teamEdit")
+    public String AcceptMember(@RequestParam("userId") String userId, @RequestParam("tId") Long tId){
+        UserTeam ut = teamService.findUserTeam(userId,tId).get(0);
+        ut.setJoinUs(true);
+        teamService.saveUserTeam(ut);
+
+        User user = teamService.findByUserID(userId).get(0);
+        if(user.getMainTid()==null){
+            teamService.updateMainTeamID(user.getUID(),tId);
+        }
+        return "team/editTeam";
+    }
+    @PostMapping("/{tid}/deniedMember")
+    public String DeniedMember(@RequestParam("userId") String userId, @RequestParam("tId") Long tId){
+        UserTeam ut = teamService.findUserTeam(userId,tId).get(0);
+        teamService.removeUTID(ut.getUtID());
+
+        return "team/editTeam";
+    }
 
 
 
