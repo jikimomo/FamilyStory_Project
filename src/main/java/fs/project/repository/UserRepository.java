@@ -62,7 +62,7 @@ public class UserRepository {
 
     //설정_마이페이지 유저 정보 수정(이름,비밀번호,닉네임,이메일,폰넘버)
     public void updateUser(Long updateUid, User user) {
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@"+user.getUserImage());
+
         String s = "update User u " +
                 "set u.password = :newPassword ," +
                 "u.name=:newName,"+
