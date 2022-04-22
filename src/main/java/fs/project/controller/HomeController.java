@@ -74,10 +74,10 @@ public class HomeController {
 
 
         model.addAttribute("loginUser", user);
-        if (tID > 0) {
-            return "redirect:/loadMainPage/" + tID;
-        } else {
+        if (user.getMainTid()==null) {
             return "AfterJoin";
+        } else{
+            return "redirect:/loadMainPage/" + curTID;
         }
     }
 
