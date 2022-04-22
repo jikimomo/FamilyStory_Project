@@ -42,7 +42,32 @@
             color: black;
         }
 
+
     </style>
+    <script th:inline="javascript">
+        let photo = [[${photo}]]
+        console.log(photo)
+
+    </script>
+    <script type="text/javascript">
+        $(function() {
+            $("#file").on('change', function(){
+                readURL(this);
+            });
+        });
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#View').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }else{
+                $('#View').attr('src', photo);
+            }
+        }
+
+    </script>
     <script type="text/javascript">
         $(document).ready(function (){
             $('input[type="button"]').click(function (){
@@ -80,15 +105,33 @@
                 }
             })
         })
+
     </script>
 </head>
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
-    <div class="py-1 text-center">
-        <img src="images/logo2.jpg" width="300px" height="300px">
-    </div>
+    <br>
+    <br>
+    <br>
+    <h1>그룹 사진 변경하기</h1>
+    <form id="imgf" th:action="@{/{tid}/updateTeamImage (tid=${tId})}" method="post" enctype="multipart/form-data">
+        <div class="mb-3"><img th:src="${photo}" id="View" class="rounded img-thumbnail mx-auto d-block">
+            <!--            <img th:src="${team.teamImage}" width="100"/>-->
+        </div>
+
+        <div class="mb-3">
+            <div>
+                <input class="form-control" type="file" name="file" id="file"/>
+            </div>
+            <input type="text" id="hidden" value="" name="tid" hidden>
+        </div>
+        <button type="submit" class="btn btn-success btn-lg btnx-indigo" id="submit">사진변경</button>
+    </form>
+    <br>
+    <br>
+    <br>
 
     <a th:href="@{/loginHome}">홈</a>
     <a th:href="@{/users/settinguser}">내정보</a>
@@ -97,21 +140,13 @@
 
     내가 그룹장이야~
 
-    <td>
-        <a href="#" th:href="@{/{tid}/teamEdit1 (tid=${tId})}" class="btn btn-primary" role="button">메인 그룹 변경</a>
-    </td>
-
-    <td>
-        <a href="#" th:href="@{/{tid}/teamEdit2 (tid=${tId})}" class="btn btn-primary" role="button">그룹 탈퇴하기</a>
-    </td>
-
 
     <div>
         <tr th:each="user:${user}">
             <div th:id="${user.userID}">
-            <td th:text="${user.name}+'('+${user.userID}+')님이 그룹가입을 요청하셨습니다. 수락하시겠습니까?'"/>
-            <input type="button" value="예" th:name="${user.userID}"/>
-            <input type="button" value="아니오" th:name="${user.userID}"/><br/>
+                <td th:text="${user.name}+'('+${user.userID}+')님이 그룹가입을 요청하셨습니다. 수락하시겠습니까?'"/>
+                <input type="button" value="예" th:name="${user.userID}"/>
+                <input type="button" value="아니오" th:name="${user.userID}"/><br/>
             </div>
         </tr>
     </div>
@@ -143,6 +178,9 @@
             </tr>
             </tbody>
         </table>
+    </div>
+    <div>
+        <a href="#" th:href="@{/{tid}/teamEdit2 (tid=${tId})}" class="btn btn-primary" role="button">그룹 탈퇴하기</a>
     </div>
 
 </div>

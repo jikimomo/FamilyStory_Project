@@ -14,9 +14,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -28,6 +31,7 @@ public class GroupContorller {
 
     private final UserService userService;
     private final TeamService teamService;
+    private final TeamController teamController;
 
     // 최초 접근 시 해당 GetMapping을 통해서 home.html로 보여준다.
     @GetMapping("/teamEdit")
@@ -89,6 +93,9 @@ public class GroupContorller {
         model.addAttribute("teamMember", teamMember);
         model.addAttribute("teamBoss", GroupBoss);
 
+        model.addAttribute("team",teamService.findTeam(tId));
+        model.addAttribute("photo",teamService.findTeam(tId).getTeamImage());
+
         if(loginUser.getUID()==findBossUid){
             return "team/editBossTeam";
         }
@@ -148,4 +155,39 @@ public class GroupContorller {
         return "redirect:/loginHome";
     }
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    // 기능 _ 팀 그룹 생성 시 이미지 업로드 & DB 저장
+    @PostMapping("/{tid}/updateTeamImage")
+    public String updateTeamImage(@PathVariable("tid") Long tId, @RequestParam MultipartFile file, Model model
+    ) throws IOException {
+        System.out.println("upload Controller");
+        // 로그로 파일 넘어온 내용을 체크했다.
+//        log.info("multi={}",file);
+        String str ="";
+        if(!file.isEmpty()){
+            String fileName = teamController.renameFiles(file);
+            // 실제 업로드 될 파일의 경로를 지정해준다.
+//            String fullPath = fileDir + fileName;
+            String fullPath = new File("").getAbsolutePath()+File.separator+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"static"+File.separator+"TeamImage"+File.separator+ fileName;
+            // 해당 경로에 파일을 업로드 한다.
+            file.transferTo(new File(fullPath));
+
+            Team team = teamService.findTeam(tId);
+
+            fullPath = File.separator + "TeamImage" + File.separator + fileName;
+
+            // 팀 테이블에 이미지 경로 저장
+            team.setTeamImage(fullPath);
+            teamService.saveTeam(team);
+            str=fullPath;
+            model.addAttribute("img",fullPath);
+        }
+
+        return "redirect:/"+tId+"/teamEdit";
+    }
+
 }
+
