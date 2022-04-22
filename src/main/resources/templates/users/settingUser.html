@@ -6,7 +6,8 @@
           href="/static/images/logo2.jpg" rel="stylesheet">
     <style>
         .container {
-            max-width: 560px;
+            /*max-width: 700px;*/
+            width: 700px;
         }
 
         ul {
@@ -57,12 +58,6 @@
             color: #333;
             border: solid 1px #2D7100;
             font-weight: bold;
-        }
-
-        .image-container {
-            position: absolute;
-            left: 1300px;
-            top: 310px;
         }
 
         #input-image {
@@ -194,8 +189,8 @@
     <ul class="menu">
         <li><a th:href="@{/loginHome/{curTID}(curTID=${curTID})}">홈</a></li>
         <li><a th:href="@{/users/settinguser}">내정보</a></li>
-        <li><a th:href="@{/teamEdit}">그룹관리</a></li>
-        <li><a id="deleteAccount">탈퇴하기</a></li>
+        <li><a th:href="@{/teamEdit}">내그룹</a></li>
+        <li><a id="deleteAccount">회원탈퇴</a></li>
 <!--    <li><a th:href="@{/logout}" >로그아웃</a></li>-->
     </ul>
 

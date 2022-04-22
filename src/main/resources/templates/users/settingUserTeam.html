@@ -7,7 +7,8 @@
           href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container {
-            max-width: 560px;
+            /*max-width: 700px;*/
+            width: 700px;
         }
         .field-error {
             border-color: #dc3545;
@@ -15,7 +16,6 @@
         }
 
         ul {
-
             list-style-type: none;
             padding: 0px;
             margin: -100px;
@@ -103,7 +103,7 @@
     <ul class="menu">
         <li><a th:href="@{/loginHome/{curTID}(curTID=${curTID})}">홈</a></li>
         <li><a th:href="@{/users/settinguser}">내정보</a></li>
-        <li><a th:href="@{/teamEdit}">그룹관리</a></li>
+        <li><a th:href="@{/teamEdit}">내그룹</a></li>
     </ul>
 
     <div>
