@@ -215,12 +215,15 @@ public class TeamController extends BaseEntity {
 
         Long curTID;
         User user = userService.findUser(loginUser.getUID());
-        if(user.getCurTid() == null){
+        if(user.getMainTid() == null){
             curTID = 0L;
         }else{
-            curTID = user.getCurTid();
+            if(user.getCurTid() == null)
+                curTID = user.getMainTid();
+            else
+                curTID = user.getCurTid();
         }
-        return "redirect:/loginHome"+curTID;
+        return "redirect:/loginHome/"+curTID;
     }
 
     // 기능 _ 파일 업로드시 파일명 재정의하는 메서드 구현
