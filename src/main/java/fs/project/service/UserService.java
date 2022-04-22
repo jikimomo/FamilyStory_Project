@@ -18,8 +18,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +38,6 @@ public class UserService {
     private final UserTeamRepository userTeamRepository;
     private final TeamEventRepository teamEventRepository;
     //메일보내기
-
     @Autowired // JavaMailSender 사용 위해 Autowired 필요
     private JavaMailSender javaMailSender;//build.gradle - implementation 'org.springframework.boot:spring-boot-starter-mail'
     private static final String FROM_ADDRESS = "multicampusgroup6@gmail.com";//송신 이메일
@@ -84,8 +87,19 @@ public class UserService {
     }
 
     //SettingController에서 postMapping에서 updateUser를 찾아들어오고 userRepository.updateUser로 이동
-    public void updateUser(Long updateUid, UserSetForm form) {
-        userRepository.updateUser(updateUid, form);
+    public void updateUser(Long updateUid, UserSetForm form) throws Exception {
+        String userImage = filePathForUserProfileImage(form.getUserImage());
+        String coverImage = filePathForUserCoverImage(form.getUserCoverImage());
+        User user = new User();
+        user.setPassword(form.getPassword());
+        user.setName(form.getName());
+        user.setNickName(form.getNickName());
+        user.setEmail(form.getEmail());
+        user.setPhoneNumber(form.getPhoneNumber());
+        user.setUserImage(userImage);
+        user.setCoverImage(coverImage);
+
+        userRepository.updateUser(updateUid, user);
     }
 
 
@@ -184,12 +198,94 @@ public class UserService {
         return userRepository.attendMember(tId);
     }
 
-    //회원 탈퇴
+    //회원탈퇴
     public void deleteUser(Long uid) {
 
         userRepository.deleteUser(uid);
 
 
+    }
+
+    //유저 프로필 사진
+    public String filePathForUserProfileImage(List<MultipartFile> images) throws Exception{
+
+        String userPhoto = new String();
+
+        if(!CollectionUtils.isEmpty(images)){ //이미지 파일이 존재할 경우
+            //프로젝트 내의 static 폴더까지의 절대 경로
+            String absolutePath = new File("").getAbsolutePath()+File.separator+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"static";
+
+            for(MultipartFile image : images){
+                String originalFileExtension = new String();
+                String contentType = image.getContentType();
+
+                if(ObjectUtils.isEmpty(contentType)){ //확장자가 없는 파일 -> 처리 x
+                    break;
+                }
+                else{
+                    if(contentType.contains("image/jpeg"))
+                        originalFileExtension = ".jpg";
+                    else if(contentType.contains("image/png"))
+                        originalFileExtension = ".png";
+                    else  // 다른 확장자일 경우 처리 x
+                        break;
+                }
+
+                String newFileName = System.nanoTime()+originalFileExtension; //이미지 이름이 겹치지 않게 나노시간을 이름으로 사진 저장
+                File file = new File(absolutePath+File.separator+"userProfileImage"+File.separator+newFileName);
+//                System.out.println(System.nanoTime()+" "+originalFileExtension);
+//                System.out.println(newFileName);
+                image.transferTo(file);
+                file.setWritable(true);
+                file.setReadable(true);
+
+                userPhoto = File.separator + "userProfileImage" + File.separator + newFileName;
+
+            }
+        }
+
+        return userPhoto;
+    }
+
+    //개인 페이지 커버 사진 업데이트
+    public String filePathForUserCoverImage(List<MultipartFile> images) throws Exception{
+
+        String userPhoto = new String();
+
+        if(!CollectionUtils.isEmpty(images)){ //이미지 파일이 존재할 경우
+            //프로젝트 내의 static 폴더까지의 절대 경로
+            String absolutePath = new File("").getAbsolutePath()+File.separator+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"static";
+
+            for(MultipartFile image : images){
+                String originalFileExtension = new String();
+                String contentType = image.getContentType();
+
+                if(ObjectUtils.isEmpty(contentType)){ //확장자가 없는 파일 -> 처리 x
+                    break;
+                }
+                else{
+                    if(contentType.contains("image/jpeg"))
+                        originalFileExtension = ".jpg";
+                    else if(contentType.contains("image/png"))
+                        originalFileExtension = ".png";
+                    else  // 다른 확장자일 경우 처리 x
+                        break;
+                }
+
+                String newFileName = System.nanoTime()+originalFileExtension; //이미지 이름이 겹치지 않게 나노시간을 이름으로 사진 저장
+                File file = new File(absolutePath+File.separator+"userCoverImage"+File.separator+newFileName);
+//                System.out.println(System.nanoTime()+" "+originalFileExtension);
+//                System.out.println(newFileName);
+                image.transferTo(file);
+                file.setWritable(true);
+                file.setReadable(true);
+
+                userPhoto = File.separator + "userCoverImage" + File.separator + newFileName;
+
+            }
+        }
+
+        return userPhoto;
     }
 
 
