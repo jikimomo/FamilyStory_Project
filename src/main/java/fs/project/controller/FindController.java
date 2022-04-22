@@ -30,14 +30,13 @@ public class FindController {
 
     @PostMapping("/users/findId")
     public String findId2(@Valid FindIdForm form, BindingResult result, Model model) {
-
         if (result.hasErrors()) {
             return "users/findIdForm";
         }
+
         User user = new User();
         user.setName(form.getName());
         user.setEmail(form.getEmail());
-
         Optional<User> findUser = userService.findId(user);
 
         if (findUser == null) {
