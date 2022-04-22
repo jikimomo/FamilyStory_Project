@@ -47,14 +47,6 @@
 
     <li><a th:href="@{/users/settinguser}">내 정보 수정하기</a></li>
 
-    <div class="col">
-        <form th:action="@{/logout}" method="post">
-            <button class="w-100 btn btn-dark btn-lg"
-                    onclick="location.href='home.html'" type="submit">
-                로그아웃
-            </button>
-        </form>
-    </div>
     <div th:replace="fragments/footer :: footer" /> <!-- fragments/footer에 있는 파일이 대체됨 -->
 </div> <!-- /container -->
 </body>
