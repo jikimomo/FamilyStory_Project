@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -125,5 +128,11 @@ public class ContentService {
         }
 
         return photoRoute;
+    }
+
+
+    public List<String> findTid(LocalDate when, Long tid) {
+           return contentRepository.findTid(when, tid);
+
     }
 }

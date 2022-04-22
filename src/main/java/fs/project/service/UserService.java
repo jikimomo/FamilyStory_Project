@@ -1,9 +1,11 @@
 package fs.project.service;
 import fs.project.domain.Team;
+import fs.project.domain.TeamEvent;
 import fs.project.domain.User;
 import fs.project.form.FindPwForm;
 import fs.project.form.LoginForm;
 import fs.project.form.UserSetForm;
+import fs.project.repository.TeamEventRepository;
 import fs.project.repository.TeamRepository;
 import fs.project.repository.UserRepository;
 import fs.project.repository.UserTeamRepository;
@@ -20,6 +22,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +36,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
     private final UserTeamRepository userTeamRepository;
-
+    private final TeamEventRepository teamEventRepository;
     //메일보내기
     @Autowired // JavaMailSender 사용 위해 Autowired 필요
     private JavaMailSender javaMailSender;//build.gradle - implementation 'org.springframework.boot:spring-boot-starter-mail'
@@ -87,9 +90,6 @@ public class UserService {
     public void updateUser(Long updateUid, UserSetForm form) throws Exception {
         String userImage = filePathForUserProfileImage(form.getUserImage());
         String coverImage = filePathForUserCoverImage(form.getUserCoverImage());
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!"+userImage);
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!"+coverImage);
-
         User user = new User();
         user.setPassword(form.getPassword());
         user.setName(form.getName());
@@ -289,4 +289,17 @@ public class UserService {
     }
 
 
+    public List<Long> findTid(LocalDate date) {
+        List <Long> tid = teamEventRepository.findTid(date);
+        return tid;
+    }
+
+    public String findEvent(Long tid) {
+        String eventName = teamEventRepository.findEvent(tid);
+        return eventName;
+    }
+    public List<String> findPhoneNumber(Long tid){
+        List<String> phoneNumber = teamEventRepository.findPhoneNumber(tid);
+        return phoneNumber;
+    }
 }

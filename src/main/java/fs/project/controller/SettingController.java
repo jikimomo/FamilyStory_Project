@@ -64,10 +64,6 @@ public class SettingController {
         //Long타입의 updateUid라는 객체에 현재 로그인된 유저의 ID를 getUID로 가져온다.
         Long updateUid = loginUser.getUID();
 
-        System.out.println("controller!!!!!!!!!!!!!");
-        System.out.println(form.getUserImage());
-        System.out.println(form.getUserCoverImage());
-
         //userService의 updateUser라는 메소드를 찾아가고 form에 담는다?
         userService.updateUser(updateUid, form);
 
