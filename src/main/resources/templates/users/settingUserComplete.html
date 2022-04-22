@@ -85,7 +85,7 @@
                         <h3>내정보로 돌아가기</h3>
                     </button>
                     </br>
-                    <button type="button" id="home" th:onclick="|location.href='@{/loginHome}'|">
+                    <button type="button" id="home" th:onclick="|location.href='@{/loginHome/{curTID}(curTID=${curTID})}'|">
                         <h5>홈으로 돌아가기</h5>
                     </button>
                 </div>

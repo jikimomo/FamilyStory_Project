@@ -1,4 +1,5 @@
 package fs.project.service;
+import fs.project.argumentresolver.Login;
 import fs.project.domain.Team;
 import fs.project.domain.TeamEvent;
 import fs.project.domain.User;
@@ -42,6 +43,9 @@ public class UserService {
     private JavaMailSender javaMailSender;//build.gradle - implementation 'org.springframework.boot:spring-boot-starter-mail'
     private static final String FROM_ADDRESS = "multicampusgroup6@gmail.com";//송신 이메일
 
+    public User findUser(Long uid){
+        return userRepository.findUser(uid);
+    }
 
 
     @Transactional(readOnly = false)
@@ -88,16 +92,30 @@ public class UserService {
 
     //SettingController에서 postMapping에서 updateUser를 찾아들어오고 userRepository.updateUser로 이동
     public void updateUser(Long updateUid, UserSetForm form) throws Exception {
+
         String userImage = filePathForUserProfileImage(form.getUserImage());
         String coverImage = filePathForUserCoverImage(form.getUserCoverImage());
+
         User user = new User();
         user.setPassword(form.getPassword());
         user.setName(form.getName());
         user.setNickName(form.getNickName());
         user.setEmail(form.getEmail());
         user.setPhoneNumber(form.getPhoneNumber());
-        user.setUserImage(userImage);
-        user.setCoverImage(coverImage);
+
+        User login = userRepository.findUser(updateUid);
+        if(userImage != null) {
+            user.setUserImage(userImage);
+        }
+        else {
+            user.setUserImage(login.getUserImage());
+        }
+        if(coverImage != null) {
+            user.setCoverImage(coverImage);
+        }
+        else {
+            user.setCoverImage(login.getCoverImage());
+        }
 
         userRepository.updateUser(updateUid, user);
     }
@@ -209,7 +227,7 @@ public class UserService {
     //유저 프로필 사진
     public String filePathForUserProfileImage(List<MultipartFile> images) throws Exception{
 
-        String userPhoto = new String();
+        String userPhoto = null;
 
         if(!CollectionUtils.isEmpty(images)){ //이미지 파일이 존재할 경우
             //프로젝트 내의 static 폴더까지의 절대 경로
@@ -250,7 +268,7 @@ public class UserService {
     //개인 페이지 커버 사진 업데이트
     public String filePathForUserCoverImage(List<MultipartFile> images) throws Exception{
 
-        String userPhoto = new String();
+        String userPhoto = null;
 
         if(!CollectionUtils.isEmpty(images)){ //이미지 파일이 존재할 경우
             //프로젝트 내의 static 폴더까지의 절대 경로
