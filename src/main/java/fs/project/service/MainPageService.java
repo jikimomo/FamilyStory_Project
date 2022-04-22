@@ -79,13 +79,15 @@ public class MainPageService {
     public List<User> findRequestJoinUs(Long uID, Long tID){
         List<User> newRequest = new ArrayList<>();
 
-        Team team = contentRepository.findTeam(tID);
-        if(team.getBoss() == uID){ //현재 팀의 보스가 나인 경우
-            List<UserTeam> userTeams = mainPageRepository.findUserTeamByT(tID);
-            for(UserTeam ut : userTeams){
-                if(ut.isJoinUs() == false){
-                    User joinUsUser = contentRepository.findUser(ut.getUser().getUID());
-                    newRequest.add(joinUsUser);
+        if(tID != 0) {
+            Team team = contentRepository.findTeam(tID);
+            if (team.getBoss() == uID) { //현재 팀의 보스가 나인 경우
+                List<UserTeam> userTeams = mainPageRepository.findUserTeamByT(tID);
+                for (UserTeam ut : userTeams) {
+                    if (!ut.isJoinUs()) {
+                        User joinUsUser = contentRepository.findUser(ut.getUser().getUID());
+                        newRequest.add(joinUsUser);
+                    }
                 }
             }
         }
