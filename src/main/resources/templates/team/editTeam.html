@@ -49,9 +49,9 @@
         <img src="images/logo2.jpg" width="300px" height="300px">
     </div>
 
-    <a th:href="@{/loginHome}">홈</a>
+    <a th:href="@{/loginHome/{curTID}(curTID=${curTID})}">홈</a>
     <a th:href="@{/users/settinguser}">내정보</a>
-    <a th:href="@{/loginHome}">그룹관리</a>
+    <a th:href="@{/teamEdit}">그룹관리</a>
     <br><br>
 
 

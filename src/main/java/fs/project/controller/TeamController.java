@@ -184,7 +184,7 @@ public class TeamController extends BaseEntity {
 
 
     @PostMapping("/upload")
-    public String saveFile(@RequestParam String tid, @RequestParam MultipartFile file, Model model
+    public String saveFile(@Login User loginUser, @RequestParam String tid, @RequestParam MultipartFile file, Model model
     ) throws IOException {
         System.out.println("upload Controller");
         // 로그로 파일 넘어온 내용을 체크했다.
@@ -212,7 +212,15 @@ public class TeamController extends BaseEntity {
             teamService.saveTeam(team);
             model.addAttribute("img",fullPath);
         }
-        return "redirect:/loginHome";
+
+        Long curTID;
+        User user = userService.findUser(loginUser.getUID());
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+        return "redirect:/loginHome"+curTID;
     }
 
     // 기능 _ 파일 업로드시 파일명 재정의하는 메서드 구현

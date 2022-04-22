@@ -97,13 +97,13 @@
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
     <div class="py-1 text-center">
-        <a th:href="@{/loginHome}" ><img src="images/logo2.jpg" width="300px" height="300px"></a>
+        <a th:href="@{/loginHome/{curTID}(curTID=${curTID})}" ><img src="images/logo2.jpg" width="300px" height="300px"></a>
     </div>
 
     <ul class="menu">
-        <li><a th:href="@{/loginHome}">홈</a></li>
+        <li><a th:href="@{/loginHome/{curTID}(curTID=${curTID})}">홈</a></li>
         <li><a th:href="@{/users/settinguser}">내정보</a></li>
-        <li><a th:href="@{/loginHome}">그룹관리</a></li>
+        <li><a th:href="@{/teamEdit}">그룹관리</a></li>
     </ul>
 
     <div>
