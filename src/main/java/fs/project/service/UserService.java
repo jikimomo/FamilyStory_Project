@@ -2,6 +2,7 @@ package fs.project.service;
 import fs.project.domain.Team;
 import fs.project.domain.TeamEvent;
 import fs.project.domain.User;
+import fs.project.domain.UserTeam;
 import fs.project.form.FindPwForm;
 import fs.project.form.LoginForm;
 import fs.project.form.UserSetForm;
@@ -80,15 +81,19 @@ public class UserService {
 
     //uid로 user한명만 불러오기 -> 유저 레파지포리로 반환
     public User findOne(Long uid){
-        return userRepository.findOne(uid);
+        List <User> all = userRepository.findAll();
+        for (User u : all) {
+            if (u.getUID().equals(uid)) {
+                return u;
+            }
+        }
+        return null;
     }
 
     //SettingController에서 postMapping에서 updateUser를 찾아들어오고 userRepository.updateUser로 이동
     public void updateUser(Long updateUid, UserSetForm form) {
         userRepository.updateUser(updateUid, form);
     }
-
-
 
     //그룹(팀)찾기
     //teamRepository의 findTeam의 userId라는 매개변수로 리던한다.
@@ -107,21 +112,56 @@ public class UserService {
     //그룹(팀) 탈퇴하기 -> 반환값이 없고 userTeamRepository의 dropTeam이라는 메소드로 이동해서 디비를 가져온다.
     public void dropTeam(Long uid, Long tid) {
 
-        userTeamRepository.dropUserTeam(uid,tid); //user가 속한 팀을 드랍했다.
-        //근데, 현재 팀에 아무도 없다면, 그냥 팀 자체를 소멸시키자.
+        //UserTeam으로부터 삭제를 하는데 삭제를 하는 조건은 UserTeam의 tID(현재 로그인된 세션의 tID)이면서
+        //UserTeam의 user의 uID(현재 로그인된 세션의 uid)인것을 삭제한다.
+        // 유저팀에서 나를 삭제
+        userTeamRepository.deleteUserTeam(uid, tid);
 
 
-        boolean check = userTeamRepository.findDropTeam(tid);//팀을 지울지 말지
+      /*user의 main_tid가삭제할 user_team 의 tid와 같다면 user가 속한 uid값을 들고 있는
+        user_team의 uid가 일치하는 값이 하나라도 존재한다면 그걸 main_tid로 둔다.
+        */
+        if(userTeamRepository.findUser(uid).getMainTid()==tid){ //
+            //List<UserTeam> mainTeamChange = userTeamRepository.findAll();
+            List<UserTeam> mainTeamChange = userTeamRepository.findmainTeam();
+            boolean check =false;
+            for (UserTeam mtc : mainTeamChange) {
+                if (mtc.getUser().getUID()==uid) { // 다른팀을 나의 메인팀으로 바꿔줘
 
-        if(check==false){//false이면 team을 그냥 지워라.
-
-            //위의 if문 실행하는 team 삭제 메소드
-            userTeamRepository.dropTeam(tid);
-
+                    //Team의 boss를 찾은 uid 값을 넣는다.
+                    userTeamRepository.updateBossUid(mtc.getTeam().getTID(), uid);
+                    check=true;
+                    break;
+                }
+            }
+            if(check==false){
+                // 다른팀이 없으면 내 메인팀은 널이야. Team의 boss를 찾은 uid 값을 넣는다.
+                userTeamRepository.updateBossUidNull(null, uid);
+            }
         }
+        List<UserTeam> all = userTeamRepository.findAll(); //all 이라는 객체에 리스트 형식으로 유저 전체를 찾아서 치환
+
+        for (UserTeam ut : all) {
+            if (ut.getTeam().getTID().equals(tid)&&ut.isJoinUs()==true) { // 현재 가입요청을 제외한 팀 사람들만!
+                //유저팀의 팀의 사람의 TID와 로그인된 TID가 같으면서 joinus가 트루라면
+                //Team의 boss를 찾은 uid 값을 넣는다.
+                //uid라는 이름을 가진 곳에(위의 :uid) UserTeam테이블의 user의 UID와 그룹원의 tid에 업데이트 실행한다.
+                userTeamRepository.updateTeam(ut.getUser().getUID(), tid);
+                return;
+            }
+        }
+        List<UserTeam> userTeam = userTeamRepository.findAll();
+        for (UserTeam ut : userTeam) {
+            //만약 userteam의 tid와 tid의 값이 같으면서 userteam의 join_us의 값이 false 라면(그룹생성이 안되어 있다면),
+            if (ut.getTeam().getTID().equals(tid)&&ut.isJoinUs()==false) {
+                //Team의 boss를 찾은 uid 값을 넣는다.
+                userTeamRepository.deleteUserT(tid);
+            }
+        }
+        userTeamRepository.deleteContent(tid);
+        userTeamRepository.deleteTeamEvent(tid);
+        userTeamRepository.deleteTeam(tid);
     }
-
-
 
     //비밀번호 찾기
     public Optional<User> findPw(User user) {
@@ -187,11 +227,29 @@ public class UserService {
     //회원 탈퇴
     public void deleteUser(Long uid) {
 
-        userRepository.deleteUser(uid);
-
-
+        userRepository.deleteUserTeamUid(uid);
+        List<Team> team = userRepository.listTeam(uid); //boss가 탈퇴한 사용자의 팀 리스트
+        for(Team t : team){
+            List<Long> bossuid =  userRepository.bossUid(t.getTID());
+            if(bossuid.isEmpty()){
+                //테이블 지우기
+                userRepository.deleteUserTeam(t.getTID());
+                userRepository.deleteTeamEvent(t.getTID());
+                userRepository.deleteContentUid1(t.getTID());
+                userRepository.deleteTeam(t.getTID());
+            }
+            else{
+                for(Long changeBossUid : bossuid){
+                    //uid true 인거를 들고오기
+                    if(userRepository.userTeamJoinUs(changeBossUid, t.getTID()).get(0).isJoinUs()){
+                        userRepository.updateTeam(changeBossUid, t.getTID());
+                        break;
+                    }
+                }
+            }
+        }
+        userRepository.deleteUserUid(uid);
     }
-
 
     public List<Long> findTid(LocalDate date) {
         List <Long> tid = teamEventRepository.findTid(date);
@@ -199,11 +257,19 @@ public class UserService {
     }
 
     public String findEvent(Long tid) {
-        String eventName = teamEventRepository.findEvent(tid);
+        String eventName = "[";
+        eventName+=teamEventRepository.teamName(tid)+"] 오늘은 ";
+        List <String> name = teamEventRepository.findEvent(tid);
+        for(String s : name)eventName+=s+", ";
+        eventName = eventName.substring(0, eventName.length()-2);
+        eventName+="입니다!! 축하해주세요~!   - Family Story - ";
         return eventName;
     }
+
     public List<String> findPhoneNumber(Long tid){
         List<String> phoneNumber = teamEventRepository.findPhoneNumber(tid);
         return phoneNumber;
     }
+
+
 }

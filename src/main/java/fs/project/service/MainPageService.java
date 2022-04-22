@@ -42,7 +42,6 @@ public class MainPageService {
                 todayTeamEvent.add(teamEvent);
             }
         }
-
         return todayTeamEvent;
     }
 

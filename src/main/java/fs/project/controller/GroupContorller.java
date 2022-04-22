@@ -160,8 +160,6 @@ public class GroupContorller {
 
         userService.dropTeam(loginUser.getUID(),tId);
 
-
-
         return "redirect:/loginHome";
     }
 
