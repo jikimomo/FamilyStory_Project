@@ -5,6 +5,7 @@ import fs.project.form.TeamForm;
 import fs.project.repository.TeamRepository2;
 import fs.project.domain.*;
 import fs.project.service.TeamService;
+import fs.project.service.UserService;
 import fs.project.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,20 +41,41 @@ public class TeamController extends BaseEntity {
     private final TeamRepository2 teamRepository2;
 
     private final TeamService teamService;
+    private final UserService userService;
 
     // 페이지 이동 _ 회원가입 후 이동할 페이지
     @GetMapping("/AfterJoin")
-    public String AfterJoin() {
+    public String AfterJoin(@Login User loginUser, Model model) {
+
+        Long curTID;
+        User user = userService.findUser(loginUser.getUID());
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+        model.addAttribute("curTID", curTID);
+
         System.out.println("AfterJoin Page");
         return "AfterJoin";
     }
 
     // 페이지 이동 _ 그룹 생성 클릭 후 페이지로 이동
     @GetMapping("/CreateTeam")
-    public String CreateTeam(Model model,@Login User loginUser) {
+    public String CreateTeam(Model model, @Login User loginUser) {
         System.out.println("CreateTeam Page");
         model.addAttribute("TeamForm", new Team());
+
         model.addAttribute("user", loginUser.getUserID());
+
+        Long curTID;
+        User user = userService.findUser(loginUser.getUID());
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+        model.addAttribute("curTID", curTID);
         return "/CreateTeam";
     }
 
@@ -88,6 +110,7 @@ public class TeamController extends BaseEntity {
     @PostMapping(value = "/CreateTeam")
     public void  CreateTeamForm(@Valid TeamForm teamForm,@Login User loginUser, HttpServletRequest request) {
         System.out.println("CreateTeam Controller");
+//        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
 
 
         // 전달받은 데이터를 Team 테이블에 저장
@@ -185,6 +208,7 @@ public class TeamController extends BaseEntity {
 
             // 팀 테이블에 이미지 경로 저장
             team.setTeamImage(fullPath);
+            // 팀 테이블 업데이트
             teamService.saveTeam(team);
             model.addAttribute("img",fullPath);
         }
@@ -220,6 +244,7 @@ public class TeamController extends BaseEntity {
         // 유저의 그룹 가입 요청 여부
         List<Boolean> joinCheck = new ArrayList<>();
 
+        model.addAttribute("ut",ut);
         for (int i = 0; i < ut.size(); i++) {
             myTeam.add(ut.get(i).getTeam().getTeamID());
             joinCheck.add(ut.get(i).isJoinUs());
@@ -238,6 +263,23 @@ public class TeamController extends BaseEntity {
         model.addAttribute("startPage",startPage);
         model.addAttribute("endPage",endPage);
 
+        // 해당하는 팀이 있는지 없는지 크기값을 전달.
+        List<Team> teamsort = teamService.searchTeam(teamId);
+        model.addAttribute("size",teamsort.size());
+        // 유저가 속한 그룹아이디 목록
+        model.addAttribute("myTeam", myTeam);
+        // 유저의 그룹 가입 요청 여부
+        model.addAttribute("joinCheck",joinCheck);
+
+        Long curTID;
+        User user = userService.findUser(loginUser.getUID());
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+        model.addAttribute("curTID", curTID);
+
         return "/SearchingTeam";
     }
 
@@ -248,7 +290,6 @@ public class TeamController extends BaseEntity {
         System.out.println("requestTeam");
 
         User findU = teamService.findUser(loginUser.getUID());
-
 
         // 요청과 동시에 유저팀 테이블에 소속된다.
         UserTeam ut = new UserTeam();
@@ -267,8 +308,6 @@ public class TeamController extends BaseEntity {
             teamService.saveUserTeam(ut);
             res = 1; // 뷰에 전달
         }
-
-
         return res;
     }
 

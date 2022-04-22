@@ -36,6 +36,8 @@ public class LoginController {
         //이후 일치한다면 그 객체를 반환해서 loginUser에 담아주고 일치하지않는다면 null값을 넣어준다.
         User loginUser = userService.login(form.getLoginId(), form.getPassword());
 
+
+
         if (loginUser == null) {
             //오류 출력
             result.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다. ");
@@ -48,10 +50,25 @@ public class LoginController {
         // 세션에 LOGIN_USER라는 이름(SessionConst.class에 LOGIN_USER값을 "loginUser")을 가진 상자에 loginUser 객체를 담음.
         // 즉, 로그인 회원 정보를 세션에 담아놓는다.
         session.setAttribute(SessionConst.LOGIN_USER, loginUser);
-        //"loginUser"
+//"loginUser"
         // users/login으로 매핑하는 컨트롤러를 찾아간다. (HomeController에 있다)
-        // return "redirect:/loginHome";
-        return "redirect:/loginHome";
+//        return "redirect:/loginHome";
+
+        Long mainTID = loginUser.getMainTid();
+        Long curTID = loginUser.getCurTid();
+        Long tID;
+        if(mainTID == null){
+            tID = 0L;
+        }
+        else{
+            if(curTID == null){
+                tID = mainTID;
+            }
+            else{
+                tID = curTID;
+            }
+        }
+        return "redirect:/loginHome/"+tID;
     }
 
     //로그아웃 버튼 클릭 시
@@ -66,7 +83,6 @@ public class LoginController {
         // 로그인 페이지로 이동
         return "redirect:/";
     }
-
 
 
 
