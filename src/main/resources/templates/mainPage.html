@@ -7,78 +7,43 @@
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
-    <div class="jumbotron">
+
         <h1>Family Story</h1>
         <h2>메인 페이지</h2>
-        현재 함께하는 가족 : <span th:text="${team.teamID}"></span><br>
+        <div>
+            <h4>그룹 생성 및 가입</h4>
+            <a href="/AfterJoin">그룹 생성 및 가입</a>
+        </div>
+        <hr>
+
+        <div id="userData">
+        </div>
+        <button id="uploadBtn" type="button">글 올리기</button>
         <hr/>
-        <p class="lead">게시물 관련 기능</p>
-        <p>
-            <a class="btn btn-lg btn-info" href="/uploadContent">게시물 등록</a>
-            <a class="btn btn-lg btn-info" href="/uploadList">개인 페이지</a>
-        </p>
-    </div>
-    <hr>
 
-    <div>
-        <h5>그룹 생성 및 가입</h5>
-        <a class="btn btn-lg btn-info" href="/AfterJoin">그룹 생성 및 가입</a>
-    </div>
-    <hr>
+        <div id="curTeam">
+        </div>
+        <hr/>
 
-    <div>
-        <h5>내가 속한 가족그룹들</h5>
-<!--        이부분-->
-        <table class="table table-striped">
-            <tr th:each="team : ${currentTeams}">
+        <h4>내가 속한 팀들</h4>
+        <div id="myTeams">
+        </div>
+        <hr/>
 
-                <td th:text="${team.teamName}"></td>
-            </tr>
-        </table>
-    </div>
+        <h4>구성원들</h4>
+        <div id="userInSameTeam">
+        </div>
+        <hr/>
 
-    <div>
-        <h5>알림 기능</h5>
-        <table class="table table-striped">
-            <tr th:each="te : ${teamEvent}">
-                <td th:text="${te.eventName}"></td>
-                <td th:text="${te.eventDate}"></td>
-            </tr>
-        </table>
-        <table class="table table-striped">
-            <tr th:each="u : ${userTodayBirthday}">
-                <td th:text="${u.name}"></td>
-                <td th:text="${u.birthday}"></td>
-            </tr>
-        </table>
-    </div>
-    <hr>
+        <h4>알림</h4>
+        <div id="notice">
+        </div>
+        <hr/>
 
-    <h5>현재 그룹의 게시물</h5>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>사진</th> <th>설명</th> <th>장소</th> <th>시간</th>
-            <th>유저아이디</th> <th>가족아이디</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="content : ${contents}">
-            <td th:text="${content.getCID()}"></td>
-            <td>
-                <block th:each="photo : ${#strings.arraySplit(content.photoRoute,' ')}" th:remove="tag">
-                    <img th:src="${photo}" width="100"/>
-                </block>
-            </td>
-            <td th:text="${content.explanation}"></td>
-            <td th:text="${content.location}"></td>
-            <td th:text="${content.when}"></td>
-            <td th:text="${content.user.userID}"></td>
-            <td th:text="${content.team.teamID}"></td>
-        </tr>
-        </tbody>
-    </table>
+        <h4>게시물</h4>
+        <div id="contents">
+        </div>
+        <hr/>
 
     <li><a th:href="@{/users/settinguser}">내 정보 수정하기</a></li>
 
@@ -93,4 +58,343 @@
     <div th:replace="fragments/footer :: footer" /> <!-- fragments/footer에 있는 파일이 대체됨 -->
 </div> <!-- /container -->
 </body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script>
+
+    var curURL = window.location.href;
+    console.log(curURL);
+    var currentTID = curURL.charAt(curURL.length-1);
+    console.log(currentTID);
+
+    //로그인 사용자 정보를 받아옴
+    $.ajax({
+        type: "get",
+        url: "/initMainPage/loginUser",
+        datatype: 'json',
+        success: function(data) {
+            console.log(data);
+            getMyTeams();
+            initInformation(currentTID);
+
+            var userData = document.getElementById('userData');
+            userData.innerHTML = "<h4>현재 로그인한 아이디 : "+data.userID+"</h4>";
+        },
+        error: function(request, status, error) {
+            console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+        }
+    });
+
+    function getMyTeams(){
+        console.log('getMyTeams 함수 안');
+        $.ajax({
+            type: "get",
+            url: "/initMainPage/myTeams",
+            datatype: 'json',
+            success: function(data) {
+                console.log('myTeams');
+                console.log(data);
+
+                var myTeams = document.getElementById('myTeams');
+
+                data.forEach(function(item){
+                    var teamBtn = document.createElement("button");
+                    teamBtn.setAttribute("type", "button");
+                    teamBtn.setAttribute("class", "teamBtn");
+                    teamBtn.setAttribute("id", item.tid);
+                    teamBtn.addEventListener("click", getInformation);
+
+                    var teamText = document.createTextNode(item.tid);
+                    teamBtn.appendChild(teamText);
+                    myTeams.appendChild(teamBtn);
+                });
+
+            },
+            error: function(request, status, error) {
+                console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+            }
+        });
+    }
+
+    function initInformation(currentTID){
+        console.log('initInformation 함수 안');
+        console.log(currentTID);
+
+        var btn = document.getElementById('uploadBtn');
+        btn.setAttribute("onclick", "location.href='/uploadContent/"+currentTID+"'");
+        console.log(btn.getAttribute('href'));
+
+        var curTeam = document.getElementById('curTeam');
+        curTeam.innerHTML = "<h4>현재 속한 그룹(이건 TID) : "+currentTID+"</h4>";
+
+        var notice = document.getElementById('notice');
+        notice.innerHTML = '';
+
+        $.ajax({
+            type: "post",
+            url: "/initMainPage/contents",
+            data: {
+                tID : currentTID
+            },
+            datatype: 'json',
+            success: function(data) {
+                console.log('contents');
+                console.log(data);
+                showContents(data);
+            },
+            error: function(request, status, error) {
+                console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+            }
+        });
+        $.ajax({
+            type: "post",
+            url: "/initMainPage/teamEvents",
+            data: {
+                tID : currentTID
+            },
+            datatype: 'json',
+            success: function(data) {
+                console.log('teamEvents');
+                console.log(data);
+                showTeamEvent(data);
+            },
+            error: function(request, status, error) {
+                console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+            }
+        });
+        $.ajax({
+            type: "post",
+            url: "/initMainPage/todayBirthday",
+            data: {
+                tID : currentTID
+            },
+            datatype: 'json',
+            success: function(data) {
+                console.log('birthday');
+                console.log(data);
+                showBirthday(data);
+            },
+            error: function(request, status, error) {
+                console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+            }
+        });
+        $.ajax({
+            type: "post",
+            url: "/initMainPage/newRequest",
+            data: {
+                tID : currentTID
+            },
+            datatype: 'json',
+            success: function(data) {
+                console.log('newRequest');
+                console.log(data);
+                showNewRequest(data);
+            },
+            error: function(request, status, error) {
+                console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+            }
+        });
+        $.ajax({
+            type: "post",
+            url: "/initMainPage/userInSameTeam",
+            data: {
+                tID : currentTID
+            },
+            datatype: 'json',
+            success: function(data) {
+                console.log('userInSameTeam');
+                console.log(data);
+                showUserInSameTeam(data, currentTID);
+            },
+            error: function(request, status, error) {
+                console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+            }
+        });
+    }
+
+    function getInformation(evt){
+        console.log('getInformation 함수 안');
+        console.log(evt.target);
+        var currentTID = $(evt.target).attr('id');
+        console.log(currentTID);
+
+        var btn = document.getElementById('uploadBtn');
+        btn.setAttribute("onclick", "location.href='/uploadContent/"+currentTID+"'");
+        console.log(btn.getAttribute('href'));
+
+        //현재
+        var curTeam = document.getElementById('curTeam');
+        curTeam.innerHTML = "<h4>현재 속한 그룹(이건 TID) : "+currentTID+"</h4>";
+
+        var notice = document.getElementById('notice');
+        notice.innerHTML = '';
+
+        $.ajax({
+            type: "post",
+            url: "/initMainPage/contents",
+            data: {
+                tID : currentTID
+            },
+            datatype: 'json',
+            success: function(data) {
+                console.log('contents');
+                console.log(data);
+                showContents(data);
+            },
+            error: function(request, status, error) {
+                console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+            }
+        });
+        $.ajax({
+            type: "post",
+            url: "/initMainPage/teamEvents",
+            data: {
+                tID : currentTID
+            },
+            datatype: 'json',
+            success: function(data) {
+                console.log('teamEvents');
+                console.log(data);
+                showTeamEvent(data);
+            },
+            error: function(request, status, error) {
+                console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+            }
+        });
+        $.ajax({
+            type: "post",
+            url: "/initMainPage/todayBirthday",
+            data: {
+                tID : currentTID
+            },
+            datatype: 'json',
+            success: function(data) {
+                console.log('birthday');
+                console.log(data);
+                showBirthday(data);
+            },
+            error: function(request, status, error) {
+                console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+            }
+        });
+        $.ajax({
+            type: "post",
+            url: "/initMainPage/newRequest",
+            data: {
+                tID : currentTID
+            },
+            datatype: 'json',
+            success: function(data) {
+                console.log('newRequest');
+                console.log(data);
+                showNewRequest(data);
+            },
+            error: function(request, status, error) {
+                console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+            }
+        });
+        $.ajax({
+            type: "post",
+            url: "/initMainPage/userInSameTeam",
+            data: {
+                tID : currentTID
+            },
+            datatype: 'json',
+            success: function(data) {
+                console.log('userInSameTeam');
+                console.log(data);
+                showUserInSameTeam(data, currentTID);
+            },
+            error: function(request, status, error) {
+                console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+            }
+        });
+    }
+
+    function showUserInSameTeam(data, currentTID){
+        console.log('showUserInSameTeam 함수 안');
+
+        var userInSameTeam = document.getElementById('userInSameTeam');
+        userInSameTeam.innerHTML = '';
+        data.forEach(function(item){
+            var userBtn = document.createElement("button");
+            userBtn.setAttribute("type", "button");
+            userBtn.setAttribute("class", "userBtn");
+            userBtn.setAttribute("id", item.uid+" "+currentTID);
+            userBtn.addEventListener("click", movePersonalPage);
+
+            var userText = document.createTextNode(item.nickName);
+            userBtn.appendChild(userText);
+            userInSameTeam.appendChild(userBtn);
+        });
+    }
+
+    function movePersonalPage(evt){
+        var userBtnID = $(evt.target).attr('id');
+        var ids = userBtnID.split(' ');
+        console.log(ids[0]);
+        console.log(ids[1]);
+        location.href = '/uploadList/'+ids[1]+'/'+ids[0];
+    }
+
+    function showTeamEvent(data){
+        console.log('showTeamEvent 함수 안');
+
+        var notice = document.getElementById('notice');
+        data.forEach(function(item){
+            var teText = document.createElement("span");
+            teText.innerHTML = '오늘은 '+item.eventDate+'로 '+item.eventName+'입니다.<br>';
+
+            notice.appendChild(teText);
+        });
+    }
+
+    function showBirthday(data){
+        console.log('showBirthday 함수 안');
+
+        var notice = document.getElementById('notice');
+        data.forEach(function(item){
+            var bText = document.createElement("span");
+            bText.innerHTML = '오늘은 '+item.birthday+'로 '+item.nickName+'의 생일 입니다.<br>';
+
+            notice.appendChild(bText);
+        });
+    }
+
+    function showNewRequest(data){
+        console.log('showNewRequest 함수 안');
+
+        var notice = document.getElementById('notice');
+        data.forEach(function(item){
+            var nqText = document.createElement("span");
+            nqText.innerHTML = item.name+'님이 가입 요청을 보냈습니다! 그룹 관리에서 확인해주세요.<br>';
+
+            notice.appendChild(nqText);
+        });
+    }
+
+    function showContents(data){
+        console.log('showContents 함수 안');
+
+        var contents = document.getElementById('contents');
+        contents.innerHTML = '';
+        data.forEach(function(item){
+            var imgBox = document.createElement("div");
+
+            var photo = item.photoRoute.split(' ');
+            photo.forEach(function(p){
+                var img = document.createElement("img");
+                img.setAttribute("src", p);
+                img.setAttribute("width", "200px");
+                img.setAttribute("height", "160px");
+                imgBox.appendChild(img);
+            });
+
+            var imgText = document.createElement("span");
+            imgText.innerHTML = item.uid+"가 올림.... "+item.explanation+" "+item.location+" "+item.when;
+            imgBox.appendChild(imgText);
+
+            contents.appendChild(imgBox);
+       });
+    }
+</script>
 </html>

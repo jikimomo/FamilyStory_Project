@@ -26,7 +26,8 @@
                 <div>
                     <h5>현재 로그인 아이디 & 소속된 팀</h5>
                     현재 접속한 아이디 : <span th:text="${user.userID}"></span><br>
-                    현재 함께하는 가족 : <span th:text="${team.teamID}"></span><br>
+                    현재 함께하는 가족(tID) : <span th:text="${tID}"></span><br>
+                    현재 함께하는 가족(teamName) : <span th:text="${teamName}"></span><br>
                 </div>
                 <br>
 
@@ -49,7 +50,8 @@
 
             <div class="buttonBox">
                 <br>
-                <button type="button" onclick="history.back()" class="backButton">돌아가기</button>
+                <a id="back">돌아가기</a>
+<!--                <button type="button" onclick="history.back()" class="backButton">돌아가기</button>-->
                 <button type="submit" id="submitButton">등록하기</button>
             </div>
         </div>
@@ -59,7 +61,14 @@
 </div> <!-- /container -->
 </body>
 <script type="text/javascript" th:src="@{/js/changeContentImage.js}"></script>
+<script th:inline="javascript">
+    var currentTID = [[${tID}]];
+</script>
 <script>
+    var back = document.getElementById('back');
+    back.setAttribute("href", "/loginHome/"+currentTID);
+
+    console.log(currentTID);
 
     const submitButton = document.querySelector('#submitButton');
     submitButton.addEventListener('click', function(evt){
@@ -99,7 +108,7 @@
         }
         else{
             const formElem = document.querySelector('#uploadContentForm');
-            formElem.setAttribute("action", "/uploadContent");
+            formElem.setAttribute("action", "/uploadContent/"+currentTID);
             formElem.setAttribute('method', 'post');
             formElem.submit();
         }

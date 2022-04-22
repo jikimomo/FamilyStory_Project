@@ -42,6 +42,9 @@ public class UserService {
     private JavaMailSender javaMailSender;//build.gradle - implementation 'org.springframework.boot:spring-boot-starter-mail'
     private static final String FROM_ADDRESS = "multicampusgroup6@gmail.com";//송신 이메일
 
+    public User findUser(Long uid){
+        return userRepository.findUser(uid);
+    }
 
 
     @Transactional(readOnly = false)

@@ -2,7 +2,7 @@ package fs.project.service;
 
 import fs.project.domain.*;
 import fs.project.repository.ContentRepository;
-import fs.project.form.ContentInputVO;
+import fs.project.vo.ContentInputVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

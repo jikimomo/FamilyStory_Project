@@ -28,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GroupContorller {
 
+
     private final UserService userService;
     private final TeamService teamService;
     private final TeamController teamController;
@@ -54,6 +55,14 @@ public class GroupContorller {
 //        List<Item> items = itemService.findItems();
 //        model.addAttribute("items", items);
 
+        Long curTID;
+        User user = userService.findUser(loginUser.getUID());
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+        model.addAttribute("curTID", curTID);
 
         return "users/settingUserTeam";
     }
@@ -143,14 +152,22 @@ public class GroupContorller {
     @GetMapping("/{tid}/teamEdit1")
     public String groupPageEdit1(@Login User loginUser,  @PathVariable("tid") Long tId, HttpServletRequest request) {
 
+        Long curTID;
+        User user = userService.findUser(loginUser.getUID());
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+
         userService.changeMainTeam(loginUser.getUID(),tId);
         HttpSession session = request.getSession();
 
         // 세션에 LOGIN_USER라는 이름(SessionConst.class에 LOGIN_USER값을 "loginUser")을 가진 상자에 loginUser 객체를 담음.
         // 즉, 로그인 회원 정보를 세션에 담아놓는다.
-        User user = userService.findOne(loginUser.getUID());
+
         session.setAttribute(SessionConst.LOGIN_USER, user);
-        return "redirect:/loginHome";
+        return "redirect:/loginHome/"+curTID;
     }
 
     //팀 탈퇴 로직
@@ -158,8 +175,14 @@ public class GroupContorller {
     public String groupPageEdit2(@Login User loginUser,  @PathVariable("tid") Long tId, HttpServletRequest request) {
 
         userService.dropTeam(loginUser.getUID(),tId);
-
-        return "redirect:/loginHome";
+        Long curTID;
+        User user = userService.findUser(loginUser.getUID());
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+        return "redirect:/loginHome/"+curTID;
     }
 
 

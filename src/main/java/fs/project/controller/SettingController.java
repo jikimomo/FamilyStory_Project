@@ -1,11 +1,8 @@
 package fs.project.controller;
 
 import fs.project.argumentresolver.Login;
-import fs.project.domain.Team;
 import fs.project.domain.User;
-import fs.project.form.GroupEditForm;
 import fs.project.form.UserSetForm;
-import fs.project.service.ContentService;
 import fs.project.service.UserService;
 import fs.project.session.SessionConst;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +23,6 @@ import java.util.List;
 public class SettingController {
 
     private final UserService userService;
-    private final ContentService contentService;
 
     //내 정보 수정 불러오기
     //"users/settinguser"라는 url로 get매핑이 잡히고
@@ -37,7 +32,7 @@ public class SettingController {
     //리턴되는 곳은 users/settingUser라고 되어있는 html이다.
     @GetMapping("/users/settinguser")
     public String updateUser(@Login User loginUser, Model model) {
-        User user = contentService.findUser(loginUser.getUID());
+        User user = userService.findUser(loginUser.getUID());
 
         //@Login User loginUser에 현재 로그인된 로그인 세션이 담겨져 있다.
         UserSetForm userSetForm = new UserSetForm();
@@ -52,6 +47,14 @@ public class SettingController {
         model.addAttribute("userSetForm", userSetForm);
         model.addAttribute("userProfileImage", user.getUserImage());
         model.addAttribute("userCoverImage", user.getCoverImage());
+
+        Long curTID;
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+        model.addAttribute("curTID", curTID);
         return "users/settingUser";
     }
 
@@ -74,6 +77,14 @@ public class SettingController {
         session.setAttribute(SessionConst.LOGIN_USER, userService.findOne(updateUid));
 
         //"users/settingUserComplete" view페이지로 return
+        Long curTID;
+        User user = userService.findUser(loginUser.getUID());
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+        model.addAttribute("curTID", curTID);
         return "users/settingUserComplete";
 
     }
