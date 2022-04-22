@@ -45,7 +45,6 @@ public class SettingController {
         userSetForm.setEmail(loginUser.getEmail());
         userSetForm.setPhoneNumber(loginUser.getPhoneNumber());
         userSetForm.setImage(loginUser.getUserImage());
-        //
         model.addAttribute("userSetForm", userSetForm);
         return "users/settingUser";
     }

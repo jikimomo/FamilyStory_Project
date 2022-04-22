@@ -23,7 +23,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/","/css/**", "/*.ico", "/error", "/signUp","/users/findId","/users/findPw" ); // url 에는 인터셉트 먹이지마.
     }
 
-
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         //만든 애노테이션 추가. @Login

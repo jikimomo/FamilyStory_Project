@@ -46,6 +46,7 @@ public class Scheduler {
                 params.put("text", e); //보낼 문구
                 params.put("app_version", "test app 1.2");
 
+
 //              주의!!!!!! 절대 주석 풀지 마세요 !!!!!!!!!!!
 
                 /*
