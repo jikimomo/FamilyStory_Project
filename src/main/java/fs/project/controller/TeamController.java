@@ -153,7 +153,7 @@ public class TeamController extends BaseEntity {
     }
 
 
-    // 파일 업로드 경로 ( properties에 저장되어 있다.)
+    // 파일 업로드 경로 ( properties에 저장되어 있다.)  123123123
 //    @Value("${file.path}")
 //    private String fileDir;
 
