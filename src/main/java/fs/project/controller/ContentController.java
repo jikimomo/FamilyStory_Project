@@ -6,19 +6,21 @@ import fs.project.domain.User;
 import fs.project.form.ContentInputVO;
 import fs.project.service.ContentService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 @Controller
+@Slf4j
 @RequiredArgsConstructor
 public class ContentController {
 
@@ -121,4 +123,34 @@ public class ContentController {
         return "redirect:/uploadList";
     }
 
+
+
+
+    //1년 전에 올렸던 사진 보여주기
+    @ResponseBody
+    @GetMapping("/{tid}/content")
+    public void event(@PathVariable Long tid, Model model){
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date now = new Date();
+        String s = sdf.format(now); //형식 변환
+        String y = s.substring(0,4);
+        log.info("{}", y);
+        String x = s.substring(4);
+        int y1 = Integer.parseInt(y);
+        y1--;
+        String y2 = Integer.toString(y1);
+        String when1 = y2+x;
+        LocalDate when = LocalDate.parse(when1, DateTimeFormatter.ISO_DATE);//local_date로 변환
+        List<String> photoRoute = contentService.findTid(when, tid); //team_event에서 오늘날짜와 같은 tid값을 받아온다.
+
+        if(photoRoute.isEmpty()){
+            model.addAttribute("photoRoute", null);
+        }
+        for( String pr : photoRoute){
+            model.addAttribute("photoRoute", pr);
+            log.info(pr);
+            break;
+        }
+    }
 }

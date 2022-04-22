@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import javax.servlet.http.HttpServletRequest;
@@ -49,9 +48,9 @@ public class LoginController {
         // 세션에 LOGIN_USER라는 이름(SessionConst.class에 LOGIN_USER값을 "loginUser")을 가진 상자에 loginUser 객체를 담음.
         // 즉, 로그인 회원 정보를 세션에 담아놓는다.
         session.setAttribute(SessionConst.LOGIN_USER, loginUser);
-//"loginUser"
+        //"loginUser"
         // users/login으로 매핑하는 컨트롤러를 찾아간다. (HomeController에 있다)
-//        return "redirect:/loginHome";
+        // return "redirect:/loginHome";
         return "redirect:/loginHome";
     }
 

@@ -1,9 +1,11 @@
 package fs.project.service;
 import fs.project.domain.Team;
+import fs.project.domain.TeamEvent;
 import fs.project.domain.User;
 import fs.project.form.FindPwForm;
 import fs.project.form.LoginForm;
 import fs.project.form.UserSetForm;
+import fs.project.repository.TeamEventRepository;
 import fs.project.repository.TeamRepository;
 import fs.project.repository.UserRepository;
 import fs.project.repository.UserTeamRepository;
@@ -16,6 +18,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,8 +32,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
     private final UserTeamRepository userTeamRepository;
-
+    private final TeamEventRepository teamEventRepository;
     //메일보내기
+
     @Autowired // JavaMailSender 사용 위해 Autowired 필요
     private JavaMailSender javaMailSender;//build.gradle - implementation 'org.springframework.boot:spring-boot-starter-mail'
     private static final String FROM_ADDRESS = "multicampusgroup6@gmail.com";//송신 이메일
@@ -179,7 +184,7 @@ public class UserService {
         return userRepository.attendMember(tId);
     }
 
-    //회원탈퇴
+    //회원 탈퇴
     public void deleteUser(Long uid) {
 
         userRepository.deleteUser(uid);
@@ -188,4 +193,17 @@ public class UserService {
     }
 
 
+    public List<Long> findTid(LocalDate date) {
+        List <Long> tid = teamEventRepository.findTid(date);
+        return tid;
+    }
+
+    public String findEvent(Long tid) {
+        String eventName = teamEventRepository.findEvent(tid);
+        return eventName;
+    }
+    public List<String> findPhoneNumber(Long tid){
+        List<String> phoneNumber = teamEventRepository.findPhoneNumber(tid);
+        return phoneNumber;
+    }
 }

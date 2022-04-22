@@ -152,11 +152,14 @@ public class TeamController extends BaseEntity {
         }
     }
 
-    // 파일 업로드 경로 ( properties에 저장되어 있다.)
+
+    // 파일 업로드 경로 ( properties에 저장되어 있다.)  123123123
 //    @Value("${file.path}")
 //    private String fileDir;
 
-    // 기능 _ 팀 그룹 생성 시 이미지 업로드 & DB 저장
+    // 기능 _ 팀 그룹 생성 시 이미지 업로드 & DB 저장!  !!!!!!!!!!!!!!!!!!!
+
+
     @PostMapping("/upload")
     public String saveFile(@RequestParam String tid, @RequestParam MultipartFile file, Model model
     ) throws IOException {

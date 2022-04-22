@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -17,6 +18,7 @@ public class ContentRepository {
     public User findUser(Long id){
         return em.find(User.class, id);
     }
+
     public Team findTeam(Long id){
         return em.find(Team.class, id);
     }
@@ -59,5 +61,12 @@ public class ContentRepository {
     public void delete(Long id){
         Content content = em.find(Content.class, id);
         em.remove(content);
+    }
+
+    public List<String> findTid(LocalDate when, Long tid) {
+        return em.createQuery("select c.photoRoute from Content c where c.when = :when and c.team.tID = :tid")
+                .setParameter("when", when)
+                .setParameter("tid", tid)
+                .getResultList();
     }
 }
