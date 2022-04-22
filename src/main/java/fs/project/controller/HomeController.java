@@ -1,5 +1,4 @@
 package fs.project.controller;
-
 import fs.project.domain.*;
 import fs.project.service.ContentService;
 import fs.project.service.MainPageService;
@@ -13,16 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-
-
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-
 //로그인페이지인지 로그인된 홈인지 정해주는 컨트롤러
 public class HomeController {
     private final ContentService contentService;
@@ -36,6 +31,7 @@ public class HomeController {
         model.addAttribute("loginForm", new LoginForm());
         return "home";
     }
+
 
     //Login 애노테이션 생성한거 적용하기.
     @GetMapping("/loginHome")
@@ -90,4 +86,12 @@ public class HomeController {
         model.addAttribute("currentTeams", currentTeams);
         return "mainPage";
     }
+
+
+
+
+
+
+
+
 }

@@ -49,13 +49,11 @@ public class UserRepository {
                 .getResultList();
     }
 
-
     public Optional<User> findByLoginId(String loginId){
         return findAll().stream()
                 .filter(u -> u.getUserID().equals(loginId))
                 .findFirst();
     }
-
 
     public void updateUser(Long updateUid, UserSetForm form) {
         String s = "update User u " +
@@ -65,7 +63,6 @@ public class UserRepository {
                 "u.email=:newEmail,"+
                 "u.phoneNumber=:newPhoneNumber "+
                 "where u.uID = :updateUid";
-
         em.createQuery(s)
                 .setParameter("newPassword",form.getPassword())
                 .setParameter("newName",form.getName())
@@ -75,7 +72,6 @@ public class UserRepository {
                 .setParameter("updateUid", updateUid).executeUpdate();
 
     }
-
     //패스워드 수정
     public void editPassword(Long uid, String newPassword){
 
@@ -116,6 +112,34 @@ public class UserRepository {
         List<User> user = em.createQuery("select ut.user from UserTeam ut where ut.joinUs=true and ut.team.tID=:tid")
                 .setParameter("tid",tId).getResultList();
         return user;
+    }
+
+    public void deleteUser(Long uid) {
+
+        em.createQuery("delete from UserTeam ut where ut.user.uID =:uid").setParameter("uid", uid).executeUpdate();
+        em.createQuery( "delete from User u where u.uID = :uid").setParameter("uid", uid).executeUpdate();
+
+        // team에서 현재 삭제한 유저의 uid 값이 boss인애가 있다면 tid값을 도출한다.
+        // tid값을 가지고 user_team에 tid값을 둘러보는데 tid가 존재한다면 user_team 테이블의 첫번째 값을 team의 boss로 등록한다. (uid)
+        // 만약 tid가 존재하지 않는다면 team에서 boss가 uid인 것을 지운다.
+
+        List<Team> team = em.createQuery("select t from Team t where t.boss=:uid").setParameter("uid", uid).getResultList();
+        for(Team t : team){
+            List<Long> bossuid =  em.createQuery("select ut.user.uID from UserTeam ut where ut.team.tID = :tid").setParameter("tid", t.getTID()).getResultList();
+            if(bossuid.isEmpty()){
+                //테이블 지우기
+                em.createQuery("delete from Team t where t.tID =:tid").setParameter("tid", t.getTID()).executeUpdate();
+            }
+            else{
+                for(Long changeBossUid : bossuid){
+                    log.info("{}, {}------------", t.getTID(), changeBossUid);
+                    em.createQuery("update Team t set t.boss = :changeBossUid where t.tID = :tid ")
+                            .setParameter("changeBossUid", changeBossUid)
+                            .setParameter("tid", t.getTID()).executeUpdate();
+                    break;
+                }
+            }
+        }
     }
 }
 

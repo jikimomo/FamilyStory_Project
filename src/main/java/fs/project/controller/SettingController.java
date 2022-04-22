@@ -54,4 +54,22 @@ public class SettingController {
         return "users/settingUserComplete";
 
     }
+
+    //회원탈퇴
+    @GetMapping("/deleteUser")
+    public String deleteUser(@Login User loginUser, HttpServletRequest request) {
+
+//        Long deleteUser = loginUser.getUID();
+
+        userService.deleteUser(loginUser.getUID());
+
+//        //session에다가 LOGIN_USER라는 박스에 findOne(updateUid)를 담고 setAttribute해준다.
+//        session.setAttribute(SessionConst.LOGIN_USER, userService.findOne(deleteUser));
+
+        return "redirect:/";
+
+    }
+
+
+
 }

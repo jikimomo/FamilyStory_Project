@@ -56,6 +56,9 @@ dependencies {
 	//gradle 메일 보내기 의존성 추가
 
 
+	implementation group: 'net.nurigo', name: 'javaSDK', version: '2.2'
+	//coolsms
+
 }
 
 tasks.named('test') {
