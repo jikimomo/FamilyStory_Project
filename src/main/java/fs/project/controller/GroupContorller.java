@@ -34,6 +34,7 @@ public class GroupContorller {
     public String groupEditPage(@Login User loginUser, Model model) {
         // 이때, "loginForm"이라는 이름을 가진 모델에 LoginForm()의 형식을 담고 간다.
 
+
         Long findUid = loginUser.getUID();
         List<Team> team =  userService.findTeam(findUid);
 
@@ -42,6 +43,7 @@ public class GroupContorller {
         }
 
         model.addAttribute("teams", team);
+        model.addAttribute("mainChecked",loginUser.getMainTid());
         model.addAttribute("groupEditForm", new GroupEditForm());
 
 //
@@ -51,6 +53,19 @@ public class GroupContorller {
 
         return "users/settingUserTeam";
     }
+
+
+    @PostMapping("/team/editTeam")
+    @ResponseBody
+    public void setMainTeam(@Login User loginUser,@RequestParam("setId") String mainTeam,HttpServletRequest request){
+        Long Tid = teamService.findByTeamID(mainTeam);
+        teamService.updateMainTeamID(loginUser.getUID(),Tid);
+        User user = teamService.findUser(loginUser.getUID());
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConst.LOGIN_USER, user);
+
+    }
+
 
     //그룹 관리
     @GetMapping("/{tid}/teamEdit")
