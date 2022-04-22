@@ -3,7 +3,6 @@ package fs.project.repository;
 import fs.project.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.List;
@@ -15,8 +14,7 @@ public class ContentRepository {
     private final EntityManager em;
 
     /* user, team 임시 repository*/
-    public User findUser(Long id){
-        return em.find(User.class, id);
+    public User findUser(Long id){ return em.find(User.class, id);
     }
 
     public Team findTeam(Long id){
@@ -30,10 +28,7 @@ public class ContentRepository {
     }
 
     //cID에 해당하는 content를 select 하는 메서드
-    public Content findOne(Long id){
-        Content content = em.find(Content.class, id);
-        return content;
-    }
+    public Content findOne(Long id){ return em.find(Content.class, id); }
 
     //모든 content 찾는 경우 -> 아마 쓸 일이 없을 듯
 //    public List<Content> findAll(){
@@ -42,6 +37,7 @@ public class ContentRepository {
 
     //tID가 일치하는 경우의 content를 select -> 메인 페이지용
     public List<Content> findAllByT(Long tID){
+
         return em.createQuery("select c from Content c join c.team t where t.tID = :tID", Content.class)
                 .setParameter("tID", tID)
                 .setMaxResults(1000)
@@ -59,10 +55,10 @@ public class ContentRepository {
 
     //cID 값에 해당하는 content를 삭제하는 메서드
     public void delete(Long id){
+
         Content content = em.find(Content.class, id);
         em.remove(content);
     }
-
     public List<String> findTid(LocalDate when, Long tid) {
         return em.createQuery("select c.photoRoute from Content c where c.when = :when and c.team.tID = :tid")
                 .setParameter("when", when)
