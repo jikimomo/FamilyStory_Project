@@ -12,12 +12,19 @@
         ul {
             list-style-type: none;
             padding: 0px;
-            margin: 0px;
+            margin: -30px;
             width: auto;
-            background: #C3EFBE;
+            background: white;
             height: auto;
             overflow: auto;
             position: fixed;
+            border-radius: 10px;
+            color: #333;
+            border: solid 1px #2D7100;
+        }
+
+        li {
+            border: solid 1px white;
             border-radius: 10px;
         }
 
@@ -25,13 +32,16 @@
             text-decoration: none;
             padding: 10px;
             display: block;
-            color: #000;
+            color: #333333;
             font-weight: bold;
+            border-radius: 10px;
         }
 
         li a:hover {
             background: #eaea80;
-            color: black;
+            color: gray;
+            border: solid 1px white;
+            border-radius: 10px;
         }
 
         .setting {
@@ -40,12 +50,13 @@
 
         #update {
             margin-top: 30px;
-            background: #2D7100;
-            border: 0;
-            border-radius: 10px;
+            background: white;
             outline: none;
             cursor: pointer;
-            color: black;
+            border-radius: 10px;
+            color: #333;
+            border: solid 1px #2D7100;
+            font-weight: bold;
         }
 
         .image-container {
@@ -65,86 +76,144 @@
             margin-left: -15px;
         }
 
+        #logout {
+            margin-top: 20px;
+        }
     </style>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script type="text/javascript">
+        <!--이미지 미리 보여주기-->
+        $(function () {
+            $("#input-image").on('change', function () {
+                readURL(this);
+            });
+        });
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#View').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                $('#View').attr('src', "/TeamImage/apple.jpg");
+            }
+        }
+
+        $(document).ready(function (){
+            $('#pwCheck').focusout(function () {//pwCheck의 포커스가 나가면 if문 실행
+
+                if ($('#pw').val() != $('#pwCheck').val()) {
+                    $('#pwCheck').val("")
+                    $('#pwCheck').focus()
+                }
+            })
+            $('#pw').mouseover(function (){
+                console.log("over")
+                $('#pw').attr('type', 'text')
+            })
+            $('#pw').mouseleave(function (){
+                console.log("아웃")
+                $('#pw').attr('type', 'password')
+            })
+
+
+
+
+        })
+
+        // function isSame() {
+        //     var pw = document.pw.value;
+        //     var pwc = document.pwCheck.value;
+        //     if (pw.length < 6 || pw.length > 16) {
+        //         window.alert('비밀번호는 6글자 이상, 16글자 이하만 이용 가능합니다.');
+        //         document.getElementById('pw').value=document.getElementById('pwCheck').value='';
+        //         document.getElementById('same').innerHTML='';
+        //     }
+        //     if(document.getElementById('pw').value!='' && document.getElementById('pwCheck').value!='') {
+        //         if(document.getElementById('pw').value==document.getElementById('pwCheck').value) {
+        //             document.getElementById('same').innerHTML='비밀번호가 일치합니다.';
+        //             document.getElementById('same').style.color='blue';
+        //         }
+        //         else {
+        //             document.getElementById('same').innerHTML='비밀번호가 일치하지 않습니다.';
+        //             document.getElementById('same').style.color='red';
+        //         }
+        //     }
+        // }
+
+
+        // $('#pw').focusout(function () {
+        //     var pwd1 = $("#pw").val();
+        //     var pwd2 = $("#pwCheck").val();
+        //
+        //         if (#pw.value == pwCheck.value) {
+        //
+        //         } else {
+        //             // 비밀번호 불일치 이벤트 실행
+        //         }
+        //     }
+        // });
+
+    </script>
 </head>
 <body>
 <div class="container">
-<!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
+    <!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
     <div class="py-1 text-center">
         <img src="/images/logo2.jpg" width="300px" height="300px">
     </div>
 
-    <!--    메뉴 클릭시 오류 납니다...ㅜㅜ-->
     <ul class="menu">
-
         <li><a th:href="@{/loginHome}">홈</a></li>
         <li><a th:href="@{/users/settinguser}">내정보</a></li>
         <li><a th:href="@{/teamEdit}">그룹관리</a></li>
-        <li>
-            <form th:action="@{/logout}" method="post">
-                <button class="w-100 btn btn-dark btn-lg"
-                        type="submit">
-                    로그아웃
-<!--                    onclick="location.href='home.html'"-->
-                </button>
-            </form>
-        </li>
-
+        <li><a th:href="@{/deleteUser}" >탈퇴하기</a></li>
+<!--    <li><a th:href="@{/logout}" >로그아웃</a></li>-->
     </ul>
 
-
-    <form role="form" action="/users/settinguser" th:object="${userSetForm}"  method="post">
-
+<!-- SettingController의 GetMapping의 /users/settinguser로 액션을 잡고 userSetForm이라는 오브젝트(객체)에 담는다. -->
+    <form role="form" action="/users/settinguser" th:object="${userSetForm}" method="post">
         <div class="setting">
-
-
             <div class="form-group">
-
                 <label th:for="id">아이디</label>
-
-
                 <input type="text" th:field="*{id}" class="form-control"
-                       placeholder="이름을 입력하세요" th:value="*{id}" readonly
+                       placeholder="아이디를 입력하세요" th:value="*{id}" readonly
                        th:class="${#fields.hasErrors('id')}? 'form-control fieldError' : 'form-control'">
-                <div class="field-error" th:errors="*{id}" />
+                <div class="field-error" th:errors="*{id}"/>
             </div>
-
-
 
             <div class="form-group">
                 <label th:for="name">이름</label>
-                <input type="text" th:field="*{name}" class="form-control"  th:value="*{name}"
+                <input type="text" th:field="*{name}" class="form-control" th:value="*{name}"
                        placeholder="이름을 입력하세요"
                        th:class="${#fields.hasErrors('name')}? 'form-control fieldError' : 'form-control'">
-                <div class="field-error" th:errors="*{name}" />
+                <div class="field-error" th:errors="*{name}"/>
             </div>
-
 
             <div class="form-group">
                 <label th:for="password">비밀번호</label>
-                <input type="text" th:field="*{password}" class="form-control" th:value="*{password}"
+                <input type="password" th:field="*{password}" name="pw" id="pw" class="form-control"
                        placeholder="비밀번호를 입력하세요"
                        th:class="${#fields.hasErrors('password')}? 'form-control fieldError' : 'form-control'">
-                <div class="field-error" th:errors="*{password}" />
+                <div class="field-error" th:errors="*{password}"/>
             </div>
-
 
             <div class="form-group">
                 <label th:for="passwordCheck">비밀번호 확인</label>
-                <input type="text" th:field="*{passwordCheck}" class="form-control" th:value="*{passwordCheck}"
+                <input type="password" th:field="*{passwordCheck}" name="pwCheck" id="pwCheck" class="form-control"
                        placeholder="비밀번호를 입력하세요"
                        th:class="${#fields.hasErrors('passwordCheck')}? 'form-control fieldError' : 'form-control'">
-                <div class="field-error" th:errors="*{passwordCheck}" />
+                <div class="field-error" th:errors="*{passwordCheck}"/>
             </div>
-
-
 
             <div class="form-group">
                 <label th:for="nickName">닉네임</label>
                 <input type="text" th:field="*{nickName}" class="form-control" th:value="*{nickName}"
-                       placeholder="이름을 입력하세요"
+                       placeholder="닉네임을 입력하세요"
                        th:class="${#fields.hasErrors('nickName')}? 'form-control fieldError' : 'form-control'">
-                <div class="field-error" th:errors="*{nickName}" />
+                <div class="field-error" th:errors="*{nickName}"/>
             </div>
 
             <div class="form-group">
@@ -152,66 +221,72 @@
                 <input type="text" th:field="*{email}" class="form-control" th:value="*{email}"
                        placeholder="E-mail을 입력하세요"
                        th:class="${#fields.hasErrors('email')}? 'form-control fieldError' : 'form-control'">
-                <div class="field-error" th:errors="*{email}" />
+                <div class="field-error" th:errors="*{email}"/>
             </div>
 
-
             <div class="form-group">
-                <label th:for="phoneNumber">Phone_number</label>
+                <label th:for="phoneNumber">핸드폰 번호</label>
                 <input type="text" th:field="*{phoneNumber}" class="form-control" th:value="*{phoneNumber}"
-                       placeholder="E-mail을 입력하세요"
+                       placeholder="Phone_number을 입력하세요"
                        th:class="${#fields.hasErrors('phoneNumber')}? 'form-control fieldError' : 'form-control'">
-                <div class="field-error" th:errors="*{phoneNumber}" />
+                <div class="field-error" th:errors="*{phoneNumber}"/>
             </div>
 
             <div class="form-group">
-                <label th:for="image">Image</label>
-                <input type="text" th:field="*{image}" class="form-control" th:value="*{image}"
-                       placeholder="E-mail을 입력하세요"
-                       th:class="${#fields.hasErrors('image')}? 'form-control fieldError' : 'form-control'">
-                <div class="field-error" th:errors="*{image}" />
+                <label th:for="userImage">프로필 사진 선택</label>
+                <img style="width: 150px; margin-top: 5px;" id="View" class="form-control" >
+                <input style="display: block;" type="file" id="input-image">
             </div>
 
-
+            <div class="form-group">
+                <label th:for="userCoverImage">개인 커버 사진 선택</label>
+                <img style="width: 150px; margin-top: 5px;" id="ViewCover" class="form-control" >
+                <input style="display: block;" type="file" id="input-coverimage">
+            </div>
 
             <div th:if="${#fields.hasGlobalErrors()}">
-                    <p class="field-error" th:each="err : ${#fields.globalErrors()}"
-                       th:text="${err}">전체 오류 메시지</p>
-                </div>
+                <p class="field-error" th:each="err : ${#fields.globalErrors()}"
+                   th:text="${err}">전체 오류 메시지</p>
+            </div>
             <br>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" id="update"
+                    th:onclick="|location.href='@{/users/settinguser}'|">수정하기
+            </button>
         </div>
-
-
+    </form>
+    <form th:action="@{/logout}" method="post">
+        <button class="w-100 btn btn-dark btn-lg" id="logout"
+                type="submit">
+            로그아웃
+        </button>
     </form>
 </div>
 <div id="footer" th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
-<script>
-    function readImage(input) {
 
-        // 인풋 태그에 파일이 있는 경우
-        if (input.files && input.files[0]) {
-
-            // FileReader 인스턴스 생성
-            const reader = new FileReader()
-
-            // 이미지가 로드가 된 경우
-            reader.onload = e => {
-                const previewImage = document.getElementById("preview-image")
-                previewImage.src = e.target.result
-            }
-
-            // reader가 이미지 읽도록 하기
-            reader.readAsDataURL(input.files[0])
-        }
-    }
-
-    // input file에 change 이벤트 부여
-    const inputImage = document.getElementById("input-image")
-    inputImage.addEventListener("change", e => {
-        readImage(e.target)
-    })
-</script>
+<!-- function readImage(input) {-->
+<!---->
+<!-- // 인풋 태그에 파일이 있는 경우-->
+<!-- if (input.files && input.files[0]) {-->
+<!---->
+<!--// FileReader 인스턴스 생성-->
+<!--const reader = new FileReader()-->
+<!---->
+<!--// 이미지가 로드가 된 경우-->
+<!--reader.onload = e => {-->
+<!--const previewImage = document.getElementById("userImage")-->
+<!--previewImage.setAttribute(src, e.target.result);-->
+<!--}-->
+<!---->
+<!--// reader가 이미지 읽도록 하기-->
+<!--reader.readAsDataURL(input.files[0])-->
+<!--}-->
+<!--}-->
+<!---->
+<!--// input file에 change 이벤트 부여-->
+<!--const inputImage = document.getElementById("input-image")-->
+<!--inputImage.addEventListener("change", e => {-->
+<!--readImage(e.target)-->
+<!--})-->
 </html>
