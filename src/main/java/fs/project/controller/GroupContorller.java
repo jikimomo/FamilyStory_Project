@@ -34,8 +34,9 @@ public class GroupContorller {
     public String groupEditPage(@Login User loginUser, Model model) {
         // 이때, "loginForm"이라는 이름을 가진 모델에 LoginForm()의 형식을 담고 간다.
 
-
+        // 세션에 대한 정보 중에 유아디값을 얘한테 받아서 저장한다
         Long findUid = loginUser.getUID();
+        // findUid를 들고 유저서비스에 구현된 findTeam이라는 메서드로 찾아간다
         List<Team> team =  userService.findTeam(findUid);
 
         for (Team t : team) {
