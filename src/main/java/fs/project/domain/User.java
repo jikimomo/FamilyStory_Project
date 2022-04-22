@@ -42,6 +42,8 @@ public class User {
 
     private Long mainTid;
 
+    private String coverImage;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserTeam> teams = new ArrayList<>();
 

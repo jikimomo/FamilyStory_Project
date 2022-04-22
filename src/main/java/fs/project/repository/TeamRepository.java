@@ -93,16 +93,18 @@ public class TeamRepository {
         return em.find(Content.class, id);
     }
 
-
+    //
     public List<Team> findTeam(Long userId) {
         return em.createQuery("select t from Team t, User u, UserTeam ut where ut.user.uID=u.uID and t.tID=ut.team.tID and ut.user.uID = :uId", Team.class).setParameter("uId", userId).getResultList();
     }
 
+    //
     public void changeMainTeam(Long uid, Long tid) {
         String s = "update User u set u.mainTid = :tid where u.uID= :uid";
         em.createQuery(s).setParameter("tid", tid).setParameter("uid", uid).executeUpdate();
     }
 
+    //
     public void updateMainTeamID(Long uid, Long tID) {
         String s = "update User u set u.mainTid = :tID where u.uID = :uid";
         em.createQuery(s).setParameter("tID", tID).setParameter("uid", uid).executeUpdate();

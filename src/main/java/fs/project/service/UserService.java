@@ -78,40 +78,48 @@ public class UserService {
         return null;
     }
 
-
+    //uid로 user한명만 불러오기 -> 유저 레파지포리로 반환
     public User findOne(Long uid){
         return userRepository.findOne(uid);
     }
 
-
+    //SettingController에서 postMapping에서 updateUser를 찾아들어오고 userRepository.updateUser로 이동
     public void updateUser(Long updateUid, UserSetForm form) {
         userRepository.updateUser(updateUid, form);
     }
 
 
+
+    //그룹(팀)찾기
+    //teamRepository의 findTeam의 userId라는 매개변수로 리던한다.
+    //타입은 List형식
     public List<Team> findTeam(Long userId){
         return teamRepository.findTeam(userId);
     }
 
+    //메인그룹(팀) 바꾸기
+    //teamRepository의 changeMainTeam로 메소드로 이동해서 디비를 가져온다
     public void changeMainTeam(Long uid, Long tid) {
         teamRepository.changeMainTeam(uid, tid);
     }
 
 
+    //그룹(팀) 탈퇴하기 -> 반환값이 없고 userTeamRepository의 dropTeam이라는 메소드로 이동해서 디비를 가져온다.
     public void dropTeam(Long uid, Long tid) {
 
-        userTeamRepository.dropUserTeam(uid,tid); // user가 속한 팀을 드랍했다.
+        userTeamRepository.dropUserTeam(uid,tid); //user가 속한 팀을 드랍했다.
         //근데, 현재 팀에 아무도 없다면, 그냥 팀 자체를 소멸시키자.
 
-        boolean check = userTeamRepository.findDropTeam(tid);
 
-        if(check==false){//team 을 그냥 지워라.
+        boolean check = userTeamRepository.findDropTeam(tid);//팀을 지울지 말지
 
+        if(check==false){//false이면 team을 그냥 지워라.
+
+            //위의 if문 실행하는 team 삭제 메소드
             userTeamRepository.dropTeam(tid);
 
         }
     }
-
 
 
 
@@ -127,13 +135,7 @@ public class UserService {
         return null;
     }
 
-
-
-
-
-
-
-    @Async                  //없으면 메일이 보내지기전까지 다음 작업 수행하지 않음 (페이지 전환 지연 방지를 위함)
+    @Async //없으면 메일이 보내지기전까지 다음 작업 수행하지 않음 (페이지 전환 지연 방지를 위함)
     public void mailSend(FindPwForm findPwForm){
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(findPwForm.getAddress());                     //수신자
@@ -163,6 +165,7 @@ public class UserService {
         userRepository.editPassword(uId, str);
     }
 
+
     public Long findBoss(Long tid) {
         return userRepository.findBoss(tid);
     }
@@ -181,13 +184,13 @@ public class UserService {
         return userRepository.attendMember(tId);
     }
 
+    //회원 탈퇴
     public void deleteUser(Long uid) {
 
         userRepository.deleteUser(uid);
 
 
     }
-
 
 
     public List<Long> findTid(LocalDate date) {

@@ -36,13 +36,13 @@ public class UserRepository {
         return null;
     }
 
-    //user 전체 조회.
+    //user 전체 조회
     public List<User> findAll(){
         List<User> result = em.createQuery("select u from User u", User.class).getResultList();
         return result;
     }
 
-    //userId로 user 찾기.
+    //userId로 user 찾기
     public List<User> findUserId(String userId) {
         return em.createQuery("select u from User u where u.userID = :userId", User.class)
                 .setParameter("userId", userId)
@@ -55,6 +55,7 @@ public class UserRepository {
                 .findFirst();
     }
 
+    //설정_마이페이지 유저 정보 수정(이름,비밀번호,닉네임,이메일,폰넘버)
     public void updateUser(Long updateUid, UserSetForm form) {
         String s = "update User u " +
                 "set u.password = :newPassword ," +
@@ -63,6 +64,7 @@ public class UserRepository {
                 "u.email=:newEmail,"+
                 "u.phoneNumber=:newPhoneNumber "+
                 "where u.uID = :updateUid";
+
         em.createQuery(s)
                 .setParameter("newPassword",form.getPassword())
                 .setParameter("newName",form.getName())
@@ -72,6 +74,7 @@ public class UserRepository {
                 .setParameter("updateUid", updateUid).executeUpdate();
 
     }
+
     //패스워드 수정
     public void editPassword(Long uid, String newPassword){
 
@@ -114,6 +117,7 @@ public class UserRepository {
         return user;
     }
 
+    //회원탈퇴
     public void deleteUser(Long uid) {
 
         em.createQuery("delete from UserTeam ut where ut.user.uID =:uid").setParameter("uid", uid).executeUpdate();
@@ -129,6 +133,7 @@ public class UserRepository {
             if(bossuid.isEmpty()){
                 //테이블 지우기
                 em.createQuery("delete from Team t where t.tID =:tid").setParameter("tid", t.getTID()).executeUpdate();
+
             }
             else{
                 for(Long changeBossUid : bossuid){
@@ -141,6 +146,7 @@ public class UserRepository {
             }
         }
     }
+
 }
 
 
