@@ -93,8 +93,18 @@ public class GroupContorller {
         model.addAttribute("teamMember", teamMember);
         model.addAttribute("teamBoss", GroupBoss);
 
+        String photoRoute = teamService.findTeam(tId).getTeamImage();
+
         model.addAttribute("team",teamService.findTeam(tId));
-        model.addAttribute("photo",teamService.findTeam(tId).getTeamImage());
+
+
+        if(photoRoute != null){
+            model.addAttribute("photo",photoRoute);
+        }
+        else{
+            photoRoute = "/AdminImage/temp.png";
+            model.addAttribute("photo",photoRoute);
+        }
 
         if(loginUser.getUID()==findBossUid){
             return "team/editBossTeam";
