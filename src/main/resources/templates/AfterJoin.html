@@ -57,6 +57,14 @@
     </div>
 </div>
 
+<form th:action="@{/logout}" method="post">
+    <button class="w-100 btn btn-dark btn-lg"
+            type="submit">
+        로그아웃
+        <!--                    onclick="location.href='home.html'"-->
+    </button>
+</form>
+
 <div th:replace="./fragments/footer :: footer"/>
 </body>
 </html>

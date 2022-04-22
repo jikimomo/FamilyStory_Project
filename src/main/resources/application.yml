@@ -41,4 +41,6 @@ logging.level:
 # org.hibernate.type: trace
 
 file:
-  path: C:/Users/bae10/Desktop/family_story/project/src/main/resources/static/TeamImage/
+  path: C:/Users/yeon/IdeaProjects/FamilyStory_Project/src/main/resources/static/TeamImage/
+
+

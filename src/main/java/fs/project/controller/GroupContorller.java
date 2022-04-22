@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -41,7 +42,14 @@ public class GroupContorller {
         // 세션에 대한 정보 중에 유아디값을 얘한테 받아서 저장한다
         Long findUid = loginUser.getUID();
         // findUid를 들고 유저서비스에 구현된 findTeam이라는 메서드로 찾아간다
-        List<Team> team =  userService.findTeam(findUid);
+        List<Team> team =  new ArrayList<>();
+
+        List<UserTeam> ut = teamService.findByUID(loginUser.getUID());
+        for(UserTeam uteam :ut){
+            if(uteam.isJoinUs()==true){
+                team.add(uteam.getTeam());
+            }
+        }
 
         for (Team t : team) {
             System.out.println("t.getTeamID() = " + t.getTeamID());
@@ -55,6 +63,14 @@ public class GroupContorller {
 //        List<Item> items = itemService.findItems();
 //        model.addAttribute("items", items);
 
+        Long curTID;
+        User user = userService.findUser(loginUser.getUID());
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+        model.addAttribute("curTID", curTID);
 
         return "users/settingUserTeam";
     }
@@ -62,9 +78,8 @@ public class GroupContorller {
 
     @PostMapping("/team/editTeam")
     @ResponseBody
-    public void setMainTeam(@Login User loginUser,@RequestParam("setId") String mainTeam,HttpServletRequest request){
-        Long Tid = teamService.findByTeamID(mainTeam);
-        teamService.updateMainTeamID(loginUser.getUID(),Tid);
+    public void setMainTeam(@Login User loginUser,@RequestParam("setId") String Tid, HttpServletRequest request){
+        teamService.updateMainTeamID(loginUser.getUID(), Long.parseLong(Tid));
         User user = teamService.findUser(loginUser.getUID());
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_USER, user);
@@ -105,6 +120,14 @@ public class GroupContorller {
             photoRoute = "/AdminImage/temp.png";
             model.addAttribute("photo",photoRoute);
         }
+        Long curTID;
+        User user = userService.findUser(loginUser.getUID());
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+        model.addAttribute("curTID", curTID);
 
         if(loginUser.getUID()==findBossUid){
             return "team/editBossTeam";
@@ -118,7 +141,7 @@ public class GroupContorller {
     }
 
     @PostMapping("/{tid}/teamEdit")
-    public String AcceptMember(@RequestParam("userId") String userId, @RequestParam("tId") Long tId){
+    public String AcceptMember(@Login User loginUser, @RequestParam("userId") String userId, @RequestParam("tId") Long tId, Model model){
         UserTeam ut = teamService.findUserTeam(userId,tId).get(0);
         ut.setJoinUs(true);
         teamService.saveUserTeam(ut);
@@ -127,13 +150,31 @@ public class GroupContorller {
         if(user.getMainTid()==null){
             teamService.updateMainTeamID(user.getUID(),tId);
         }
+
+        Long curTID;
+        User lUser = userService.findUser(loginUser.getUID());
+        if(lUser.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = lUser.getCurTid();
+        }
+        model.addAttribute("curTID", curTID);
         return "team/editTeam";
     }
+
     @PostMapping("/{tid}/deniedMember")
-    public String DeniedMember(@RequestParam("userId") String userId, @RequestParam("tId") Long tId){
+    public String DeniedMember(@Login User loginUser, @RequestParam("userId") String userId, @RequestParam("tId") Long tId, Model model){
         UserTeam ut = teamService.findUserTeam(userId,tId).get(0);
         teamService.removeUTID(ut.getUtID());
 
+        Long curTID;
+        User user = userService.findUser(loginUser.getUID());
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+        model.addAttribute("curTID", curTID);
         return "team/editTeam";
     }
 
@@ -144,14 +185,22 @@ public class GroupContorller {
     @GetMapping("/{tid}/teamEdit1")
     public String groupPageEdit1(@Login User loginUser,  @PathVariable("tid") Long tId, HttpServletRequest request) {
 
+        Long curTID;
+        User user = userService.findUser(loginUser.getUID());
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+
         userService.changeMainTeam(loginUser.getUID(),tId);
         HttpSession session = request.getSession();
 
         // 세션에 LOGIN_USER라는 이름(SessionConst.class에 LOGIN_USER값을 "loginUser")을 가진 상자에 loginUser 객체를 담음.
         // 즉, 로그인 회원 정보를 세션에 담아놓는다.
-        User user = userService.findOne(loginUser.getUID());
+
         session.setAttribute(SessionConst.LOGIN_USER, user);
-        return "redirect:/loginHome";
+        return "redirect:/loginHome/"+curTID;
     }
 
     //팀 탈퇴 로직
@@ -159,8 +208,14 @@ public class GroupContorller {
     public String groupPageEdit2(@Login User loginUser,  @PathVariable("tid") Long tId, HttpServletRequest request) {
 
         userService.dropTeam(loginUser.getUID(),tId);
-
-        return "redirect:/loginHome";
+        Long curTID;
+        User user = userService.findUser(loginUser.getUID());
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+        return "redirect:/loginHome/"+curTID;
     }
 
 
@@ -169,7 +224,7 @@ public class GroupContorller {
 
     // 기능 _ 팀 그룹 생성 시 이미지 업로드 & DB 저장
     @PostMapping("/{tid}/updateTeamImage")
-    public String updateTeamImage(@PathVariable("tid") Long tId, @RequestParam MultipartFile file, Model model
+    public String updateTeamImage(@Login User loginUser, @PathVariable("tid") Long tId, @RequestParam MultipartFile file, Model model
     ) throws IOException {
         System.out.println("upload Controller");
         // 로그로 파일 넘어온 내용을 체크했다.
@@ -193,6 +248,15 @@ public class GroupContorller {
             str=fullPath;
             model.addAttribute("img",fullPath);
         }
+
+        Long curTID;
+        User user = userService.findUser(loginUser.getUID());
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+        model.addAttribute("curTID", curTID);
 
         return "redirect:/"+tId+"/teamEdit";
     }
