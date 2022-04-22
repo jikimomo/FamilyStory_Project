@@ -25,7 +25,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GroupContorller {
 
-
     private final UserService userService;
     private final TeamService teamService;
 
@@ -142,8 +141,6 @@ public class GroupContorller {
     public String groupPageEdit2(@Login User loginUser,  @PathVariable("tid") Long tId, HttpServletRequest request) {
 
         userService.dropTeam(loginUser.getUID(),tId);
-
-
 
         return "redirect:/loginHome";
     }

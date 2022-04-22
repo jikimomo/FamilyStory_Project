@@ -56,21 +56,26 @@ public class UserRepository {
     }
 
     //설정_마이페이지 유저 정보 수정(이름,비밀번호,닉네임,이메일,폰넘버)
-    public void updateUser(Long updateUid, UserSetForm form) {
+    public void updateUser(Long updateUid, User user) {
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@"+user.getUserImage());
         String s = "update User u " +
                 "set u.password = :newPassword ," +
                 "u.name=:newName,"+
                 "u.nickName=:newNickName,"+
                 "u.email=:newEmail,"+
-                "u.phoneNumber=:newPhoneNumber "+
+                "u.phoneNumber=:newPhoneNumber, "+
+                "u.userImage=:newUserImage, "+
+                "u.coverImage=:newCoverImage "+
                 "where u.uID = :updateUid";
 
         em.createQuery(s)
-                .setParameter("newPassword",form.getPassword())
-                .setParameter("newName",form.getName())
-                .setParameter("newNickName",form.getNickName())
-                .setParameter("newEmail",form.getEmail())
-                .setParameter("newPhoneNumber",form.getPhoneNumber())
+                .setParameter("newPassword",user.getPassword())
+                .setParameter("newName",user.getName())
+                .setParameter("newNickName",user.getNickName())
+                .setParameter("newEmail",user.getEmail())
+                .setParameter("newPhoneNumber",user.getPhoneNumber())
+                .setParameter("newUserImage",user.getUserImage())
+                .setParameter("newCoverImage",user.getCoverImage())
                 .setParameter("updateUid", updateUid).executeUpdate();
 
     }
@@ -120,6 +125,7 @@ public class UserRepository {
     //회원탈퇴
     public void deleteUser(Long uid) {
 
+        em.createQuery("delete from Content c where c.user.uID = :uid").setParameter("uid", uid).executeUpdate();
         em.createQuery("delete from UserTeam ut where ut.user.uID =:uid").setParameter("uid", uid).executeUpdate();
         em.createQuery( "delete from User u where u.uID = :uid").setParameter("uid", uid).executeUpdate();
 
