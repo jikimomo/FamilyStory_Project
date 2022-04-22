@@ -4,11 +4,11 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <meta charset="utf-8">
     <link th:href="@{/css/bootstrap.min.css}"
-          href="../css/bootstrap.min.css" rel="stylesheet">
+          rel="stylesheet">
     <style>
         .container {
-            /*max-width: 560px;*/
-            max-width: 700px;
+            /*max-width: 700px;*/
+            width: 700px;
         }
 
         .field-error {
@@ -17,15 +17,22 @@
         }
 
         ul {
-
             list-style-type: none;
             padding: 0px;
-            margin: 0px;
+            margin-top: -550px;
+            margin-left: -100px;
             width: auto;
-            background: lightgray;
+            background: white;
             height: auto;
             overflow: auto;
             position: fixed;
+            border-radius: 10px;
+            color: #333;
+            border: solid 1px #2D7100;
+        }
+
+        li {
+            border: solid 1px white;
             border-radius: 10px;
         }
 
@@ -33,13 +40,16 @@
             text-decoration: none;
             padding: 10px;
             display: block;
-            color: #000;
+            color: #333333;
             font-weight: bold;
+            border-radius: 10px;
         }
 
         li a:hover {
             background: #eaea80;
-            color: black;
+            color: gray;
+            border: solid 1px white;
+            border-radius: 10px;
         }
 
 
@@ -121,6 +131,13 @@
             <!--            <img th:src="${team.teamImage}" width="100"/>-->
         </div>
 
+        <ul class="menu">
+            <li><a th:href="@{/loginHome/{curTID}(curTID=${curTID})}">홈</a></li>
+            <li><a th:href="@{/users/settinguser}">내정보</a></li>
+            <li><a th:href="@{/teamEdit}">내그룹</a></li>
+<!--            <li><a id="deleteAccount">탈퇴하기</a></li>-->
+        </ul>
+
         <div class="mb-3">
             <div>
                 <input class="form-control" type="file" name="file" id="file"/>
@@ -133,10 +150,6 @@
     <br>
     <br>
 
-    <a th:href="@{/loginHome/{curTID}(curTID=${curTID})}">홈</a>
-    <a th:href="@{/users/settinguser}">내정보</a>
-    <a th:href="@{/teamEdit}">그룹관리</a>
-    <br><br>
 
     내가 그룹장이야~
 
