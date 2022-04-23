@@ -207,8 +207,9 @@ public class UserRepository {
         return em.find(User.class, uid);
     }
 
-    public User findUser(Long updateUid) {
-        return em.find(User.class, updateUid);
+    public User findUser(Long uid) {
+
+        return em.find(User.class, uid);
     }
 }
 
