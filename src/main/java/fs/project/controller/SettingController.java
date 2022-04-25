@@ -1,9 +1,7 @@
 package fs.project.controller;
 
 import fs.project.argumentresolver.Login;
-import fs.project.domain.Team;
 import fs.project.domain.User;
-import fs.project.form.GroupEditForm;
 import fs.project.form.UserSetForm;
 import fs.project.service.UserService;
 import fs.project.session.SessionConst;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,17 +32,29 @@ public class SettingController {
     //리턴되는 곳은 users/settingUser라고 되어있는 html이다.
     @GetMapping("/users/settinguser")
     public String updateUser(@Login User loginUser, Model model) {
+        User user = userService.findUser(loginUser.getUID());
+
         //@Login User loginUser에 현재 로그인된 로그인 세션이 담겨져 있다.
         UserSetForm userSetForm = new UserSetForm();
-        userSetForm.setId(loginUser.getUserID());
-        userSetForm.setPassword(loginUser.getPassword());
-        userSetForm.setPasswordCheck(loginUser.getPassword());
-        userSetForm.setName(loginUser.getName());
-        userSetForm.setNickName(loginUser.getNickName());
-        userSetForm.setEmail(loginUser.getEmail());
-        userSetForm.setPhoneNumber(loginUser.getPhoneNumber());
-        userSetForm.setImage(loginUser.getUserImage());
+        userSetForm.setId(user.getUserID());
+        userSetForm.setPassword(user.getPassword());
+        userSetForm.setPasswordCheck(user.getPassword());
+        userSetForm.setName(user.getName());
+        userSetForm.setNickName(user.getNickName());
+        userSetForm.setEmail(user.getEmail());
+        userSetForm.setPhoneNumber(user.getPhoneNumber());
+        //
         model.addAttribute("userSetForm", userSetForm);
+        model.addAttribute("userProfileImage", user.getUserImage());
+        model.addAttribute("userCoverImage", user.getCoverImage());
+
+        Long curTID;
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+        model.addAttribute("curTID", curTID);
         return "users/settingUser";
     }
 
@@ -53,7 +62,7 @@ public class SettingController {
     //settingUser.html에서 수정하기를 누르면 UserSetForm이라는 객체의 form에 내용이 담겨져 오고
     //loginUser.getUID()로 현재 로그인된 uID찾고 userService의 updateUser로 정보를 보낸다 -> userService로 이동
     @PostMapping("/users/settinguser")
-    public String updateUser(@Login User loginUser, @ModelAttribute UserSetForm form, Model model, HttpServletRequest request) {
+    public String updateUser(@Login User loginUser, @ModelAttribute UserSetForm form, Model model, HttpServletRequest request) throws Exception {
 
         //Long타입의 updateUid라는 객체에 현재 로그인된 유저의 ID를 getUID로 가져온다.
         Long updateUid = loginUser.getUID();
@@ -68,6 +77,14 @@ public class SettingController {
         session.setAttribute(SessionConst.LOGIN_USER, userService.findOne(updateUid));
 
         //"users/settingUserComplete" view페이지로 return
+        Long curTID;
+        User user = userService.findUser(loginUser.getUID());
+        if(user.getCurTid() == null){
+            curTID = 0L;
+        }else{
+            curTID = user.getCurTid();
+        }
+        model.addAttribute("curTID", curTID);
         return "users/settingUserComplete";
 
     }

@@ -24,6 +24,9 @@ public class Team{
 
     private String teamImage;
 
+    @NotNull
+    private Long boss;
+
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<UserTeam> users = new ArrayList<>();
 
@@ -33,7 +36,6 @@ public class Team{
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<Content> contents = new ArrayList<>();
 
-    @NotNull
-    private Long boss;
+
 
 }

@@ -352,6 +352,10 @@ function removeAllChildNods(el) {
     back.setAttribute("href", "/loginHome/"+currentTID);
 
     console.log(currentTID);
+    var back = document.getElementById('back');
+    back.setAttribute("href", "/loginHome/"+currentTID);
+
+    console.log(currentTID);
 
     const submitButton = document.querySelector('#submitButton');
     submitButton.addEventListener('click', function(evt){

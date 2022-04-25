@@ -6,68 +6,147 @@
         <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
         <h2>개인 페이지</h2>
-        <h4>현재 로그인 아이디 & 소속된 팀</h4>
-        <div>
-            현재 접속한 아이디 : <span th:text="${user.userID}"></span><br>
-            현재 함께하는 가족 : <span th:text="${team.teamID}"></span><br>
+        <div id="userInfo">
         </div>
-        <br>
 
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>사진</th> <th>설명</th> <th>장소</th> <th>시간</th>
-                <th>유저아이디</th> <th>가족아이디</th> <th>수정</th> <th>삭제</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="content : ${contents}">
-                <td th:text="${content.cID}"></td>
-                <td>
-                    <block th:each="photo : ${#strings.arraySplit(content.photoRoute,' ')}" th:remove="tag">
-                        <img th:src="${photo}" width="150"/>
-                    </block>
-                </td>
-                <td th:text="${content.explanation}"></td>
-                <td th:text="${content.location}"></td>
-                <td th:text="${content.when}"></td>
-                <td th:text="${content.user.userID}"></td>
-                <td th:text="${content.team.teamID}"></td>
-                <td>
-                    <a th:href="'javascript:changeContent('+${content.cID}+')'" class="btn btn-danger">
-                        수정
-                    </a>
-                </td>
-                <td>
-                    <a href="#"
-                       th:href="'javascript:deleteContent('+${content.cID}+')'" class="btn btn-danger">
-                        삭제
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div id="contents">
+        </div>
 
-
-        <br/>
         <div th:replace="fragments/footer :: footer" />
     </div> <!-- /container -->
 </body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script>
 
-    function changeContent(id) {
+    var curURL = window.location.href;
+    console.log(curURL);
+    var tID = curURL.charAt(curURL.length-3);
+    var uID = curURL.charAt(curURL.length-1); //현재 페이지 유저
+    var loginUID;
+    console.log(tID);
+    console.log(uID);
+
+    var userInfo = document.getElementById('userInfo');
+    userInfo.innerHTML = '현재 그룹 아이디 : '+tID+'<br>';
+
+    //로그인 유저, 현재 페이지 유저, 컨텐츠 값을 json으로 받아오기
+    $.ajax({
+        type: "get",
+        url: "/uploadList/loginUser",
+        datatype: 'json',
+        success: function(data) {
+            console.log(data);
+            var userInfo = document.getElementById('userInfo');
+            userInfo.innerHTML += '현재 로그인 아이디 : '+data.uid+'<br>';
+            loginUID = data.uid;
+            getData();
+        },
+        error: function(request, status, error) {
+            console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+        }
+    });
+
+    //로그인 정보를 가져 온 후에 페이지 유저와 컨텐츠 정보를 가져옴
+    function getData(){
+        $.ajax({
+            type: "get",
+            url: "/uploadList/pageUser",
+            data: {
+                uID : uID
+            },
+            datatype: 'json',
+            success: function(data) {
+                console.log(data);
+                var userInfo = document.getElementById('userInfo');
+                userInfo.innerHTML += '현재 페이지 유저 아이디 : '+data.uid+'<br>';
+            },
+            error: function(request, status, error) {
+                console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            url: "/uploadList/contents",
+            data: {
+                uID : uID,
+                tID : tID
+            },
+            datatype: 'json',
+            success: function(data) {
+                console.log(data);
+                showContents(data);
+            },
+            error: function(request, status, error) {
+                console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+            }
+        });
+    }
+
+
+    function showContents(data){
+        console.log('showContents 함수 안');
+
+        var contents = document.getElementById('contents');
+        contents.innerHTML = '';
+        data.forEach(function(item){
+            var imgBox = document.createElement("div");
+
+            var photo = item.photoRoute.split(' ');
+            photo.forEach(function(p){
+                var img = document.createElement("img");
+                img.setAttribute("src", p);
+                img.setAttribute("width", "200px");
+                img.setAttribute("height", "160px");
+                imgBox.appendChild(img);
+            });
+
+            var imgText = document.createElement("span");
+            imgText.innerHTML = item.explanation+" "+item.location+" "+item.when;
+            imgBox.appendChild(imgText);
+
+            if(loginUID == uID){
+                //수정버튼
+                var changeBtn = document.createElement("button");
+                changeBtn.setAttribute("type", "button");
+                changeBtn.setAttribute("class", "changeBtn");
+                changeBtn.setAttribute("id", item.cid);
+                changeBtn.addEventListener("click", changeContent);
+
+                var changeText = document.createTextNode("변경하기");
+                changeBtn.appendChild(changeText);
+                imgBox.appendChild(changeBtn);
+
+                //삭제버튼
+                var deleteBtn = document.createElement("button");
+                deleteBtn.setAttribute("type", "button");
+                deleteBtn.setAttribute("class", "deleteBtn");
+                deleteBtn.setAttribute("id", item.cid);
+                deleteBtn.addEventListener("click", deleteContent);
+
+                var deleteText = document.createTextNode("삭제하기");
+                deleteBtn.appendChild(deleteText);
+                imgBox.appendChild(deleteBtn);
+            }
+
+            contents.appendChild(imgBox);
+       });
+    }
+
+    function changeContent(evt) {
+        var changeBtnID = $(evt.target).attr('id');
         var form = document.createElement("form");
         form.setAttribute("method", "post");
-        form.setAttribute("action", "/uploadList/" + id + "/changeForm");
+        form.setAttribute("action", "/uploadList/" + changeBtnID + "/changeForm");
         document.body.appendChild(form);
         form.submit();
     }
 
-    function deleteContent(id) {
+    function deleteContent(evt) {
+        var deleteBtnID = $(evt.target).attr('id');
         var form = document.createElement("form");
         form.setAttribute("method", "post");
-        form.setAttribute("action", "/uploadList/" + id + "/delete");
+        form.setAttribute("action", "/uploadList/" + deleteBtnID + "/delete");
         document.body.appendChild(form);
         form.submit();
     }

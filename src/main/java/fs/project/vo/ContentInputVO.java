@@ -1,4 +1,4 @@
-package fs.project.form;
+package fs.project.vo;
 
 import lombok.Getter;
 

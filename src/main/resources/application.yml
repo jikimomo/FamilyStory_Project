@@ -20,7 +20,7 @@ spring:
     # show-sql:
 
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         # show_sql: true
@@ -41,4 +41,6 @@ logging.level:
 # org.hibernate.type: trace
 
 file:
-  path: C:/Users/bae10/Desktop/family_story/project/src/main/resources/static/TeamImage/
+  path: C:/Users/yeon/IdeaProjects/FamilyStory_Project/src/main/resources/static/TeamImage/
+
+
