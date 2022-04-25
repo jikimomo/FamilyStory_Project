@@ -77,7 +77,11 @@ public class HomeController {
         if (user.getMainTid()==null) {
             return "AfterJoin";
         } else{
-            return "redirect:/loadMainPage/" + curTID;
+            if(curTID != 0L)
+                return "redirect:/loadMainPage/" + curTID;
+            else{
+                return "redirect:/loadMainPage/" + user.getMainTid();
+            }
         }
     }
 
@@ -106,14 +110,14 @@ public class HomeController {
 //        model.addAttribute("userTodayBirthday", userTodayBirthday);
 //        model.addAttribute("newRequestJoinUs", newRequestJoinUs);
 
-        Long curTID;
-        User user = userService.findUser(loginUser.getUID());
-        if(user.getCurTid() == null){
-            curTID = 0L;
-        }else{
-            curTID = user.getCurTid();
-        }
-        model.addAttribute("curTID", curTID);
+//        Long curTID;
+//        User user = userService.findUser(loginUser.getUID());
+//        if(user.getCurTid() == null){
+//            curTID = 0L;
+//        }else{
+//            curTID = user.getCurTid();
+//        }
+        model.addAttribute("curTID", tID);
 
         return "mainPage";
     }

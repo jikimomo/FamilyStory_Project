@@ -58,6 +58,20 @@ public class UserTeamRepository {
                 .executeUpdate();
     }
 
+    public void updateCurTID(Long tid, Long uid){
+
+        em.createQuery("update User u set u.curTid = :tid where u.uID = :uid")
+                .setParameter("tid",tid).setParameter("uid", uid)
+                .executeUpdate();
+    }
+
+    public void updateCurTIDNull(Long tid, Long uid){
+
+        em.createQuery("update User u set u.curTid = :tid where u.uID = :uid")
+                .setParameter("tid",null).setParameter("uid", uid)
+                .executeUpdate();
+    }
+
     public Team findTeam(Long tid){
         return em.find(Team.class, tid);
     }
