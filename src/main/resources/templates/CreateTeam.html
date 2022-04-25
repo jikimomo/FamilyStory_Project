@@ -279,7 +279,7 @@
             pathpoint = obj.value.lastIndexOf('.');
             filepoint = obj.value.substring(pathpoint+1,obj.length);
             filetype = filepoint.toLowerCase();
-            if(filetype=='jpg' || filetype=='gif' || filetype=='png' || filetype=='jpeg' || filetype=='bmp') {
+            if(filetype=='jpg' || filetype=='gif' || filetype=='png' || filetype=='jpeg' || filetype=='bmp' || filetype=='svg' || filetype=='tiff' || filetype=='jfif' || filetype=='tif') {
                 // 정상적인 이미지 확장자 파일인 경우
                 readURL(this)
             } else {
