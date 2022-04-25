@@ -5,7 +5,6 @@ import fs.project.domain.Team;
 import fs.project.domain.User;
 import fs.project.domain.UserTeam;
 import fs.project.form.GroupEditForm;
-import fs.project.form.LoginForm;
 import fs.project.service.TeamService;
 import fs.project.service.UserService;
 import fs.project.session.SessionConst;
@@ -27,7 +26,7 @@ import java.util.List;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class GroupContorller {
+public class TeamSettingController {
 
 
     private final UserService userService;
@@ -149,6 +148,7 @@ public class GroupContorller {
         User user = teamService.findByUserID(userId).get(0);
         if(user.getMainTid()==null){
             teamService.updateMainTeamID(user.getUID(),tId);
+            teamService.updateCurTeamID(user.getUID(), tId);
         }
 
         Long curTID;
