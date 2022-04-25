@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginCheckIntercept())
                 .order(1) //첫번째 인터셉트
                 .addPathPatterns("/**") //하위 전부 허용하되,
-                .excludePathPatterns("/","/css/**", "/*.ico", "/error", "/signUp","/users/findId","/users/findPw" ); // url 에는 인터셉트 먹이지마.
+                .excludePathPatterns("/","/css/**", "/*.ico", "/error", "/signUp","/users/findId","/users/findPw" , "/kakaoLogin"); // url 에는 인터셉트 먹이지마.
     }
 
     @Override
