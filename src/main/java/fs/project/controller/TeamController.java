@@ -1,15 +1,18 @@
 package fs.project.controller;
 
 import fs.project.argumentresolver.Login;
+import fs.project.domain.Team;
+import fs.project.domain.TeamEvent;
+import fs.project.domain.User;
+import fs.project.domain.UserTeam;
 import fs.project.form.TeamForm;
 import fs.project.repository.TeamRepository2;
-import fs.project.domain.*;
 import fs.project.service.TeamService;
 import fs.project.service.UserService;
 import fs.project.session.SessionConst;
+import fs.project.vo.BaseEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -103,6 +106,14 @@ public class TeamController extends BaseEntity {
         int res = teamService.TeamIdCheck(id);
         return res;
     }
+
+    @ResponseBody
+    @PostMapping(value="/mainTeamChecked")
+    public int mainTeamChecked(@Login User loginuser){
+        int res = teamService.findByUID(loginuser.getUID()).size();
+        return res;
+    }
+
 
     // 기능 _ 폼 데이터 DB에 저장
     // ( 폼 데이터 : TeamName(NN), TeamId(NN), users, eventName, eventDate )
@@ -340,33 +351,5 @@ public class TeamController extends BaseEntity {
         return res;
     }
 
-
-
-    // 페이지 이동
-    @GetMapping("/ManageGroup")
-    public String ManageGroup(){
-
-// 탈퇴시키려면? 굳이...시켜야할까..?ㅠㅠ
-// 내가 보스인 팀의 팀원리스트 출력 -> User-Team에서 해당 utid 날려준다. 유저의 메인팀아이디 체크해서 동일하면 날려준다.
-
-// 요청 거절
-// 내가 보스인 팀의 팀원리스트 출력 -> User-Team에서 해당 utid 날려준다. _ 요청 취소 참고하자.
-
-// 요청 수락
-// User-Team의 JoinUs를 true로 변경해준다. 유저의 메인팀이 NULL이면 변경해준다.
-
-// 본인이 그룹을 탈퇴하려면? _ 그룹원
-// User-Team에서 utid날려준다. 유저의 메인팀아이디 체크해서 동일하면 날려준다.
-
-// 그룹장이 그룹을 탈퇴한다면?
-// User-Team에서 다른 한명 Boss로 올려준다. User-Team에서 utid날린다. User에서 메인팀아이디 날린다.
-
-// 그룹 정보 수정
-// 팀명 변경, 기념일 추가 및 삭제, 팀 사진 변경
-
-        //        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
-
-        return "redirect:/";
-    }
 }
 
