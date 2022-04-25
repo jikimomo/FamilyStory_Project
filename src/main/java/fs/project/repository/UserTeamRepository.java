@@ -44,16 +44,30 @@ public class UserTeamRepository {
         return em.createQuery("select ut from UserTeam ut", UserTeam.class).getResultList();
     }
 
-    public void updateBossUid(Long tid, Long uid){
+    public void updateMainTID(Long tid, Long uid){
 
         em.createQuery("update User u set u.mainTid = :tid where u.uID = :uid")
                 .setParameter("tid",tid).setParameter("uid", uid)
                 .executeUpdate();
     }
 
-    public void updateBossUidNull(Long tid, Long uid){
+    public void updateMainTIDNull(Long tid, Long uid){
 
         em.createQuery("update User u set u.mainTid = :tid where u.uID = :uid")
+                .setParameter("tid",null).setParameter("uid", uid)
+                .executeUpdate();
+    }
+
+    public void updateCurTID(Long tid, Long uid){
+
+        em.createQuery("update User u set u.curTid = :tid where u.uID = :uid")
+                .setParameter("tid",tid).setParameter("uid", uid)
+                .executeUpdate();
+    }
+
+    public void updateCurTIDNull(Long tid, Long uid){
+
+        em.createQuery("update User u set u.curTid = :tid where u.uID = :uid")
                 .setParameter("tid",null).setParameter("uid", uid)
                 .executeUpdate();
     }

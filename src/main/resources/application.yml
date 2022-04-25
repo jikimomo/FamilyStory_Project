@@ -29,8 +29,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: multicampusgroup6@gmail.com
-    password: a123456789!
+    username: FamilyStory.mailservice@gmail.com
+    password: myFamily_team6!!
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
@@ -40,7 +40,5 @@ logging.level:
   org.hibernate.SQL: debug
 # org.hibernate.type: trace
 
-file:
-  path: C:/Users/yeon/IdeaProjects/FamilyStory_Project/src/main/resources/static/TeamImage/
 
 

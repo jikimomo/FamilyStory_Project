@@ -1,16 +1,10 @@
 package fs.project.service;
 import fs.project.argumentresolver.Login;
-import fs.project.domain.Team;
-import fs.project.domain.TeamEvent;
-import fs.project.domain.User;
-import fs.project.domain.UserTeam;
+import fs.project.domain.*;
 import fs.project.form.FindPwForm;
 import fs.project.form.LoginForm;
 import fs.project.form.UserSetForm;
-import fs.project.repository.TeamEventRepository;
-import fs.project.repository.TeamRepository;
-import fs.project.repository.UserRepository;
-import fs.project.repository.UserTeamRepository;
+import fs.project.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +33,8 @@ public class UserService {
     private final TeamRepository teamRepository;
     private final UserTeamRepository userTeamRepository;
     private final TeamEventRepository teamEventRepository;
+    private final ContentRepository contentRepository;
+
     //메일보내기
     @Autowired // JavaMailSender 사용 위해 Autowired 필요
     private JavaMailSender javaMailSender;//build.gradle - implementation 'org.springframework.boot:spring-boot-starter-mail'
@@ -155,24 +151,50 @@ public class UserService {
       /*user의 main_tid가삭제할 user_team 의 tid와 같다면 user가 속한 uid값을 들고 있는
         user_team의 uid가 일치하는 값이 하나라도 존재한다면 그걸 main_tid로 둔다.
         */
-        if(userTeamRepository.findUser(uid).getMainTid()==tid){ //
+        User curUser = userTeamRepository.findUser(uid);
+        if(curUser.getMainTid()==tid){ //
             //List<UserTeam> mainTeamChange = userTeamRepository.findAll();
             List<UserTeam> mainTeamChange = userTeamRepository.findmainTeam();
             boolean check =false;
+            //join_us == true인 모든 팀 중에서
             for (UserTeam mtc : mainTeamChange) {
-                if (mtc.getUser().getUID()==uid) { // 다른팀을 나의 메인팀으로 바꿔줘
+                //내가 포함된 팀이 있다면
+                if (mtc.getUser().getUID()==uid) {
 
-                    //Team의 boss를 찾은 uid 값을 넣는다.
-                    userTeamRepository.updateBossUid(mtc.getTeam().getTID(), uid);
+                    //main_tid를 update해준다.
+                    userTeamRepository.updateMainTID(mtc.getTeam().getTID(), uid);
+
+                    //cur_tid가 현재 탈퇴하고 싶은 그룹이라면 main_tid로 바꿔줘야함
+                    if(curUser.getCurTid() == tid){
+                        userTeamRepository.updateCurTID(mtc.getTeam().getTID(), uid);
+                    }
+
                     check=true;
                     break;
                 }
             }
             if(check==false){
                 // 다른팀이 없으면 내 메인팀은 널이야. Team의 boss를 찾은 uid 값을 넣는다.
-                userTeamRepository.updateBossUidNull(null, uid);
+                userTeamRepository.updateMainTIDNull(null, uid);
+                userTeamRepository.updateCurTIDNull(null, uid);
             }
         }
+        if(curUser.getCurTid()==tid){
+            User tmpUser = userTeamRepository.findUser(uid);
+            if(tmpUser.getMainTid() == null){
+                userTeamRepository.updateCurTIDNull(null, uid);
+            }
+            else{
+                userTeamRepository.updateCurTID(tmpUser.getMainTid(), uid);
+            }
+        }
+
+        //탈퇴할 팀에 현재 user가 올린 게시글이 있다면 삭제되야함
+        List<Content> contents = contentRepository.findAllByUT(uid, tid);
+        for(Content content : contents){
+            contentRepository.delete(content.getCID());
+        }
+
         List<UserTeam> all = userTeamRepository.findAll(); //all 이라는 객체에 리스트 형식으로 유저 전체를 찾아서 치환
 
         for (UserTeam ut : all) {
@@ -192,6 +214,7 @@ public class UserService {
                 userTeamRepository.deleteUserT(tid);
             }
         }
+
         userTeamRepository.deleteContent(tid);
         userTeamRepository.deleteTeamEvent(tid);
         userTeamRepository.deleteTeam(tid);
@@ -283,6 +306,8 @@ public class UserService {
             }
         }
         userRepository.deleteUserUid(uid);
+
+        //내가 보스가 아닌경우 팀을 탈퇴하면 content가 지워져야 함
     }
 
     //유저 프로필 사진

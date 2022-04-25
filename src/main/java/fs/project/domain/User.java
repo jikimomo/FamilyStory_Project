@@ -40,11 +40,11 @@ public class User {
 
     private String userImage;
 
+    private String coverImage;
+
     private Long mainTid;
 
     private Long curTid;
-
-    private String coverImage;
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

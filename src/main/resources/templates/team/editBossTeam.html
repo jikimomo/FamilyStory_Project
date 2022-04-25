@@ -80,6 +80,14 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function (){
+            $('#outTeam').click(function (evt){
+                evt.preventDefault()
+
+                let ans = confirm("그룹을 탈퇴하시겠습니까?")
+                if(ans){
+                    location.replace("/[[${tid}]]/teamEdit2")
+                }
+            })
             $('input[type="button"]').click(function (){
                 // console.log($(this).val())
                 // console.log(this.name)
@@ -193,7 +201,7 @@
         </table>
     </div>
     <div>
-        <a href="#" th:href="@{/{tid}/teamEdit2 (tid=${tId})}" class="btn btn-primary" role="button">그룹 탈퇴하기</a>
+        <a href="#" th:href="@{/{tid}/teamEdit2 (tid=${tId})}" class="btn btn-primary" role="button" id="outTeam">그룹 탈퇴하기</a>
     </div>
 
 </div>

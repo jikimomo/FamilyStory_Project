@@ -55,9 +55,10 @@ public class ContentRepository {
 
     //cID 값에 해당하는 content를 삭제하는 메서드
     public void delete(Long id){
-
-        Content content = em.find(Content.class, id);
-        em.remove(content);
+        System.out.println("!!!!!!!!!!!contentRepository"+id);
+        em.createQuery("delete from Content c where c.cID = :cID")
+                .setParameter("cID", id)
+                .executeUpdate();
     }
     public List<String> findTid(LocalDate when, Long tid) {
         return em.createQuery("select c.photoRoute from Content c where c.when = :when and c.team.tID = :tid")

@@ -44,6 +44,7 @@ public class SettingController {
         userSetForm.setEmail(user.getEmail());
         userSetForm.setPhoneNumber(user.getPhoneNumber());
         //
+
         model.addAttribute("userSetForm", userSetForm);
         model.addAttribute("userProfileImage", user.getUserImage());
         model.addAttribute("userCoverImage", user.getCoverImage());
@@ -64,6 +65,7 @@ public class SettingController {
     @PostMapping("/users/settinguser")
     public String updateUser(@Login User loginUser, @ModelAttribute UserSetForm form, Model model, HttpServletRequest request) throws Exception {
 
+        System.out.println("넘어가라넘어가라");
         //Long타입의 updateUid라는 객체에 현재 로그인된 유저의 ID를 getUID로 가져온다.
         Long updateUid = loginUser.getUID();
 
