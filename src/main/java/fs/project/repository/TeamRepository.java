@@ -144,5 +144,12 @@ public class TeamRepository {
                 .setParameter("tId", tId)
                 .getResultList();
     }
+
+    public void updateCurTeamID(Long uid, Long tid) {
+        em.createQuery("update User u set u.curTid = :tID where u.uID = :uid")
+                .setParameter("tID", tid)
+                .setParameter("uid", uid)
+                .executeUpdate();
+    }
 }
 

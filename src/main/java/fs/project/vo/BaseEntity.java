@@ -1,4 +1,4 @@
-package fs.project.domain;
+package fs.project.vo;
 
 import lombok.Getter;
 import lombok.Setter;

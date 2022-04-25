@@ -1,5 +1,6 @@
-package fs.project.domain;
+package fs.project.vo;
 
+import fs.project.domain.Content;
 import lombok.Data;
 
 @Data
