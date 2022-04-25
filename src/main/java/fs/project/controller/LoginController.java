@@ -3,6 +3,7 @@ package fs.project.controller;
 import fs.project.argumentresolver.Login;
 import fs.project.domain.User;
 import fs.project.form.LoginForm;
+import fs.project.kakalogin.kakaoService;
 import fs.project.service.UserService;
 import fs.project.session.SessionConst;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +24,8 @@ import javax.validation.Valid;
 public class LoginController {
 
     private final UserService userService;
+    private final kakaoService kakaoService;
+
 
     @PostMapping("/")
     public String login(@Valid @ModelAttribute LoginForm form, BindingResult result, HttpServletRequest request) {
@@ -35,8 +39,6 @@ public class LoginController {
         //입력받은 아이디와 패스워드를 userService의 login 메소드에 전달하고 데이터베이스의 정보와 일치한지 확인한다.
         //이후 일치한다면 그 객체를 반환해서 loginUser에 담아주고 일치하지않는다면 null값을 넣어준다.
         User loginUser = userService.login(form.getLoginId(), form.getPassword());
-
-
 
         if (loginUser == null) {
             //오류 출력
@@ -76,6 +78,16 @@ public class LoginController {
     public String logout(HttpServletRequest request) {
         //세션 값을 담아온다.
         HttpSession session = request.getSession(false);
+
+        String access_Token = (String)session.getAttribute("access_Token");
+
+        //카카오 토큰 삭제
+        if(access_Token != null && !"".equals(access_Token)) {
+            kakaoService.kakaoLogout(access_Token);
+            session.removeAttribute("access_Token");
+            session.removeAttribute("userId");
+        }
+
         //현재 담겨져있는 세션값이 존재한다면 세션을 드랍한다.
         if(session !=null){
             session.invalidate();
@@ -83,8 +95,4 @@ public class LoginController {
         // 로그인 페이지로 이동
         return "redirect:/";
     }
-
-
-
-
 }
