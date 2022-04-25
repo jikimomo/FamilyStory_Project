@@ -218,7 +218,7 @@
                 <label th:for="pw">비밀번호</label>
                 <input type="password" id="pw" name="password" class="form-control"
                        placeholder="비밀번호를 입력하세요"
-                       th:class="${#fields.hasErrors('password')}? 'form-control fieldError' : 'form-control'">
+                       th:class="${#fields.hasErrors('password')}? 'form-control fieldError' : 'form-control'" th:value="*{password}">
                 <div class="field-error" th:errors="*{password}"/>
             </div>
 
