@@ -35,6 +35,8 @@ public class ContentController {
         model.addAttribute("user", user);
         model.addAttribute("team", team);
 
+
+
         return "content/uploadContentForm";
     }
 
