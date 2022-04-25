@@ -123,7 +123,6 @@
             $('#usersplus').click(function (evt){
                 let sendData = document.querySelector('#users').value;
                 $('#users').attr('placeholder','구성원 아이디를 입력해주세요.');
-                console.log("??");
                 $.ajax({
                     type: "POST",
                     url: "validateMem",
@@ -171,6 +170,23 @@
                 });
             })
 
+            $('#mainTeamChecked').click(function(){
+            // let mainTeamChecked = $('input:checked').is(":checked");
+                $.ajax({
+                    type: "POST",
+                    url: "mainTeamChecked",
+                    // data: {checked:mainTeamChecked},
+                    success: function (data) {
+                        if(data==0){
+                            alert('소속 그룹이 없는 경우엔 필수체크입니다.')
+                            $('#mainTeamChecked').attr("checked",true)
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+                });
+            })
             // 이벤트 추가 및 삭제, 유효성 체크(비어있는 값이면 안된다.)
             $('#eventplus').click(function (evt) {
                 let eventName = document.querySelector('input[name="eventName"]').value;
@@ -251,6 +267,8 @@
                 }
                 evt.preventDefault();
                 let res = confirm("그룹을 생성하시겠습니까?");
+
+
                 $('#users').val("");
                 edate.value="";
                 ename.value="";
@@ -358,7 +376,7 @@
                 <div class="mb-3 row">
                     <div class="input-group mb-3">
                         <div class="input-group-text">
-                            <input class="form-check-input mt-0" type="checkbox" name="mainTeamChecked" checked/>
+                            <input class="form-check-input mt-0" type="checkbox" name="mainTeamChecked" id="mainTeamChecked" checked/>
                         </div>
                          <input type="text" class="form-control" placeholder="메인 그룹으로 설정하기 (소속 그룹이 없는 경우엔 필수체크입니다.)" readonly/>
                     </div>

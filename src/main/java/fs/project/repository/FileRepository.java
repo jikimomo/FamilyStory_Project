@@ -1,8 +1,6 @@
 package fs.project.repository;
 
-import fs.project.domain.File;
-import fs.project.domain.Team;
-import fs.project.domain.User;
+import fs.project.vo.File;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
