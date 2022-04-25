@@ -391,7 +391,6 @@ public class UserService {
         return userPhoto;
     }
 
-
     public List<Long> findTid(LocalDate date) {
         List <Long> tid = teamEventRepository.findTid(date);
         return tid;
@@ -412,5 +411,18 @@ public class UserService {
         return phoneNumber;
     }
 
+    public User getNameEmail(String nickname, String email) {
 
+        log.info("------------{}", nickname);
+        log.info("---------{}", email);
+        List<User> user = userRepository.findAll();
+        for (User u : user){
+            if(u.getEmail().equals(email)&&u.getName().equals(nickname)){
+                log.info("------------{}", nickname);
+                log.info("---------{}", email);
+                return u;
+            }
+        }
+        return null;
+    }
 }

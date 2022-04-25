@@ -49,7 +49,7 @@
             margin-left: 120px;
         }
 
-        #update, #deleteAccount {
+        #update {
             margin-top: 30px;
             background: white;
             outline: none;
@@ -74,7 +74,25 @@
         #logout {
             margin-top: 20px;
         }
+        .kakaoChatPc {
+            position: fixed;
+            z-index: 999;
+            right: 20px; /* 화면 오른쪽으로부터의 거리, 숫자만 입력 */
+            bottom: 20px; /* 화면 아래쪽으로부터의 거리, 숫자만 입력 */
+        }
     </style>
+
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script>
+        // SDK를 초기화 합니다. 사용할 앱의 JavaScript 키를 설정해 주세요.
+        Kakao.init('241e8e5d885ad576b5c291865fbe3373'); // 사용할 앱의 JavaScript키를 입력해 주세요.
+        // SDK 초기화 여부를 판단합니다.
+        console.log(Kakao.isInitialized());
+    </script>
+
+
+
+
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script type="text/javascript">
         <!--이미지 미리 보여주기-->
@@ -218,7 +236,7 @@
                 <label th:for="pw">비밀번호</label>
                 <input type="password" id="pw" name="password" class="form-control"
                        placeholder="비밀번호를 입력하세요"
-                       th:class="${#fields.hasErrors('password')}? 'form-control fieldError' : 'form-control'">
+                       th:class="${#fields.hasErrors('password')}? 'form-control fieldError' : 'form-control'" th:value="*{password}">
                 <div class="field-error" th:errors="*{password}"/>
             </div>
 
@@ -291,7 +309,82 @@
         </button>
     </form>
 </div>
+
+
+<a href="javascript:void kakaoChatStart()" class="kakaoChatPc hidden-md hidden-sm hidden-xs">
+    <p id="kakao-talk-channel-chat-button"></p>
+</a>
+
+
+<script type="text/javascript">
+
+
+    /*  function logoutWithKakao() {
+          if (!Kakao.Auth.getAccessToken()) {
+              console.log('Not logged in.');
+              return;
+          }
+          console.log(Kakao.Auth.getAccessToken()); //before Logout
+          Kakao.Auth.logout(function () {
+              console.log(Kakao.Auth.getAccessToken()); //after Logout
+              //★ 추가 할 것 : 로그아웃 성공 후 처리
+          });
+      }*/
+
+
+    function chat() {
+        Kakao.Channel.chat({
+            channelPublicId: '_pPPkb' // 카카오톡 채널 홈 URL에 명시된 id로 설정합니다.
+        });
+    }
+
+
+    btn_chat();
+    function btn_chat() {
+        Kakao.Channel.createChatButton({
+            container: '#kakao-talk-channel-chat-button',
+            channelPublicId: '_pPPkb' // 카카오톡 채널 홈 URL에 명시된 id로 설정합니다.
+        });
+    }
+
+    /*    btn_added();
+        function btn_added() {
+            Kakao.Channel.createAddChannelButton({
+                container: '#kakao-add-channel-button',
+                channelPublicId: '_pPPkb' // 채널 홈 URL에 명시된 id로 설정합니다.
+            });
+        }*/
+
+</script>
+
+
 <div id="footer" th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
+
+
+<!-- function readImage(input) {-->
+<!---->
+<!-- // 인풋 태그에 파일이 있는 경우-->
+<!-- if (input.files && input.files[0]) {-->
+<!---->
+<!--// FileReader 인스턴스 생성-->
+<!--const reader = new FileReader()-->
+<!---->
+<!--// 이미지가 로드가 된 경우-->
+<!--reader.onload = e => {-->
+<!--const previewImage = document.getElementById("userImage")-->
+<!--previewImage.setAttribute(src, e.target.result);-->
+<!--}-->
+<!---->
+<!--// reader가 이미지 읽도록 하기-->
+<!--reader.readAsDataURL(input.files[0])-->
+<!--}-->
+<!--}-->
+<!---->
+<!--// input file에 change 이벤트 부여-->
+<!--const inputImage = document.getElementById("input-image")-->
+<!--inputImage.addEventListener("change", e => {-->
+<!--readImage(e.target)-->
+<!--})-->
 </html>
