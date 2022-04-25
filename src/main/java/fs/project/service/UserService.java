@@ -155,7 +155,8 @@ public class UserService {
       /*user의 main_tid가삭제할 user_team 의 tid와 같다면 user가 속한 uid값을 들고 있는
         user_team의 uid가 일치하는 값이 하나라도 존재한다면 그걸 main_tid로 둔다.
         */
-        if(userTeamRepository.findUser(uid).getMainTid()==tid){ //
+        User curUser = userTeamRepository.findUser(uid);
+        if(curUser.getMainTid()==tid){ //
             //List<UserTeam> mainTeamChange = userTeamRepository.findAll();
             List<UserTeam> mainTeamChange = userTeamRepository.findmainTeam();
             boolean check =false;
@@ -164,6 +165,12 @@ public class UserService {
 
                     //Team의 boss를 찾은 uid 값을 넣는다.
                     userTeamRepository.updateBossUid(mtc.getTeam().getTID(), uid);
+
+                    //cur_tid가 현재 탈퇴하고 싶은 그룹이라면 main_tid로 바꿔줘야함
+                    if(curUser.getCurTid() == tid){
+                        userTeamRepository.updateCurTID(mtc.getTeam().getTID(), uid);
+                    }
+
                     check=true;
                     break;
                 }
@@ -171,8 +178,12 @@ public class UserService {
             if(check==false){
                 // 다른팀이 없으면 내 메인팀은 널이야. Team의 boss를 찾은 uid 값을 넣는다.
                 userTeamRepository.updateBossUidNull(null, uid);
+                userTeamRepository.updateCurTIDNull(null, uid);
             }
         }
+
+
+
         List<UserTeam> all = userTeamRepository.findAll(); //all 이라는 객체에 리스트 형식으로 유저 전체를 찾아서 치환
 
         for (UserTeam ut : all) {
