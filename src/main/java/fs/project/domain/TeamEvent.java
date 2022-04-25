@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Getter @Setter
 public class TeamEvent {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long teID;
