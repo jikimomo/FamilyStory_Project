@@ -51,7 +51,7 @@
 
                             <div>
                                 <!--                                "searchPlaces(); return false;"-->
-                                키워드 : <input type="text" placeholder="키워드를 입력해주세요" id="keyword" size="25" onkeypress="if(event.keyCode=='13'){event.preventDefault();}">
+                                키워드 : <input type="text" placeholder="키워드를 입력해주세요" id="keyword" size="25" onkeypress="if(event.keyCode=='13'){event.preventDefault(); searchEvt();}">
                                 <br>
                                 <button  id="searchbtn" type="button">검색하기</button>
                             </div>
@@ -149,6 +149,13 @@ map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
 // 키워드로 장소를 검색합니다
 //searchPlaces();
+
+function searchEvt() {
+    	// 엔터키가 눌렸을 때
+    	console.log('enter');
+    	searchPlaces();
+}
+
 
  document.getElementById("searchbtn").addEventListener("click", function(){
             //console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
