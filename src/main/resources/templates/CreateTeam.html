@@ -31,7 +31,7 @@
                 }
                 reader.readAsDataURL(input.files[0]);
             }else{
-                $('#View').attr('src', "/TeamImage/temp.png");
+                $('#View').attr('src', "/AdminImage/temp.png");
             }
         }
     </script>
@@ -275,6 +275,21 @@
             })
         })
 
+        function fileTypeCheck(obj) {
+            pathpoint = obj.value.lastIndexOf('.');
+            filepoint = obj.value.substring(pathpoint+1,obj.length);
+            filetype = filepoint.toLowerCase();
+            if(filetype=='jpg' || filetype=='gif' || filetype=='png' || filetype=='jpeg' || filetype=='bmp') {
+                // 정상적인 이미지 확장자 파일인 경우
+                readURL(this)
+            } else {
+                alert('이미지 파일만 업로드 가능합니다.');
+                $('#View').attr('src', "/AdminImage/temp.png");
+                $('#file').val("")
+                return false;
+            }
+        }
+
     </script>
 </head>
 <body>
@@ -287,7 +302,7 @@
                 <div class="mb-3"><img src="/AdminImage/temp.png" id="View" class="rounded img-thumbnail mx-auto d-block" ></div>
                 <div class="mb-3">
                     <div>
-                        <input class="form-control" type="file" name="file" id="file"/>
+                        <input class="form-control" type="file" name="file" id="file"  accept="image/*" onchange="fileTypeCheck(this)"/>
                     </div>
                     <input type="text" id="hidden" value="" name="tid" hidden>
                 </div>
