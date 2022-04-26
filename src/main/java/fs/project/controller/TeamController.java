@@ -284,6 +284,7 @@ public class TeamController extends BaseEntity {
         model.addAttribute("currentPage",currentPage);
         model.addAttribute("startPage",startPage);
         model.addAttribute("endPage",endPage);
+        model.addAttribute("end",all.getTotalPages());
 
         // 해당하는 팀이 있는지 없는지 크기값을 전달.
         List<Team> teamsort = teamService.searchTeam(teamId);
