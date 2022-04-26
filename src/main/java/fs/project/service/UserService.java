@@ -38,6 +38,7 @@ public class UserService {
     //메일보내기
     @Autowired // JavaMailSender 사용 위해 Autowired 필요
     private JavaMailSender javaMailSender;//build.gradle - implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     private static final String FROM_ADDRESS = "multicampusgroup6@gmail.com";//송신 이메일
 
     public User findUser(Long uid){
@@ -67,31 +68,19 @@ public class UserService {
 
         아래 코드는 위의 코드를 축약 시켜놓은 코드.
         */
-
         return userRepository.findByLoginId(loginId).filter(u -> u.getPassword().equals(password))
                 .orElse(null);
     }
-    public Optional<User> findId(User user) {
-
+    public Optional<User> findId(String name, String email) {
         List<User> findUsers = userRepository.findAll();
         for(User u : findUsers){
-            if(user.getName().equals(u.getName())&&user.getEmail().equals(u.getEmail())) {
+            if(name.equals(u.getName())&&email.equals(u.getEmail())) {
                 return Optional.of(u);
             }
         }
         return null;
     }
 
-    //uid로 user한명만 불러오기 -> 유저 레파지포리로 반환
-    public User findOne(Long uid){
-        List <User> all = userRepository.findAll();
-        for (User u : all) {
-            if (u.getUID().equals(uid)) {
-                return u;
-            }
-        }
-        return null;
-    }
 
     //SettingController에서 postMapping에서 updateUser를 찾아들어오고 userRepository.updateUser로 이동
     public void updateUser(Long updateUid, UserSetForm form) throws Exception {
@@ -128,13 +117,13 @@ public class UserService {
     //teamRepository의 findTeam의 userId라는 매개변수로 리던한다.
     //타입은 List형식
     public List<Team> findTeam(Long userId){
-        return teamRepository.findTeam(userId);
+        return teamRepository.findTeams(userId);
     }
 
     //메인그룹(팀) 바꾸기
     //teamRepository의 changeMainTeam로 메소드로 이동해서 디비를 가져온다
     public void changeMainTeam(Long uid, Long tid) {
-        teamRepository.changeMainTeam(uid, tid);
+        teamRepository.updateMainTID(uid, tid);
     }
 
 
@@ -220,11 +209,11 @@ public class UserService {
     }
 
     //비밀번호 찾기
-    public Optional<User> findPw(User user) {
+    public Optional<User> findPw(String name, String email, String userId) {
         List<User> findUsers = userRepository.findAll();
         for(User u : findUsers){
             //name, email, userid가 모두 일치해야한다.
-            if(user.getName().equals(u.getName())&&user.getEmail().equals(u.getEmail())&&user.getUserID().equals(u.getUserID())) {
+            if(name.equals(u.getName())&&email.equals(u.getEmail())&&userId.equals(u.getUserID())) {
                 return Optional.of(u);
             }
         }
@@ -257,8 +246,8 @@ public class UserService {
     }
 
     //패스워드 수정
-    public void editPassword(Long uId, String str) {
-        userRepository.editPassword(uId, str);
+    public void editPassword(Long uId, String pw) {
+        userRepository.editPassword(uId, pw);
     }
 
 
@@ -411,15 +400,10 @@ public class UserService {
         return phoneNumber;
     }
 
-    public User getNameEmail(String nickname, String email) {
-
-        log.info("------------{}", nickname);
-        log.info("---------{}", email);
+    public User getNameEmail(String name, String email) {
         List<User> user = userRepository.findAll();
         for (User u : user){
-            if(u.getEmail().equals(email)&&u.getName().equals(nickname)){
-                log.info("------------{}", nickname);
-                log.info("---------{}", email);
+            if(u.getEmail().equals(email)&&u.getName().equals(name)){
                 return u;
             }
         }

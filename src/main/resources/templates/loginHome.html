@@ -18,7 +18,6 @@
     <li><a th:href="@{/users/settinguser}">내 정보 수정하기</a></li>
 
 
-
     <div class="col">
         <form th:action="@{/logout}" method="post">
             <button class="w-100 btn btn-dark btn-lg"
@@ -26,6 +25,13 @@
                 로그아웃
             </button>
         </form>
+    </div>
+
+
+    <div class="col">
+
+        <a href="https://accounts.kakao.com/logout?continue=https://localhost:8080/" class="link_logout" data-tiara-layer="logout">로그아웃</a>
+
     </div>
 
     <div th:replace="fragments/footer :: footer" />

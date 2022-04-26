@@ -57,13 +57,22 @@
     </div>
 </div>
 
-<form th:action="@{/logout}" method="post">
-    <button class="w-100 btn btn-dark btn-lg"
-            type="submit">
-        로그아웃
-        <!--                    onclick="location.href='home.html'"-->
-    </button>
-</form>
+<div class="setting">
+    <div th:if="${kakaoLogin.booleanValue()==true}">
+        <a href = "https://kauth.kakao.com/oauth/logout?client_id=4d6bfc510b9480c47be3a30e3ae11deb&logout_redirect_uri=http://localhost:8080/" id="custom-logout-btn">
+            <button class="w-100 btn btn-dark btn-lg">로그아웃</button>
+        </a>
+    </div>
+
+    <div th:if="${kakaoLogin.booleanValue()==false}">
+        <form th:action="@{/logout}" method="post">
+            <button class="w-100 btn btn-dark btn-lg" id="logout"
+                    type="submit">
+                로그아웃
+            </button>
+        </form>
+    </div>
+</div>
 
 <div th:replace="./fragments/footer :: footer"/>
 </body>

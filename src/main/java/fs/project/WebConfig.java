@@ -12,15 +12,16 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //인터셉트 순서 체인식으로 적용. order(2) 가 있으면 .order(1)을 수행하고 다음 인터셉트 적용.
         registry.addInterceptor(new LoginCheckIntercept())
                 .order(1) //첫번째 인터셉트
                 .addPathPatterns("/**") //하위 전부 허용하되,
-                .excludePathPatterns("/","/css/**", "/*.ico", "/error", "/signUp","/users/findId","/users/findPw" , "/kakaoLogin"); // url 에는 인터셉트 먹이지마.
+                .excludePathPatterns("/","/css/**", "/*.ico", "/error", "/signUp",
+                        "/users/findId","/users/findPw" , "/kakaoLogin" ,"/logout", "/images/*.jpg","/images/*.png",
+                        "/pade", "/users/findPw", "/users/images/*.png", "/moveimage"
+                        ); // url 에는 인터셉트 먹이지마.
     }
 
     @Override

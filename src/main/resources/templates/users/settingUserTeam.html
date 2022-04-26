@@ -6,19 +6,32 @@
     <link th:href="@{/css/bootstrap.min.css}"
           href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .container {
-            /*max-width: 700px;*/
-            width: 700px;
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Poppins:wght@200;300;400&family=Roboto+Serif:wght@800&display=swap');
+    </style>
+
+    <style>
+        *{
+            font-family: "Poppins", sans-serif;
         }
-        .field-error {
-            border-color: #dc3545;
-            color: #dc3545;
+        .container {
+            width: 850px;
         }
 
+        .btn{
+            background-color: #ffffff;
+            border: 1px solid #33333330;
+            color:#33333370;
+        }
+        .btn:hover{
+            background-color: #33333330;
+            border: 1px solid #33333330;
+            color: #333333;
+        }
         ul {
             list-style-type: none;
             padding: 0px;
             margin: -100px;
+            margin-top: -50px;
             width: auto;
             background: white;
             height: auto;
@@ -26,8 +39,10 @@
             position: fixed;
             border-radius: 10px;
             color: #333;
-            border: solid 1px #2D7100;
+            /*border: solid 1px #2D7100;*/
+            border: solid 1px #33333330;
         }
+
 
         li {
             border: solid 1px white;
@@ -48,22 +63,6 @@
             color: gray;
             border: solid 1px white;
             border-radius: 10px;
-        }
-
-        #dropTeamButton{
-            background-color: white;
-            border-radius: 10px;
-            color: #333;
-            border: solid 1px #2D7100;
-            font-weight: bold;
-        }
-
-        #changeMainTeamButton{
-            background-color: white;
-            border-radius: 10px;
-            color: #333;
-            border: solid 1px #2D7100;
-            font-weight: bold;
         }
 
     </style>
@@ -110,7 +109,7 @@
 
         <div>
             <table class="table">
-                <thead>
+                <thead style="text-align: center;">
                 <tr>
                     <th>그룹 아이디</th>
                     <th>그룹 이름</th>
@@ -119,11 +118,11 @@
 
                 </tr>
                 </thead>
-                <tbody>
+                <tbody style="text-align: center">
                 <tr th:each="team : ${teams}">
                     <td th:text="${team.teamID}">10000</td>
                     <td th:text="${team.teamName}">10</td>
-                    <td style="text-align: center">
+                    <td>
                         <input type="radio" th:value="${team.getTID()}" name="mainTeam"/>
                     </td>
                     <td>
