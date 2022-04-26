@@ -118,13 +118,13 @@ public class UserService {
     //teamRepository의 findTeam의 userId라는 매개변수로 리던한다.
     //타입은 List형식
     public List<Team> findTeam(Long userId){
-        return teamRepository.findTeam(userId);
+        return teamRepository.findTeams(userId);
     }
 
     //메인그룹(팀) 바꾸기
     //teamRepository의 changeMainTeam로 메소드로 이동해서 디비를 가져온다
     public void changeMainTeam(Long uid, Long tid) {
-        teamRepository.changeMainTeam(uid, tid);
+        teamRepository.updateMainTID(uid, tid);
     }
 
 

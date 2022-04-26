@@ -6,7 +6,6 @@ import fs.project.domain.TeamEvent;
 import fs.project.domain.User;
 import fs.project.domain.UserTeam;
 import fs.project.form.TeamForm;
-import fs.project.repository.TeamRepository2;
 import fs.project.service.TeamService;
 import fs.project.service.UserService;
 import fs.project.session.SessionConst;
@@ -41,25 +40,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TeamController extends BaseEntity {
 
-    private final TeamRepository2 teamRepository2;
-
     private final TeamService teamService;
     private final UserService userService;
 
     // 페이지 이동 _ 회원가입 후 이동할 페이지
     @GetMapping("/AfterJoin")
     public String AfterJoin(@Login User loginUser, Model model) {
+        System.out.println("AfterJoin Page");
 
         Long curTID;
-        User user = userService.findUser(loginUser.getUID());
-        if(user.getCurTid() == null){
+        if(loginUser.getCurTid() == null){
             curTID = 0L;
         }else{
-            curTID = user.getCurTid();
+            curTID = loginUser.getCurTid();
         }
         model.addAttribute("curTID", curTID);
 
-        System.out.println("AfterJoin Page");
         return "AfterJoin";
     }
 
@@ -67,18 +63,16 @@ public class TeamController extends BaseEntity {
     @GetMapping("/CreateTeam")
     public String CreateTeam(Model model, @Login User loginUser) {
         System.out.println("CreateTeam Page");
-        model.addAttribute("TeamForm", new Team());
-
-        model.addAttribute("user", loginUser.getUserID());
 
         Long curTID;
-        User user = userService.findUser(loginUser.getUID());
-        if(user.getCurTid() == null){
+        if(loginUser.getCurTid() == null){
             curTID = 0L;
         }else{
-            curTID = user.getCurTid();
+            curTID = loginUser.getCurTid();
         }
         model.addAttribute("curTID", curTID);
+        model.addAttribute("TeamForm", new Team());
+        model.addAttribute("user", loginUser.getUserID());
         return "/CreateTeam";
     }
 
@@ -86,12 +80,10 @@ public class TeamController extends BaseEntity {
     @ResponseBody
     @PostMapping(value = "/validateMem")
     public int validateMem(@RequestParam("sendData") String id){
-        // 빈값이 들어오면 회원이 아니므로 -1 리턴
         if(id==""){
             return -1;
         }else{
-            int res = teamService.UserIdCheck(id);
-            return res;
+            return teamService.UserIdCheck(id);
         }
     }
 
@@ -99,14 +91,13 @@ public class TeamController extends BaseEntity {
     @ResponseBody
     @PostMapping(value = "/validateTeam")
     public int validateTeam(@RequestParam("sendData") String id){
-        // 빈값이 들어오면 그룹리스트에 없으므로 -1 리턴
         if(id==""){
             return -1;
         }
-        int res = teamService.TeamIdCheck(id);
-        return res;
+        return teamService.TeamIdCheck(id);
     }
 
+    // 기능 _ 속해있는 그룹이 없으면 메인그룹체크를 강제로 하기 위함.
     @ResponseBody
     @PostMapping(value="/mainTeamChecked")
     public int mainTeamChecked(@Login User loginuser){
@@ -114,15 +105,11 @@ public class TeamController extends BaseEntity {
         return res;
     }
 
-
     // 기능 _ 폼 데이터 DB에 저장
-    // ( 폼 데이터 : TeamName(NN), TeamId(NN), users, eventName, eventDate )
     @ResponseBody
     @PostMapping(value = "/CreateTeam")
     public void  CreateTeamForm(@Valid TeamForm teamForm,@Login User loginUser, HttpServletRequest request) {
         System.out.println("CreateTeam Controller");
-//        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
-
 
         // 전달받은 데이터를 Team 테이블에 저장
         Team team = new Team();
@@ -130,9 +117,10 @@ public class TeamController extends BaseEntity {
         team.setTeamName(teamForm.getTeamName());
         team.setBoss(loginUser.getUID());
         Long saveId = teamService.saveTeam(team);
+
         Team findTeam = teamService.findTeam(saveId);
         if(teamForm.isMainTeamChecked()){
-            teamService.updateMainTeamID(loginUser.getUID(),findTeam.getTID());
+            teamService.updateMainTID(loginUser.getUID(),findTeam.getTID());
             User user = teamService.findUser(loginUser.getUID());
 
             HttpSession session = request.getSession();
@@ -155,7 +143,6 @@ public class TeamController extends BaseEntity {
                 }
             }
 
-            // UserTeam테이블에도 관련 사항을 저장해준다. (User(join), Team(join), joinTime, joinUs )
             UserTeam ut = new UserTeam();
             ut.setTeam(findT);
             ut.setUser(loginUser);
@@ -163,15 +150,14 @@ public class TeamController extends BaseEntity {
             ut.setJoinTime(LocalDateTime.now());
             teamService.saveUserTeam(ut);
 
-
             // 구성원 저장 ( 데이터가 여러개 일 수 있어서 반복문 사용 )
             for (int i = 0; i < teamForm.getUsers().length; i++) {
                 if( teamForm.getUsers()[i] != ""){
                     // 추가한 구성원의 정보
-                    User userInfo = teamService.findByUserID(teamForm.getUsers()[i]).get(0);
+                    User userInfo = teamService.findByUserID(teamForm.getUsers()[i]);
                     // 그룹을 만들 때 추가된 구성원은 메인그룹이 없으면 해당 그룹이 메인그룹으로 지정된다.
                     if(userInfo.getMainTid()==null){
-                        teamService.updateMainTeamID(userInfo.getUID(),findTeam.getTID());
+                        teamService.updateMainTID(userInfo.getUID(),findTeam.getTID());
                     }
                     // 그룹의 구성원이 추가되었으므로, 유저-팀테이블을 업데이트 해준다.
                     ut = new UserTeam();
@@ -186,26 +172,16 @@ public class TeamController extends BaseEntity {
         }
     }
 
-
-    // 파일 업로드 경로 ( properties에 저장되어 있다.)  123123123
-//    @Value("${file.path}")
-//    private String fileDir;
-
-    // 기능 _ 팀 그룹 생성 시 이미지 업로드 & DB 저장!  !!!!!!!!!!!!!!!!!!!
-
-
     @PostMapping("/upload")
     public String saveFile(@Login User loginUser, @RequestParam String tid, @RequestParam MultipartFile file, Model model
     ) throws IOException {
         System.out.println("upload Controller");
-        // 로그로 파일 넘어온 내용을 체크했다.
-//        log.info("multi={}",file);
+
         if(!file.isEmpty()){
             // ========================== 파일 업로드 ========================== //
             // 업로드된 파일의 파일명을 변경 ( 중복 파일명이 될 수 있으므로, 중복되지 않을 문자로 변경해준다. )
             String fileName = renameFiles(file);
             // 실제 업로드 될 파일의 경로를 지정해준다.
-//            String fullPath = fileDir + fileName;
             String fullPath = new File("").getAbsolutePath()+File.separator+"src"+File.separator+"main"+File.separator+"resources"+File.separator+"static"+File.separator+"TeamImage"+File.separator+ fileName;
             // 해당 경로에 파일을 업로드 한다.
             file.transferTo(new File(fullPath));
@@ -213,8 +189,6 @@ public class TeamController extends BaseEntity {
             // 넘겨받은 팀아이디 정보로 TID를 찾고, TID로 팀을 찾는다.
             Team team = teamService.findTeam(teamService.findByTeamID(tid));
             // DB에 올릴 경로를 짧게 잡아준다. ( static/example.jpg )
-//            String[] dir = fileDir.split("/");
-//            fullPath = File.separator + dir[6] + File.separator + fileName;
             fullPath = File.separator + "TeamImage" + File.separator + fileName;
 
             // 팀 테이블에 이미지 경로 저장
@@ -266,16 +240,18 @@ public class TeamController extends BaseEntity {
         // 유저의 그룹 가입 요청 여부
         List<Boolean> joinCheck = new ArrayList<>();
 
-        model.addAttribute("ut",ut);
         for (int i = 0; i < ut.size(); i++) {
             myTeam.add(ut.get(i).getTeam().getTeamID());
             joinCheck.add(ut.get(i).isJoinUs());
         }
+
+        // 유저가 속한 그룹아이디 목록
         model.addAttribute("myTeam", myTeam);
+        // 유저의 그룹 가입 요청 여부
         model.addAttribute("joinCheck",joinCheck);
 
         // Spring Data JPA를 사용해 페이징을 구현
-        Page<Team> all = teamRepository2.findByTeamIDContaining(teamId,pageable);
+        Page<Team> all = teamService.findByTeamIDContaining(teamId,pageable);
         model.addAttribute("teams",all);
 
         int currentPage=all.getPageable().getPageNumber()+1; // 현재 페이지 넘버 _ 인덱스는 1부터니까 +1
@@ -284,21 +260,13 @@ public class TeamController extends BaseEntity {
         model.addAttribute("currentPage",currentPage);
         model.addAttribute("startPage",startPage);
         model.addAttribute("endPage",endPage);
-
-        // 해당하는 팀이 있는지 없는지 크기값을 전달.
-        List<Team> teamsort = teamService.searchTeam(teamId);
-        model.addAttribute("size",teamsort.size());
-        // 유저가 속한 그룹아이디 목록
-        model.addAttribute("myTeam", myTeam);
-        // 유저의 그룹 가입 요청 여부
-        model.addAttribute("joinCheck",joinCheck);
+        model.addAttribute("end",all.getTotalPages());
 
         Long curTID;
-        User user = userService.findUser(loginUser.getUID());
-        if(user.getCurTid() == null){
+        if(loginUser.getCurTid() == null){
             curTID = 0L;
         }else{
-            curTID = user.getCurTid();
+            curTID = loginUser.getCurTid();
         }
         model.addAttribute("curTID", curTID);
 
@@ -311,24 +279,22 @@ public class TeamController extends BaseEntity {
     public int RequestTeam(@RequestParam String id,@Login User loginUser) { // 요청한 그룹의 id값이 들어온다.
         System.out.println("requestTeam");
 
-        User findU = teamService.findUser(loginUser.getUID());
-
-        // 요청과 동시에 유저팀 테이블에 소속된다.
+        // 요청과 동시에 유저팀 테이블에 소속된다. (JoinUs=false)
         UserTeam ut = new UserTeam();
-        ut.setUser(findU); // 현재 계정의 user 정보 세팅
+        ut.setUser(loginUser); // 현재 계정의 user 정보 세팅
         ut.setTeam(teamService.findTeam(teamService.findByTeamID(id))); // 요청 그룹의 정보 세팅
         ut.setJoinTime(LocalDateTime.now()); // 신청 시간 세팅
-        ut.setJoinUs(false); // 아직 그룹장이 수락하지 않아서 false
+        ut.setJoinUs(false);
 
         // 데이터 전달을 위한 변수
         int res = 0;
 
         // 중복에 대한 유효성 체크 ( 이미 요청되있거나, 그룹원인 상태면 테이블을 업데이트 하지 않는다. )
-        int check = teamService.UserTeamIdCheck(findU.getUID(), teamService.findByTeamID(id));
+        int check = teamService.UserTeamIdCheck(loginUser.getUID(), teamService.findByTeamID(id));
         if (check == 0) {
             // 해당하는 리스트가 없으므로, 유저-팀 테이블 업데이트.
             teamService.saveUserTeam(ut);
-            res = 1; // 뷰에 전달
+            res = 1;
         }
         return res;
     }
@@ -336,17 +302,11 @@ public class TeamController extends BaseEntity {
     // 기능 _ 그룹 요청취소하기
     @ResponseBody
     @PostMapping("/RequestTeamCancel")
-
-    public int RequestTeamCancel(@Login User LoginUser , @RequestParam String id, Model model) { // 요청한 그룹의 id값이 들어온다.
+    public int RequestTeamCancel(@Login User LoginUser , @RequestParam String id) { // 요청한 그룹의 id값이 들어온다.
         System.out.println("RequestTeamCancel");
-
-//        ===================임시 로그인 계정 _ 앞단이랑 연결하면 유저아이디로 UID 찾아서 넣으면 될 것 같다.==================
-        User findU = teamService.findUser(LoginUser.getUID());
-
-
         // 전달받은 팀 정보와 유저정보를 통해 해당하는 내역을 삭제한다.
         Long Tid=teamService.findByTeamID(id);
-        Long utid=teamService.findUTID(findU.getUID(),Tid);
+        Long utid=teamService.findUTID(LoginUser.getUID(),Tid);
         int res = teamService.removeUTID(utid);
         return res;
     }

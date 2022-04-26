@@ -5,7 +5,10 @@ import fs.project.domain.Team;
 import fs.project.domain.TeamEvent;
 import fs.project.domain.User;
 import fs.project.domain.UserTeam;
+import fs.project.repository.TeamRepository2;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,73 +20,71 @@ import java.util.List;
 public class TeamService {
 
     private final TeamRepository teamRepository;
+    private final TeamRepository2 teamRepository2;
 
+    // 그룹 검색 + 페이징
+    public Page<Team> findByTeamIDContaining(String teamID, Pageable pageable){
+        Page<Team> res = teamRepository2.findByTeamIDContaining(teamID, pageable);
+        return res;
+    }
 
-    // Team
+    // 팀 저장
     @Transactional
     public Long saveTeam(Team team){
         System.out.println("saveTeam Service");
         long res = teamRepository.saveTeam(team);
         return res;
     }
+    // 팀 찾기
     public Team findTeam(Long id){
         System.out.println("findTeam Service");
-        Team res = teamRepository.findTeams(id);
+        Team res = teamRepository.findTeam(id);
         return res;
     }
-    // 팀 아이디로 TID를 찾는다.
+    // 팀 아이디로 TID 찾기
     public Long findByTeamID(String id){
         System.out.println("findByTeamID Service");
         List<Team> lists = teamRepository.findByTeamID(id);
         return lists.get(0).getTID();
     }
-    // 검색페이지에서 검색 키워드를 포함한 팀 아이디 리스트를 가져온다.
-    public List<Team> searchTeam(String id){
-        System.out.println("searchTeam Service");
-        List<Team> res = teamRepository.searchTeam(id);
-        return res;
-    }
 
-    // User
-    @Transactional
-    public Long saveUser(User user) {
-        System.out.println("saveUser Service");
-        Long res = teamRepository.saveUser(user);
-        return res;
-    }
+    // 유저 찾기
     public User findUser(Long userUID) {
         System.out.println("findUser Service");
         User res = teamRepository.findUser(userUID);
         return res;
     }
-    public List<User> findByUserID(String id){
+    // 유저 아이디로 유저 찾기
+    public User findByUserID(String id){
         System.out.println("findByUserID Service");
         List<User> res = teamRepository.findByUserID(id);
-        return res;
+        return res.get(0);
     }
+    // 유저의 메인 TID 업데이트
     @Transactional
-    public void updateMainTeamID(Long uid, Long tid){
-        teamRepository.updateMainTeamID(uid,tid);
+    public void updateMainTID(Long uid, Long tid){
+        teamRepository.updateMainTID(uid,tid);
+    }
+    // 유저의 현재 TID(CurTID) 업데이트
+    @Transactional
+    public void updateCurTID(Long uid, Long tid){
+        teamRepository.updateCurTID(uid,tid);
     }
 
-    @Transactional
-    public void updateCurTeamID(Long uid, Long tid){
-        teamRepository.updateCurTeamID(uid,tid);
-    }
-
-    // Userteam
+    // 유저팀 저장
     @Transactional
     public Long saveUserTeam(UserTeam userTeam){
         System.out.println("saveUserTeam Service");
         Long res = teamRepository.saveUserTeam(userTeam);
         return res;
     }
+    // UID로 유저팀 찾기
     public List<UserTeam> findByUID(Long uID) {
         System.out.println("findByUID");
         List<UserTeam> lists = teamRepository.findByUID(uID);
         return lists;
     }
-
+    // UID & TID로 UTID찾기
     public long findUTID(long uid, long tid){
         // 유저가 가입한 팀 리스트
         List<UserTeam> list = teamRepository.findByUID(uid);
@@ -96,7 +97,7 @@ public class TeamService {
         }
         return utid;
     }
-
+    // UTID로 유저팀 삭제
     @Transactional
     @Modifying
     public int removeUTID(long utid){
@@ -105,19 +106,18 @@ public class TeamService {
         return res;
     }
 
-
-    // 팀이벤트
+    // 팀이벤트 저장
     @Transactional
     public Long saveTeamEvent(TeamEvent te){
         System.out.println("saveTeamEvent Service");
         Long res = teamRepository.saveTeamEvent(te);
         return res;
     }
-
+    // UTID로 유저팀 찾기
     @Transactional
-    public List<UserTeam> findUserTeam(String userId, Long tId){
-        System.out.println("updateUserTeamID");
-        return teamRepository.findUserTeam(userId,tId);
+    public UserTeam findUserTeam(Long utid){
+        System.out.println("findUserTeam");
+        return teamRepository.findUserTeam(utid);
     }
 
 
@@ -129,8 +129,6 @@ public class TeamService {
     }
     private int validateDuplicateUserID(String id){
         List<User> res = teamRepository.findByUserID(id);
-        System.out.println();
-        System.out.println("사이즈" + res.size());
         return res.size();
     }
 
