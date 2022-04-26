@@ -49,7 +49,7 @@
             margin-left: 120px;
         }
 
-        #update {
+        #update,#deleteAccount{
             margin-top: 30px;
             background: white;
             outline: none;
@@ -302,18 +302,35 @@
             <button type="button" class="btn btn-primary" id="deleteAccount" >회원탈퇴</button>
         </div>
     </form>
-    <form th:action="@{/logout}" method="post">
-        <button class="w-100 btn btn-dark btn-lg" id="logout"
-                type="submit">
-            로그아웃
-        </button>
-    </form>
+
+    <br>
+
+    <div class="setting">
+        <div th:if="${kakaoLogin.booleanValue()==true}">
+            <a href = "https://kauth.kakao.com/oauth/logout?client_id=4d6bfc510b9480c47be3a30e3ae11deb&logout_redirect_uri=http://localhost:8080/" id="custom-logout-btn">
+                <button class="w-100 btn btn-dark btn-lg">로그아웃</button>
+            </a>
+        </div>
+
+        <div th:if="${kakaoLogin.booleanValue()==false}">
+            <form th:action="@{/logout}" method="post">
+                <button class="w-100 btn btn-dark btn-lg" id="logout"
+                        type="submit">
+                    로그아웃
+                </button>
+            </form>
+        </div>
+    </div>
+
+
 </div>
 
+<!--<a href="https://accounts.kakao.com/logout?/logout" class="link_logout" data-tiara-layer="logout">로그아웃</a>-->
 
 <a href="javascript:void kakaoChatStart()" class="kakaoChatPc hidden-md hidden-sm hidden-xs">
     <p id="kakao-talk-channel-chat-button"></p>
 </a>
+
 
 
 <script type="text/javascript">

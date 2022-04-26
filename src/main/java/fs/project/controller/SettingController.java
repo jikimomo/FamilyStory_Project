@@ -3,6 +3,7 @@ package fs.project.controller;
 import fs.project.argumentresolver.Login;
 import fs.project.domain.User;
 import fs.project.form.UserSetForm;
+import fs.project.kakalogin.kakaoService;
 import fs.project.service.UserService;
 import fs.project.session.SessionConst;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class SettingController {
     //model.addAttribute의"userSetForm"이라는 이름으로 설정된 객체에 담아서 리턴하고
     //리턴되는 곳은 users/settingUser라고 되어있는 html이다.
     @GetMapping("/users/settinguser")
-    public String updateUser(@Login User loginUser, Model model) {
+    public String updateUser(@Login User loginUser, Model model, HttpServletRequest request) {
         User user = userService.findUser(loginUser.getUID());
 
         //@Login User loginUser에 현재 로그인된 로그인 세션이 담겨져 있다.
@@ -44,6 +45,16 @@ public class SettingController {
         userSetForm.setEmail(user.getEmail());
         userSetForm.setPhoneNumber(user.getPhoneNumber());
         //
+
+
+        //로그인 성공하였고 세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성하는 코드 작성.
+        HttpSession session = request.getSession();
+        String access_Token = (String)session.getAttribute("access_Token");
+        //카카오 토큰 삭제. 왜냐? 이전 사용자가 카카오 서비스 계정 로그아웃 안하고 이후 사람이 일반 로그인 할 경우 보안에 문제가 생기기 때문에.
+        if(access_Token != null && !"".equals(access_Token)) {
+            model.addAttribute("kakaoLogin", true);
+        }
+        else model.addAttribute("kakaoLogin", false);
 
         model.addAttribute("userSetForm", userSetForm);
         model.addAttribute("userProfileImage", user.getUserImage());
@@ -76,7 +87,7 @@ public class SettingController {
         HttpSession session = request.getSession();
 
         //session에다가 LOGIN_USER라는 박스에 findOne(updateUid)를 담고 setAttribute해준다.
-        session.setAttribute(SessionConst.LOGIN_USER, userService.findOne(updateUid));
+        session.setAttribute(SessionConst.LOGIN_USER, userService.findUser(updateUid));
 
         //"users/settingUserComplete" view페이지로 return
         Long curTID;
@@ -88,7 +99,6 @@ public class SettingController {
         }
         model.addAttribute("curTID", curTID);
         return "users/settingUserComplete";
-
     }
 
 

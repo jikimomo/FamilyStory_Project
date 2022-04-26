@@ -1,6 +1,7 @@
 package fs.project;
 
 import fs.project.domain.*;
+import fs.project.repository.DomainRepository;
 import fs.project.repository.TeamRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -21,7 +22,7 @@ import java.time.LocalDateTime;
 public class DomainTest {
 
     @Autowired
-    TeamRepository domainRepository;
+    DomainRepository domainRepository;
 
     @Test
     @Transactional
@@ -52,6 +53,7 @@ public class DomainTest {
     @Transactional
     @Commit
     public void testTeam() throws Exception{
+
         Team team = new Team();
         team.setTeamID("asdf");
         team.setTeamName("우리가족");
@@ -62,6 +64,7 @@ public class DomainTest {
         Assertions.assertThat(findTeam.getTID()).isEqualTo(team.getTID());
         Assertions.assertThat(findTeam.getTeamID()).isEqualTo(team.getTeamID());
         Assertions.assertThat(findTeam.getTeamName()).isEqualTo(team.getTeamName());
+
     }
 
     @Test
@@ -71,7 +74,6 @@ public class DomainTest {
         Team team = new Team();
         team.setTeamID("asdfg");
         team.setTeamName("우리가족1");
-
         Long savedId11 = domainRepository.saveTeam(team);
         Team findTeam = domainRepository.findTeams(savedId11);
 

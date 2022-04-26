@@ -13,7 +13,6 @@ public class FindPwForm {
     private String email;
 
     private String id;
-
     private String address;
     private String title;
     private String message;

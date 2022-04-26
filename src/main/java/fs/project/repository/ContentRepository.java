@@ -44,6 +44,7 @@ public class ContentRepository {
                 .getResultList();
     }
 
+
     //uID, tID가 일치하는 경우의 content를 select -> 개인 페이지용
     public List<Content> findAllByUT(Long uID, Long tID){
         return em.createQuery("select c from Content c join c.user u join c.team t where u.uID = :uID and t.tID = :tID", Content.class)

@@ -1,9 +1,12 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header" />
+
+<link th:href="@{/css/bootstrap.min.css}"
+      href="../css/bootstrap.min.css" rel="stylesheet">
 <style>
     .container {
-        max-width: 560px;
+        max-width: 350px;
     }
     .fieldError{
         border-color: #dc3545;
@@ -13,20 +16,73 @@
         border-color: #dc3545;
         color: #dc3545;
     }
+
+    .signup_form {
+
+        border:1px solid white;
+        width:400px;
+        height:auto;
+        margin:0 auto;
+    }
+
+    .signup_form button {
+
+        display: block;
+        box-sizing: border-box;
+        margin:auto;
+        width: 50%;
+        padding: 1rem;
+        font-size: 1rem;
+        background-color: #333333;
+        border: 1px solid #b1b1b1;
+        color: #fff;
+        border-radius: 0.3rem;
+        margin-top: 2rem;
+    }
+
+    .signup_form fieldset{
+
+        margin-top: 4em;
+        margin-bottom: 5em;
+        border:2px solid #e2e2e2;
+        padding:1.8rem 2rem 1.8rem;
+
+    }
+    input[type="date"]::before {content:attr(data-placeholder);width:100%}
+    input[type="date"]:focus::before,
+    input[type="date"]:valid::before{display:none}
+
 </style>
 
 
 <body>
-<div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+<div class="signup_form" style="margin-top: 150px;">
+<!--    <div th:replace="fragments/bodyHeader :: bodyHeader" />-->
+    <fieldset>
+        <div style="text-align: center; margin-top: 8px; margin-bottom: 50px; ">
+            <img src="../images/headerimage.png" style="width : 70%;" >
+        </div>
+
 
     <form role="form" action="/signUp" th:object="${userForm}"  method="post">
+
+
+
+        <div class="form-group">
+            <!--            <label th:for="name">이름</label>-->
+            <input type="text" th:field="*{name}" class="form-control"
+                   placeholder="성명" style="margin-top: 10px; "
+                   th:class="${#fields.hasErrors('name')}? 'form-control fieldError' : 'form-control'">
+            <div class="field-error" th:errors="*{name}" />
+        </div>
+
+
         <div class="form-group">
 
-            <label th:for="id">아이디</label>
+<!--            <label th:for="id">아이디</label>-->
 
             <input type="text" th:field="*{id}" class="form-control"
-                   placeholder="이름을 입력하세요"
+                   placeholder="아이디"  style="margin-top: 10px; "
                    th:class="${#fields.hasErrors('id')}? 'form-control fieldError' : 'form-control'">
             <div class="field-error" th:errors="*{id}" />
         </div>
@@ -36,58 +92,52 @@
                th:text="${err}">전체 오류 메시지</p>
         </div>
 
+
         <div class="form-group">
-            <label th:for="passWord">비밀번호</label>
+<!--            <label th:for="passWord">비밀번호</label>-->
             <input type="text" th:field="*{passWord}" class="form-control"
-                   placeholder="비밀번호를 입력하세요"
+                   placeholder="비밀번호" style="margin-top: 10px; "
                    th:class="${#fields.hasErrors('passWord')}? 'form-control fieldError' : 'form-control'">
             <div class="field-error" th:errors="*{passWord}" />
         </div>
 
 
         <div class="form-group">
-            <label th:for="name">이름</label>
-            <input type="text" th:field="*{name}" class="form-control"
-                   placeholder="이름을 입력하세요"
-                   th:class="${#fields.hasErrors('name')}? 'form-control fieldError' : 'form-control'">
-            <div class="field-error" th:errors="*{name}" />
-        </div>
-
-        <div class="form-group">
-            <label th:for="nickName">닉네임</label>
+<!--            <label th:for="nickName">닉네임</label>-->
             <input type="text" th:field="*{nickName}" class="form-control"
-                   placeholder="이름을 입력하세요"
+                   placeholder="닉네임" style="margin-top: 10px; "
                    th:class="${#fields.hasErrors('nickName')}? 'form-control fieldError' : 'form-control'">
             <div class="field-error" th:errors="*{nickName}" />
         </div>
 
         <div class="form-group">
-            <label th:for="email">E-mail</label>
+<!--            <label th:for="email">E-mail</label>-->
             <input type="text" th:field="*{email}" class="form-control"
-                   placeholder="E-mail을 입력하세요"
+                   placeholder="E-mail" style="margin-top: 10px; "
                    th:class="${#fields.hasErrors('email')}? 'form-control fieldError' : 'form-control'">
             <div class="field-error" th:errors="*{email}" />
         </div>
 
         <div class="form-group">
-            <label th:for="nickName">휴대폰 번호</label>
+<!--            <label th:for="nickName">휴대폰 번호</label>-->
             <input type="text" th:field="*{phoneNumber}" class="form-control"
-                   placeholder="휴대폰 번호를 입력하세요"
+                   placeholder="휴대폰 번호" style="margin-top: 10px; "
                    th:class="${#fields.hasErrors('phoneNumber')}? 'form-control fieldError' : 'form-control'">
             <div class="field-error" th:errors="*{phoneNumber}" />
         </div>
 
         <div class="form-group">
-            <label th:for="street">날짜</label>
-            <input type="date" id="birthDay" name="birthDay" class="form-control" placeholder="시간을 입력하세요. ex)2022-04-10 )" required>
+
+            <input type="date" id="birthDay" name="birthDay" class="form-control" data-placeholder="생년월일" required
+                   style="margin-top: 10px; "
+            >
         </div>
 
-        <br>
-            <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-outline-secondary">가입</button>
 
     </form>
-    <br/>
-    <div th:replace="fragments/footer :: footer" />
+    </fieldset>
+<!--    <div th:replace="fragments/footer :: footer" />-->
 
 </div>
 </body>
