@@ -8,9 +8,23 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <style>
-        .btnx-indigo{
-            background: var(--bs-indigo); background: #C3EFBE; border: none;);
-            color: #5C9204;
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Poppins:wght@200;300;400&family=Roboto+Serif:wght@800&display=swap');
+    </style>
+    <style>
+        *{
+            font-family: "Poppins", sans-serif;
+        }
+        a{
+            color:#333333;
+            text-decoration: none;
+        }
+        #searchbtn{
+            background-color: #33333350;
+            border: none;
+        }
+        #searchbtn:hover{
+            border: none;
+            background-color: #33333330;
         }
     </style>
     <script th:inline="javascript">
@@ -24,7 +38,6 @@
             // 사용자가 이미 팀에 소속되어 있거나, 요청을 한 상태면 버튼을 비활성화
             if (myTeam != null || joinCheck != null) {
                 for (var i = 0; i < myTeam.length; i++) {
-                    // $('input[name=' + myTeam[i] + ']').attr("disabled", true);
                     console.log(joinCheck[i])
                     if (joinCheck[i] == true) {
                         $('input[name=' + myTeam[i] + ']').attr("value", "팀원");
@@ -38,11 +51,9 @@
             $('input[name=teamId]').click(function(){
                 $(this).val("");
             })
-            // $('input[type=button]').click(function () {
             $('input[value="가입 요청"]').click(function () {
                 let res = confirm("가입 요청을 하시겠습니까?")
                 let id = this.name;
-                const this1 = $(this);
                 if(res){
                     $.ajax({
                         type: "POST",
@@ -51,7 +62,6 @@
                         success: function (res) {
                             if (res == 1) {
                                 alert("요청이 완료되었습니다.");
-                             //   location.href="/"
                                 history.go(0);
                             } else {
                                 alert("이미 요청된 사항입니다.")
@@ -66,9 +76,7 @@
 
             $('input[value="요청 취소"]').click(function () {
                 let res = confirm("요청을 취소하시겠습니까?")
-                console.log('요청취소?')
                 let id = this.name;
-                console.log(id)
                 const this2 = $(this);
                 if(res){
                     $.ajax({
@@ -76,12 +84,9 @@
                         url: "RequestTeamCancel",
                         data: {id: id},
                         success: function (res) {
-                            // console.log("넘어갔다");
-                                console.log("res " + res)
                             if (res == 1) {
                                 alert("요청이 취소되었습니다.");
                                 this2.val("가입 요청")
-                                // this1.attr("disabled", true);
                                 history.go(0)
                             }
                         },
@@ -109,13 +114,12 @@
             </div>
         </form>
     </div>
-<!--    <div>총 ㅣ <span th:text="${teams.totalElements}"></span></div>-->
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover" style="text-align: center">
         <thead class="table-dark">
-            <th>그룹번호</th>
+            <th style="width: 6em;">그룹번호</th>
             <th>그룹 ID</th>
             <th>그룹명</th>
-            <th>가입하기</th>
+            <th style="width: 15em">가입하기</th>
         </thead>
         <tbody>
             <tr th:each="team : ${teams}" id="dataTable">
@@ -133,8 +137,13 @@
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${1 ==currentPage} ? 'disabled'" >
-                    <a class="page-link" href="#" th:href="@{/SearchingTeam(page=${currentPage-1},teamId=${param.teamId})}" aria-label="Previous">
+                    <a class="page-link" href="#" th:href="@{/SearchingTeam(page=0,teamId=${param.teamId})}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${1 ==currentPage} ? 'disabled'" >
+                    <a class="page-link" href="#" th:href="@{/SearchingTeam(page=${currentPage-2},teamId=${param.teamId})}" aria-label="Previous">
+                        <span aria-hidden="true"><</span>
                     </a>
                 </li>
                 <li class="page-item" th:classappend="${idx ==currentPage} ? 'disabled'" th:each="idx:${#numbers.sequence(startPage,endPage)}">
@@ -142,6 +151,11 @@
 
                 <li class="page-item" th:classappend="${teams.totalPages ==currentPage} ? 'disabled'">
                     <a class="page-link" href="#" th:href="@{/SearchingTeam(page=${currentPage},teamId=${param.teamId})}"  aria-label="Next">
+                        <span aria-hidden="true">></span>
+                    </a>
+                </li>
+                <li class="page-item" th:classappend="${teams.totalPages ==currentPage} ? 'disabled'">
+                    <a class="page-link" href="#" th:href="@{/SearchingTeam(page=${end-1},teamId=${param.teamId})}"  aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
