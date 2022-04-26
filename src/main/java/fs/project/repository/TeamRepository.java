@@ -85,7 +85,6 @@ public class TeamRepository {
 
     //teamevent
     public Long saveTeamEvent(TeamEvent teamEvent) {
-
         em.persist(teamEvent);
         return teamEvent.getTeID();
     }
@@ -96,7 +95,6 @@ public class TeamRepository {
 
     //content
     public Long saveContent(Content content) {
-
         em.persist(content);
         return content.getCID();
     }

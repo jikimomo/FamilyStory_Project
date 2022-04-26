@@ -71,7 +71,6 @@ public class UserRepository {
 
     //패스워드 수정
     public void editPassword(Long uid, String newPassword){
-
         em.createQuery("update User u set u.password = :newPassword where u.uID = :uid")
                 .setParameter("newPassword",newPassword)
                 .setParameter("uid", uid)

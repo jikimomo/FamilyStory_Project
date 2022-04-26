@@ -37,7 +37,7 @@ public class FindController {
         User user = new User();
         user.setName(form.getName());
         user.setEmail(form.getEmail());
-        Optional<User> findUser = userService.findId(user);
+        Optional<User> findUser = userService.findId(user.getName(), user.getEmail());
 
         if (findUser == null) {
             result.reject("signupFail", "존재하지 않는 아이디 입니다. ");
@@ -67,7 +67,7 @@ public class FindController {
         user.setEmail(form.getEmail());
         user.setUserID(form.getId());
 
-        Optional<User> findUser = userService.findPw(user);
+        Optional<User> findUser = userService.findPw(user.getName(),user.getEmail(), user.getUserID());
 
 
         if (findUser == null) {
