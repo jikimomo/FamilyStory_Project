@@ -2,21 +2,37 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <link th:href="@{/css/bootstrap.min.css}"
-          href="../css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .container {
-            max-width: 560px;
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Poppins:wght@200;300;400&family=Roboto+Serif:wght@800&display=swap');
+    </style>
+    <style>
+        * {
+            font-family: "Poppins", sans-serif;
         }
-        .field-error {
-            border-color: #dc3545;
-            color: #dc3545;
+        .container {
+            width: 850px;
+        }
+        .btn{
+            margin-top: 20px;
+            background-color: #ffffff;
+            border: 1px solid #33333330;
+            color:#33333370;
+        }
+        #teamName{
+            text-align: center;
+            margin-bottom: 20px;
+            color: #33333380;
+        }
+        #View{
+            width:300px;
         }
 
         ul {
             list-style-type: none;
             padding: 0px;
-            margin-top: -550px;
+            margin-top: -50px;
             margin-left: -100px;
             width: auto;
             background: white;
@@ -25,7 +41,9 @@
             position: fixed;
             border-radius: 10px;
             color: #333;
-            border: solid 1px #2D7100;
+            /*border: solid 1px #2D7100;*/
+            border: solid 1px #33333330;
+
         }
 
         li {
@@ -50,14 +68,31 @@
         }
 
     </style>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#outTeam').click(function (evt){
+                evt.preventDefault()
+
+                let ans = confirm("그룹을 탈퇴하시겠습니까?")
+                if(ans){
+                    location.replace("/[[${tid}]]/teamEdit2")
+                }
+            })
+        })
+    </script>
 </head>
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
 
+    <div id="teamName"><h2 th:text="${team.teamName}">팀 이름</h2></div>
     <div class="py-1 text-center">
-        <img src="images/logo2.jpg" width="300px" height="300px">
+        <img th:src="${photo}" id="View" class="rounded img-thumbnail mx-auto d-block">
     </div>
+
+    <br>
+    <br>
+    <br>
 
     <ul class="menu">
         <li><a th:href="@{/loginHome/{curTID}(curTID=${curTID})}">홈</a></li>
@@ -66,42 +101,48 @@
         <!--            <li><a id="deleteAccount">탈퇴하기</a></li>-->
     </ul>
 
-    나는 그룹장이 아니야
+<!--    <td>-->
+<!--        <a href="#" th:href="@{/{tid}/teamEdit1 (tid=${tId})}" class="btn btn-primary" role="button">메인 그룹 변경</a>-->
+<!--    </td>-->
 
 
-    <td>
-        <a href="#" th:href="@{/{tid}/teamEdit1 (tid=${tId})}" class="btn btn-primary" role="button">메인 그룹 변경</a>
-    </td>
-
-    <td>
-        <a href="#" th:href="@{/{tid}/teamEdit2 (tid=${tId})}" class="btn btn-primary" role="button">그룹 탈퇴하기</a>
-    </td>
     <div>
         <div>
-            <table class="table">
+            <table class="table" style="text-align: center">
                 <thead>
                 <tr>
                     <th>닉네임</th>
                     <th>이름</th>
+                    <th>아이디</th>
                 </tr>
                 </thead>
                 <tbody>
-
-                <tr th:each="member : ${teamMember}">
-                    <td th:text="${member.nickName}">10000</td>
-                    <td th:text="${member.name}">10000</td>
+                <tr>
+                    <th th:text="'👑 '+${teamBoss.nickName}"></th>
+                    <th th:text="${teamBoss.name}"></th>
+                    <th th:text="${teamBoss.userID}"></th>
+                </tr>
+                <tr th:each="member : ${teamMember}" th:if="${member.userID != teamBoss.userID}">
+                    <td th:text="${member.nickName}">닉네임</td>
+                    <td th:text="${member.name}">이름</td>
+                    <td th:text="${member.userID}">아이디</td>
                 </tr>
                 </tbody>
             </table>
         </div>
+        <div>
+            <a href="#" th:href="@{/{tid}/teamEdit2 (tid=${tId})}" class="btn w-100 btn-lg" role="button" id="outTeam">그룹 탈퇴하기</a>
+        </div>
     </div>
 
+<!--
     <form th:action="@{/logout}" method="post">
         <button class="w-100 btn btn-dark btn-lg"
                 type="submit">
             로그아웃
         </button>
     </form>
+-->
 
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->

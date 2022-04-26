@@ -6,20 +6,83 @@
     <link th:href="@{/css/bootstrap.min.css}"
           rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Poppins:wght@200;300;400&family=Roboto+Serif:wght@800&display=swap');
+    </style>
+    <style>
         .container {
-            /*max-width: 700px;*/
-            width: 700px;
+            width: 850px;
+        }
+        *{
+            font-family: "Poppins", sans-serif;
         }
 
-        .field-error {
-            border-color: #dc3545;
-            color: #dc3545;
+        .btn {
+            margin-top: 20px;
+            background-color: #ffffff;
+            border: 1px solid #33333330;
+            color: #33333370;
         }
+
+        .btn:hover {
+            background-color: #33333330;
+        }
+
+        .requestbox {
+            border: 1px solid #33333330;
+            color: #33333390;
+            padding: 5px;
+            padding-left: 15px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        #deny, #accept {
+            color: #33333390;
+            background-color: #ffffff;
+            border: 1px solid #33333310;
+            border-radius: 10%;
+        }
+
+        #deny:hover, #accept:hover {
+            background-color: #33333310;
+        }
+
+        #View, #file {
+            width: 300px;
+        }
+
+        #file {
+            margin: 0 auto;
+        }
+
+        #submit {
+            background-color: #ffffff;
+            border: 1px solid #33333320;
+            color: #333333;
+            font-size: 16px;
+            margin: 0 auto;
+            width: 300px;
+        }
+
+        #submit:hover {
+            background-color: #33333320;
+        }
+
+        #btndiv {
+            text-align: center;
+        }
+
+        #teamName {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #33333380;
+        }
+
 
         ul {
             list-style-type: none;
             padding: 0px;
-            margin-top: -550px;
+            margin-top: -50px;
             margin-left: -100px;
             width: auto;
             background: white;
@@ -28,7 +91,7 @@
             position: fixed;
             border-radius: 10px;
             color: #333;
-            border: solid 1px #2D7100;
+            border: solid 1px #33333330;
         }
 
         li {
@@ -56,15 +119,14 @@
     </style>
     <script th:inline="javascript">
         let photo = [[${photo}]]
-        console.log(photo)
-
     </script>
     <script type="text/javascript">
-        $(function() {
-            $("#file").on('change', function(){
+        $(function () {
+            $("#file").on('change', function () {
                 readURL(this);
             });
         });
+
         function readURL(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -72,31 +134,30 @@
                     $('#View').attr('src', e.target.result);
                 }
                 reader.readAsDataURL(input.files[0]);
-            }else{
+            } else {
                 $('#View').attr('src', photo);
             }
         }
 
     </script>
     <script type="text/javascript">
-        $(document).ready(function (){
-            $('#outTeam').click(function (evt){
+        $(document).ready(function () {
+            $('#outTeam').click(function (evt) {
                 evt.preventDefault()
 
                 let ans = confirm("그룹을 탈퇴하시겠습니까?")
-                if(ans){
+                if (ans) {
                     location.replace("/[[${tid}]]/teamEdit2")
                 }
             })
-            $('input[type="button"]').click(function (){
-                // console.log($(this).val())
-                // console.log(this.name)
-                let userId=this.name;
-                if($(this).val()=="예"){
+            $('input[type="button"]').click(function () {
+                let userId = this.name;
+                if ($(this).val() == "수락") {
+                    console.log("수락클릭")
                     $.ajax({
                         type: "POST",
                         url: "/[[${tid}]]/teamEdit",
-                        data: {userId: userId, tId:[[${tid}]]},
+                        data: {userId: userId, tId: [[${tid}]]},
                         success: function (res) {
                             console.log("승인 처리 완료")
                             // $('#'+userId).remove()
@@ -106,11 +167,13 @@
                             console.log(error);
                         }
                     });
-                }else{
+                } else if($(this).val()=="거절") {
+                    console.log("거절클릭")
+
                     $.ajax({
                         type: "POST",
                         url: "/[[${tid}]]/deniedMember",
-                        data: {userId: this.name, tId:[[${tid}]]},
+                        data: {userId: this.name, tId: [[${tid}]]},
                         success: function (res) {
                             console.log("거부 처리 완료")
                             // $('#'+userId).remove()
@@ -132,8 +195,8 @@
 
     <br>
     <br>
-    <br>
-    <h1>그룹 사진 변경하기</h1>
+    <!--    <h1>그룹 사진 변경하기</h1>-->
+    <div id="teamName"><h2 th:text="${team.teamName}">팀 이름</h2></div>
     <form id="imgf" th:action="@{/{tid}/updateTeamImage (tid=${tId})}" method="post" enctype="multipart/form-data">
         <div class="mb-3"><img th:src="${photo}" id="View" class="rounded img-thumbnail mx-auto d-block">
             <!--            <img th:src="${team.teamImage}" width="100"/>-->
@@ -143,46 +206,45 @@
             <li><a th:href="@{/loginHome/{curTID}(curTID=${curTID})}">홈</a></li>
             <li><a th:href="@{/users/settinguser}">내정보</a></li>
             <li><a th:href="@{/teamEdit}">내그룹</a></li>
-<!--            <li><a id="deleteAccount">탈퇴하기</a></li>-->
+            <!--            <li><a id="deleteAccount">탈퇴하기</a></li>-->
         </ul>
 
         <div class="mb-3">
-            <div>
+            <div id="filediv">
                 <input class="form-control" type="file" name="file" id="file"/>
             </div>
-            <input type="text" id="hidden" value="" name="tid" hidden>
+            <input type="text" id="hidden" value="" name="tid" hidden/>
         </div>
-        <button type="submit" class="btn btn-success btn-lg btnx-indigo" id="submit">사진변경</button>
+        <div id="btndiv">
+            <button type="submit" class="btn btn-lg" id="submit">대표이미지 수정하기</button>
+        </div>
     </form>
     <br>
     <br>
     <br>
 
-
-    내가 그룹장이야~
-
-
     <div>
         <tr th:each="user:${user}">
-            <div th:id="${user.userID}">
-                <td th:text="${user.name}+'('+${user.userID}+')님이 그룹가입을 요청하셨습니다. 수락하시겠습니까?'"/>
-                <input type="button" value="예" th:name="${user.userID}"/>
-                <input type="button" value="아니오" th:name="${user.userID}"/><br/>
+            <div th:id="${user.userID}" class="requestbox">
+                <td th:text="${user.name}+'('+${user.userID}+')님이 그룹가입을 요청하셨습니다. 수락하시겠습니까?'"></td>
+                &nbsp
+                <input type="button" value="수락" th:name="${user.userID}" id="accept"/>
+                <input type="button" value="거절" th:name="${user.userID}" id="deny"/><br/>
             </div>
         </tr>
     </div>
 
+    <!--    <div>-->
+    <!--        <h1> 그룹장은 이 친구입니다 </h1>-->
+    <!--        <h1>-->
+    <!--            <td th:text="${teamBoss.nickName}"></td>-->
+    <!--        </h1>-->
+    <!--        <h1>-->
+    <!--            <td th:text="${teamBoss.name}"></td>-->
+    <!--        </h1>-->
+    <!--    </div>-->
     <div>
-        <h1> 그룹장은 이 친구입니다 </h1>
-        <h1>
-            <td th:text="${teamBoss.nickName}"></td>
-        </h1>
-        <h1>
-            <td th:text="${teamBoss.name}"></td>
-        </h1>
-    </div>
-    <div>
-        <table class="table">
+        <table class="table" style="text-align: center">
             <thead>
             <tr>
                 <th>닉네임</th>
@@ -191,29 +253,32 @@
             </tr>
             </thead>
             <tbody>
-
-            <tr th:each="member : ${teamMember}">
-                <td th:text="${member.nickName}">10000</td>
-                <td th:text="${member.name}">10000</td>
-                <td th:text="${member.userID}">10000</td>
+            <tr>
+                <th th:text="'👑 '+${teamBoss.nickName}"></th>
+                <th th:text="${teamBoss.name}"></th>
+                <th th:text="${teamBoss.userID}"></th>
+            </tr>
+            <tr th:each="member : ${teamMember}" th:if="${member.userID != teamBoss.userID}">
+                <td th:text="${member.nickName}">닉네임</td>
+                <td th:text="${member.name}">이름</td>
+                <td th:text="${member.userID}">아이디</td>
             </tr>
             </tbody>
         </table>
     </div>
     <div>
-        <a href="#" th:href="@{/{tid}/teamEdit2 (tid=${tId})}" class="btn btn-primary" role="button" id="outTeam">그룹 탈퇴하기</a>
+        <a href="#" th:href="@{/{tid}/teamEdit2 (tid=${tId})}" class="btn w-100 btn-lg" role="button" id="outTeam">그룹
+            탈퇴하기</a>
     </div>
-
+    <!-- <form th:action="@{/logout}" method="post">
+         <button class="w-100 btn btn-dark btn-lg"
+                 type="submit">
+             로그아웃
+             &lt;!&ndash;                    onclick="location.href='home.html'"&ndash;&gt;
+         </button>
+     </form>-->
 </div>
 
-
-<form th:action="@{/logout}" method="post">
-    <button class="w-100 btn btn-dark btn-lg"
-            type="submit">
-        로그아웃
-        <!--                    onclick="location.href='home.html'"-->
-    </button>
-</form>
 
 <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
