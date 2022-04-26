@@ -10,6 +10,9 @@
         @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Poppins:wght@200;300;400&family=Roboto+Serif:wght@800&display=swap');
     </style>
     <style>
+        .btn{
+            border: none;
+        }
         .container {
             width: 850px;
         }
@@ -69,32 +72,27 @@
             </div>
         </div>
     </div>
-    <form th:action="@{/logout}" method="post">
-        <button class="w-100 btn btn-lg" id="logout"
-                type="submit">
-            로그아웃
-        </button>
-    </form>
-</div>
+    <div class="setting">
+        <div th:if="${kakaoLogin.booleanValue()==true}">
+            <a href = "https://kauth.kakao.com/oauth/logout?client_id=4d6bfc510b9480c47be3a30e3ae11deb&logout_redirect_uri=http://localhost:8080/" id="custom-logout-btn">
+                <button class="w-100 btn btn-dark btn-lg">로그아웃</button>
+            </a>
+        </div>
 
-
-
-<div class="setting">
-    <div th:if="${kakaoLogin.booleanValue()==true}">
-        <a href = "https://kauth.kakao.com/oauth/logout?client_id=4d6bfc510b9480c47be3a30e3ae11deb&logout_redirect_uri=http://localhost:8080/" id="custom-logout-btn">
-            <button class="w-100 btn btn-dark btn-lg">로그아웃</button>
-        </a>
-    </div>
-
-    <div th:if="${kakaoLogin.booleanValue()==false}">
-        <form th:action="@{/logout}" method="post">
-            <button class="w-100 btn btn-dark btn-lg" id="logout"
-                    type="submit">
-                로그아웃
-            </button>
-        </form>
+        <div th:if="${kakaoLogin.booleanValue()==false}">
+            <form th:action="@{/logout}" method="post">
+                <button class="w-100 btn btn-dark btn-lg" id="logout"
+                        type="submit">
+                    로그아웃
+                </button>
+            </form>
+        </div>
     </div>
 </div>
+
+
+
+
 
 <div th:replace="./fragments/footer :: footer"/>
 </body>
