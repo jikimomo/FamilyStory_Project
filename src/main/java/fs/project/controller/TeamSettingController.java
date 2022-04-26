@@ -139,6 +139,7 @@ public class TeamSettingController {
 
     }
 
+    @ResponseBody
     @PostMapping("/{tid}/teamEdit")
     public String AcceptMember(@Login User loginUser, @RequestParam("userId") String userId, @RequestParam("tId") Long tId, Model model){
         UserTeam ut = teamService.findUserTeam(userId,tId).get(0);
@@ -162,6 +163,7 @@ public class TeamSettingController {
         return "team/editTeam";
     }
 
+    @ResponseBody
     @PostMapping("/{tid}/deniedMember")
     public String DeniedMember(@Login User loginUser, @RequestParam("userId") String userId, @RequestParam("tId") Long tId, Model model){
         UserTeam ut = teamService.findUserTeam(userId,tId).get(0);
@@ -177,8 +179,6 @@ public class TeamSettingController {
         model.addAttribute("curTID", curTID);
         return "team/editTeam";
     }
-
-
 
 
 //    메인그룹 변경 로직
