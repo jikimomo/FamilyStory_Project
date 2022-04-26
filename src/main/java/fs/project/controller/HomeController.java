@@ -36,8 +36,14 @@ public class HomeController {
 
     // 최초 접근 시 해당 GetMapping을 통해서 home.html로 보여준다.
     @GetMapping("/")
-    public String home(Model model) {
+    public String home(Model model, HttpServletRequest request) {
         // 이때, "loginForm"이라는 이름을 가진 모델에 LoginForm()의 형식을 담고 간다.
+        HttpSession session = request.getSession(false);
+        //현재 담겨져있는 세션값이 존재한다면 세션을 드랍한다.
+        if(session !=null){
+            session.invalidate();
+        }
+
         model.addAttribute("loginForm", new LoginForm());
         return "home";
     }
@@ -71,9 +77,15 @@ public class HomeController {
         // 즉, 로그인 회원 정보를 세션에 담아놓는다.
 
         session.setAttribute(SessionConst.LOGIN_USER, user);
-
-
         model.addAttribute("loginUser", user);
+
+        String access_Token = (String)session.getAttribute("access_Token");
+        //카카오 로그인인지 아닌지 확인 로직
+        if(access_Token != null && !"".equals(access_Token)) {
+            model.addAttribute("kakaoLogin", true);
+        }
+        else model.addAttribute("kakaoLogin", false);
+
         if (user.getMainTid()==null) {
             return "AfterJoin";
         } else{
@@ -164,7 +176,6 @@ public class HomeController {
             tVO.setTeamName(t.getTeamName());
             myTeamVO.add(tVO);
         }
-
         return myTeamVO;
     }
 
@@ -266,7 +277,6 @@ public class HomeController {
 
         Long uid = loginUser.getUID();
         User user = contentService.findUser(uid);
-
         Team team = contentService.findTeam(user.getMainTid());
         List<Content> content = contentService.findAllByT(team.getTID());
         List<TeamEvent> teamEvent = mainPageService.findTeamEvent(user.getMainTid()); // 오늘 해당되는 기념일에 관한 정보
@@ -306,4 +316,17 @@ public class HomeController {
         return userVOInSameTeam;
     }
 
+
+    @GetMapping("/moveimage")
+    public String moveimage(){
+
+        return "moveimage";
+    }
+
+
+    @GetMapping("/pade")
+    public String pade(){
+
+        return "pade";
+    }
 }

@@ -6,23 +6,56 @@
           href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container {
-            max-width: 380px;
+            margin-top: 200px;
+            max-width: 900px;
         }
         .field-error {
             border-color: #dc3545;
             color: #dc3545;
         }
-
-
         .kakaoChatPc {
             position: fixed;
             z-index: 999;
             right: 20px; /* 화면 오른쪽으로부터의 거리, 숫자만 입력 */
             bottom: 20px; /* 화면 아래쪽으로부터의 거리, 숫자만 입력 */
         }
-    </style>
+        .signup_form fieldset{
 
+            margin-top: 4em;
+            margin-bottom: 5em;
+            border:2px solid #e2e2e2;
+            padding:1.8rem 2rem 1.8rem;
+
+        }
+
+        .hr-sect {
+            display: flex;
+            flex-basis: 100%;
+            align-items: center;
+            color: rgba(0, 0, 0, 0.35);
+            font-size: 12px;
+            margin: 8px 0px;
+        }
+        .hr-sect::before,
+        .hr-sect::after {
+            content: "";
+            flex-grow: 1;
+            background: rgba(0, 0, 0, 0.35);
+            height: 1px;
+            font-size: 0px;
+            line-height: 0px;
+            margin: 0px 16px;
+        }
+
+        a{
+            color : #4d4d4d;
+        }
+
+    </style>
     <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/pade.css">
+
     <script>
         // SDK를 초기화 합니다. 사용할 앱의 JavaScript 키를 설정해 주세요.
         Kakao.init('241e8e5d885ad576b5c291865fbe3373'); // 사용할 앱의 JavaScript키를 입력해 주세요.
@@ -30,128 +63,130 @@
         console.log(Kakao.isInitialized());
     </script>
 
+
  <!--   <script src="/developers.kakao.com/sdk/js/kakao.min.js"></script>-->
 
 </head>
 <body>
 <div class="container">
 
-    <br><br><br><br>
-
-    <form action="/"  th:object="${loginForm}" method="post">
-
-        <div>
-            <label for="loginId"><b>아이디</b></label>
-            <input type="text" id="loginId" th:field="*{loginId}" class="form-control"
-                   th:errorclass="field-error">
-            <div class="field-error" th:errors="*{loginId}" />
-        </div>
-        <div>
-            <label for="password"><b>비밀번호</b></label>
-            <input type="password" id="password" th:field="*{password}"  class="form-control"
-                   th:errorclass="field-error">
-            <div class="field-error" th:errors="*{password}" />
-        </div>
-        <br>
-        <div th:if="${#fields.hasGlobalErrors()}">
-            <p class="field-error" th:each="err : ${#fields.globalErrors()}"
-               th:text="${err}">전체 오류 메시지</p>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                <button class="w-100 btn btn-success btn-lg" type="submit">
-                    로그인</button>
-            </div>
-            <div class="col">
-                <button class="w-100 btn btn-warning btn-lg"  onclick="location.href='items.html'" th:onclick="|location.href='@{/}'|"
-                        type="button">취소</button>
-            </div>
-
-        </div>
-
-    </form>
-
     <div class="row">
-        <div class="py-3 text-center">
+        <div class="col-7">
+            <div class="slider-wrap">
+                <div class="slider-img">
+                    <div class="slider"><img src="images/family1.jpg" alt=""></div>
+                    <div class="slider"><img src="images/family2.jpg" alt=""></div>
+                    <div class="slider"><img src="images/family3.jpg" alt=""></div>
+                </div>
+            </div>
+        </div>
 
-            <a href = "https://kauth.kakao.com/oauth/authorize?client_id=4d6bfc510b9480c47be3a30e3ae11deb&redirect_uri=http://localhost:8080/kakaoLogin&response_type=code" id="custom-login-btn">
-                <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" width="330" />
-            </a>
+        <div class="col-5" >
+            <div style="text-align: center; margin-top: 50px;  margin-bottom: 50px;" >
+                <img src="../images/headerimage.png" width="100%" >
+            </div>
+            <form action="/"  th:object="${loginForm}" method="post">
+
+                <div>
+                    <label for="loginId"><b>아이디</b></label>
+                    <input type="text" id="loginId" th:field="*{loginId}" class="form-control"
+                           th:errorclass="field-error" placeholder="ID">
+                    <div class="field-error" th:errors="*{loginId}" />
+                </div>
+                <div>
+                    <label for="password"><b>비밀번호</b></label>
+                    <input type="password" id="password" th:field="*{password}"  class="form-control"
+                           th:errorclass="field-error" placeholder="PW">
+                    <div class="field-error" th:errors="*{password}" />
+                </div>
+                <br>
+                <div th:if="${#fields.hasGlobalErrors()}">
+                    <p class="field-error" th:each="err : ${#fields.globalErrors()}"
+                       th:text="${err}">전체 오류 메시지</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-outline-secondary" type="submit" style="width: 100%;"> 로그인</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-outline-secondary" style="width: 100%;"  th:onclick="|location.href='@{/}'|"
+                                type="button">취소</button>
+                    </div>
+                </div>
+
+            </form>
+
+            <div class="hr-sect" style="margin-top: 30px; margin-bottom: 50px; ">또는</div>
+
+            <div style="margin-bottom: 40px; margin-left: 50px; ">
+
+                <a href="https://kauth.kakao.com/oauth/authorize?client_id=4d6bfc510b9480c47be3a30e3ae11deb&redirect_uri=http://localhost:8080/kakaoLogin&response_type=code" style="text-decoration:none; text-align-all: center;">
+                    <img src="../images/kakaologo.png" alt="" style= "width: 23px; height: 23px; float: left; margin-right: 10px; ">
+                    <h5> 카카오계정으로 로그인</h5>
+                </a>
+            </div>
+
+            <div class="row">
+                <div class="py-1 text-center">
+                    <a class="btn btn-lg btn-light" href="/signUp">회원가입</a>
+                    <a class="btn btn-lg btn-light" href="/users/findId">ID 찾기</a>
+                    <a class="btn btn-lg btn-light" href="/users/findPw">PW 찾기</a>
+                </div>
+            </div>
         </div>
     </div>
 
+    <div>
 
-    <hr class="my-3">
-    <div class="row">
-        <div class="py-3 text-center">
-            <a class="btn btn-lg btn-light" href="/signUp">회원가입</a>
-            <a class="btn btn-lg btn-light" href="/users/findId">ID 찾기</a>
-            <a class="btn btn-lg btn-light" href="/users/findPw">PW 찾기</a>
-        </div>
+
+
+
     </div>
-
 </div>
+<script>
+    const sliderWrap = document.querySelector(".slider-wrap");
+    const sliderImg = document.querySelector(".slider-img");
+    const slider = document.querySelectorAll(".slider");
 
+    let currentIndex = 0;
+    let sliderCount = 3;
+    // let sliderCount = slider.length;
 
-
-
-
-<!--    <a href="javascript:void kakaoChatStart()" class="kakaoChatPc hidden-md hidden-sm hidden-xs">
-        <p id="kakao-talk-channel-chat-button"></p>
-    </a>-->
-
-
-<!--
-
-<Button onclick="javascript:logoutWithKakao()">Logout</Button>
-
--->
-
-
-
-<script type="text/javascript">
-
-
- /*   function logoutWithKakao() {
-        if (!Kakao.Auth.getAccessToken()) {
-            console.log('Not logged in.');
-            return;
-        }
-        console.log(Kakao.Auth.getAccessToken()); //before Logout
-        Kakao.Auth.logout(function () {
-            console.log(Kakao.Auth.getAccessToken()); //after Logout
-            //★ 추가 할 것 : 로그아웃 성공 후 처리
+    setInterval(() => {
+        let nextIndex = (currentIndex + 1) % sliderCount;  //0 1 2 3 4 0 1 2 3 4....
+        slider[currentIndex].style.opacity = "0";
+        slider[nextIndex].style.opacity = "1";
+        slider.forEach(slider => {
+            slider.style.transition = "all 3s";
         });
-    }*/
-
-
-    function chat() {
-        Kakao.Channel.chat({
-            channelPublicId: '_pPPkb' // 카카오톡 채널 홈 URL에 명시된 id로 설정합니다.
-        });
-    }
-
-    btn_chat();
-    function btn_chat() {
-        Kakao.Channel.createChatButton({
-            container: '#kakao-talk-channel-chat-button',
-            channelPublicId: '_pPPkb' // 카카오톡 채널 홈 URL에 명시된 id로 설정합니다.
-        });
-    }
-
-/*    btn_added();
-    function btn_added() {
-        Kakao.Channel.createAddChannelButton({
-            container: '#kakao-add-channel-button',
-            channelPublicId: '_pPPkb' // 채널 홈 URL에 명시된 id로 설정합니다.
-        });
-    }*/
-
+        currentIndex = nextIndex;
+    }, 3000);
 </script>
 </body>
 
 
 
-
 </html>
+
+
+
+<!--   <div class="row">
+                <div class="col-3">
+                    <img src="../images/kakaologo.png" alt="" style=" width: 40%;">
+                </div>
+                <div class="col-9">
+                    <a href="https://kauth.kakao.com/oauth/authorize?client_id=4d6bfc510b9480c47be3a30e3ae11deb&redirect_uri=http://localhost:8080/kakaoLogin&response_type=code" style="text-decoration:none"><h7>카카오계정으로 로그인</h7></a>
+                </div>
+            </div>
+
+
+             <div class="row">
+                <div class="py-3 text-center">
+
+                    <a href = "https://kauth.kakao.com/oauth/authorize?client_id=4d6bfc510b9480c47be3a30e3ae11deb&redirect_uri=http://localhost:8080/kakaoLogin&response_type=code" id="custom-login-btn">
+                        <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" width="100%">
+                    </a>
+                </div>
+            </div>
+-->

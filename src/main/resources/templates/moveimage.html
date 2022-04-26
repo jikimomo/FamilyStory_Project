@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        #mainimg {position: relative; width:500px; height:500px; overflow:hidden; }
+        #mainimg img {position:absolute; left:0; top:0;}
+    </style>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var num = 0;
+            start();
+            function start() {
+                $('#mainimg img').eq(num - 1).css({left: -1200});
+                setInterval(function () {
+                    slide();
+                }, 5000);
+            }
+            function slide() {
+                if (num == 2) {
+                    num = 0;
+                } else {
+                    num++;
+                }
+                $('#mainimg img').eq(num - 1).animate({left: 1200}, 4000, function () {
+                    $('#mainimg img').eq(num - 1).css({left: -1200});
+                });
+                $('#mainimg img').eq(num).animate({left: 0}, 4000);
+            }
+        });
+    </script>
+
+</head>
+<body>
+
+<div id ="mainimg">
+    <div><img src="images/logo2.jpg" alt="" style="width: 500px; height: 500px;"></div>
+    <div><img src="images/logo3.jpg" alt="" style="width: 500px; height: 500px;"></div>
+    <div><img src="images/logo4.jpg" alt="" style="width: 500px; height: 500px;"></div>
+</div>
+
+<br><br><br><br>
+</body>
+</html>

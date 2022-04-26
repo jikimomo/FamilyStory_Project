@@ -10,13 +10,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.HashMap;
 
 @Controller
 @RequiredArgsConstructor
@@ -56,9 +61,18 @@ public class LoginController {
         // users/login으로 매핑하는 컨트롤러를 찾아간다. (HomeController에 있다)
 //        return "redirect:/loginHome";
 
+        String access_Token = (String)session.getAttribute("access_Token");
+        //카카오 토큰 삭제. 왜냐? 이전 사용자가 카카오 서비스 계정 로그아웃 안하고 이후 사람이 일반 로그인 할 경우 보안에 문제가 생기기 때문에.
+        if(access_Token != null && !"".equals(access_Token)) {
+            kakaoService.kakaoLogout(access_Token);
+            session.removeAttribute("access_Token");
+            session.removeAttribute("userId");
+        }
+
         Long mainTID = loginUser.getMainTid();
         Long curTID = loginUser.getCurTid();
         Long tID;
+
         if(mainTID == null){
             tID = 0L;
         }
@@ -77,8 +91,8 @@ public class LoginController {
     @PostMapping("/logout")
     public String logout(HttpServletRequest request) {
         //세션 값을 담아온다.
+        log.info("로그아웃");
         HttpSession session = request.getSession(false);
-
         String access_Token = (String)session.getAttribute("access_Token");
 
         //카카오 토큰 삭제
@@ -95,4 +109,9 @@ public class LoginController {
         // 로그인 페이지로 이동
         return "redirect:/";
     }
+
+
+
+
+
 }

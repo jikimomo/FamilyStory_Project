@@ -12,53 +12,96 @@
             border-color: #dc3545;
             color: #dc3545;
         }
+
+
+        .signup_form {
+
+            border:1px solid white;
+            width:400px;
+            height:auto;
+            margin:0 auto;
+        }
+
+        .signup_form button {
+
+            display: block;
+            box-sizing: border-box;
+            margin:auto;
+            width: 50%;
+            padding: 1rem;
+            font-size: 1rem;
+            background-color: #333333;
+            border: 1px solid #b1b1b1;
+            color: #fff;
+            border-radius: 0.3rem;
+            margin-top: 2rem;
+        }
+
+        .signup_form fieldset{
+
+            margin-top: 4em;
+            margin-bottom: 5em;
+            border:2px solid #e2e2e2;
+            padding:1.8rem 2rem 1.8rem;
+        }
+
     </style>
 </head>
 <body>
 
-<div class="container">
-    <br><br><br><br><br>
+<div class="signup_form" style="margin-top: 150px;">
+    <!--    <div th:replace="fragments/bodyHeader :: bodyHeader" />-->
+    <fieldset>
+        <div style="text-align: center; margin-top: 8px; margin-bottom: 50px; ">
+            <img src="../images/headerimage.png" style="width : 70%;" >
+        </div>
 
-    <form action="/users/findPw"  th:object="${findPwForm}" method="post">
+        <form action="/users/findPw"  th:object="${findPwForm}" method="post">
 
-        <div>
-            <label for="name"><b>이름</b></label>
-            <input type="text" id="name" th:field="*{name}" class="form-control"
-                   th:errorclass="field-error">
-            <div class="field-error" th:errors="*{name}" />
-        </div>
-        <div>
-            <label for="email"><b>E-mail</b></label>
-            <input type="text" id="email" th:field="*{email}"  class="form-control"
-                   th:errorclass="field-error">
-            <div class="field-error" th:errors="*{email}" />
-        </div>
-        <div>
-            <label for="id"><b>아이디</b></label>
-            <input type="text" id="id" th:field="*{id}"  class="form-control"
-                   th:errorclass="field-error">
-            <div class="field-error" th:errors="*{id}" />
-        </div>
-        <br>
-        <div th:if="${#fields.hasGlobalErrors()}">
-            <p class="field-error" th:each="err : ${#fields.globalErrors()}"
-               th:text="${err}">전체 오류 메시지</p>
-        </div>
-        <hr class="my-4">
-        <div class="row">
-            <div class="col">
-                <button class="w-100 btn btn-success btn-lg" type="submit">
-                    비밀번호 찾기</button>
-            </div>
-            <div class="col">
-                <button class="w-100 btn btn-warning btn-lg"  onclick="location.href='items.html'" th:onclick="|location.href='@{/}'|"
-                        type="button">취소</button>
+            <div>
+
+                <input type="text" id="name" th:field="*{name}" class="form-control"
+                       th:errorclass="field-error" placeholder="성명"  style="margin-top: 10px; " >
+                <div class="field-error" th:errors="*{name}" />
             </div>
 
-        </div>
+            <div>
+                <input type="text" id="id" th:field="*{id}"  class="form-control"
+                       th:errorclass="field-error"   placeholder="아이디" style="margin-top: 10px; ">
+                <div class="field-error" th:errors="*{id}" />
+            </div>
+            <div>
 
-    </form>
+                <input type="text" id="email" th:field="*{email}"  class="form-control"
+                       th:errorclass="field-error" placeholder="E-mail" style="margin-top: 10px; " >
+                <div class="field-error" th:errors="*{email}" />
+            </div>
+
+            <br>
+            <div th:if="${#fields.hasGlobalErrors()}">
+                <p class="field-error" th:each="err : ${#fields.globalErrors()}"
+                   th:text="${err}">전체 오류 메시지</p>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col">
+                    <button class="w-100 btn btn-success btn-lg" type="submit">
+                        비밀번호 찾기</button>
+                </div>
+                <div class="col">
+                    <button class="w-100 btn btn-warning btn-lg"  onclick="location.href='items.html'" th:onclick="|location.href='@{/}'|"
+                            type="button">돌아가기</button>
+                </div>
+
+            </div>
+
+        </form>
+
+
+    </fieldset>
+    <!--    <div th:replace="fragments/footer :: footer" />-->
 
 </div>
+
 </body>
 </html>
