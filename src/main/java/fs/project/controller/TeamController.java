@@ -109,7 +109,14 @@ public class TeamController extends BaseEntity {
     @ResponseBody
     @PostMapping(value="/mainTeamChecked")
     public int mainTeamChecked(@Login User loginuser){
-        int res = teamService.findByUID(loginuser.getUID()).size();
+        List<UserTeam> userTeamList = teamService.findByUID(loginuser.getUID());
+        int res = 0;
+        for(int i=0; i<userTeamList.size();i++){
+            if(userTeamList.get(i).isJoinUs()){
+                res++;
+            }
+        }
+
         return res;
     }
 
@@ -122,13 +129,13 @@ public class TeamController extends BaseEntity {
         // 전달받은 데이터를 Team 테이블에 저장
         Team team = new Team();
         team.setTeamID(teamForm.getTeamId());
-        team.setTeamName(teamForm.getTeamName());
+//        team.setTeamName(teamForm.getTeamName());
         team.setBoss(loginUser.getUID());
         Long saveId = teamService.saveTeam(team);
-
         Team findTeam = teamService.findTeam(saveId);
         if(teamForm.isMainTeamChecked()){
             teamService.updateMainTID(loginUser.getUID(),findTeam.getTID());
+
             User user = teamService.findUser(loginUser.getUID());
 
             HttpSession session = request.getSession();

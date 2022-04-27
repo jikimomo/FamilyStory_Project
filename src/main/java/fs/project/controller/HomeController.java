@@ -98,6 +98,12 @@ public class HomeController {
         }
     }
 
+    @GetMapping("/afterJoin")
+    public String afterJoin()
+    {
+        return "AfterJoin";
+    }
+
     // 단순히 메인 페이지를 띄우는 용도, 보내줘야 하는 데이터는 없음
     // 데이터(컨텐츠, 알림, 구성원 정보, 팀 정보 등)는 다른 부분에서 ajax로 넘겨줄 것임
     @GetMapping("/loadMainPage/{tID}")
@@ -149,6 +155,7 @@ public class HomeController {
         userVO.setNickName(u.getNickName());
         userVO.setBirthday(u.getBirthday());
         userVO.setUserImage(u.getUserImage());
+        userVO.setCoverImage(u.getCoverImage());
         userVO.setMainTid(u.getMainTid());
         if(u.getCurTid() == null){
             userVO.setCurTid(u.getMainTid());
@@ -201,7 +208,8 @@ public class HomeController {
             cVO.setWhen(c.getWhen());
             cVO.setPhotoRoute(c.getPhotoRoute());
             cVO.setUploadTime(c.getUploadTime());
-            cVO.setUID(c.getUser().getUID());
+            cVO.setUserImage(c.getUser().getUserImage());
+            cVO.setUserNickname(c.getUser().getNickName());
             cVO.setTID(c.getTeam().getTID());
             contentVO.add(cVO);
         }
@@ -311,24 +319,17 @@ public class HomeController {
             userVO.setNickName(u.getNickName());
             userVO.setBirthday(u.getBirthday());
             userVO.setUserImage(u.getUserImage());
+            userVO.setCoverImage(u.getCoverImage());
             userVO.setMainTid(u.getMainTid());
             userVOInSameTeam.add(userVO);
         }
-
         return userVOInSameTeam;
     }
 
-
-    @GetMapping("/moveimage")
-    public String moveimage(){
-
-        return "moveimage";
+    @GetMapping("/explain")
+    public String explain(){
+        return "explain";
     }
 
 
-    @GetMapping("/pade")
-    public String pade(){
-
-        return "pade";
-    }
 }

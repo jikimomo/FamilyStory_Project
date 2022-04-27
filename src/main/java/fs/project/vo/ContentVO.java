@@ -16,6 +16,7 @@ public class ContentVO {
     private String location;
     private LocalDate when;
     private LocalDateTime uploadTime;
-    private Long uID;
+    private String userNickname;
+    private String userImage;
     private Long tID;
 }
