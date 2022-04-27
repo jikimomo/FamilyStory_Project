@@ -5,6 +5,14 @@
     <link th:href="@{/css/bootstrap.min.css}"
           href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Poppins:wght@200;300;400&family=Roboto+Serif:wght@800&display=swap');
+    </style>
+
+    <style>
+        *{
+            font-family: "Poppins", sans-serif;
+        }
+
         .container {
             max-width: 560px;
         }
@@ -43,9 +51,9 @@
             border-radius: 10px;
             outline: none;
             cursor: pointer;
-            background: white;
-            color: #333;
-            border: solid 1px #2D7100;
+            background-color: #ffffff;
+            border: 1px solid #33333330;
+            color:#33333370;
 
         }
 
@@ -55,12 +63,18 @@
             padding-left: 10px;
             padding-right: 10px;
             border-radius: 10px;
-            background: white;
             outline: none;
             cursor: pointer;
-            color: #333;
-            border: solid 1px #2D7100;
+            background-color: #ffffff;
+            border: 1px solid #33333330;
+            color:#33333370;
 
+        }
+
+        #settingUserComplete:hover, #home:hover{
+            background-color: #33333330;
+            border: 1px solid #33333330;
+            color: #333333;
         }
     </style>
 </head>

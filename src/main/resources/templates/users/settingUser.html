@@ -5,6 +5,14 @@
     <link th:href="@{/css/bootstrap.min.css}"
           href="/static/images/logo2.jpg" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Poppins:wght@200;300;400&family=Roboto+Serif:wght@800&display=swap');
+    </style>
+
+    <style>
+        *{
+            font-family: "Poppins", sans-serif;
+        }
+
         .container {
             /*max-width: 700px;*/
             width: 850px;
@@ -13,7 +21,7 @@
         ul {
             list-style-type: none;
             padding: 0px;
-            margin: -30px;
+            margin: -120px;
             width: auto;
             background: white;
             height: auto;
@@ -21,7 +29,7 @@
             position: fixed;
             border-radius: 10px;
             color: #333;
-            border: solid 1px #2D7100;
+            border: solid 1px #33333330;
         }
 
         li {
@@ -39,11 +47,26 @@
         }
 
         li a:hover {
+            /*border-radius: 10px;*/
+            /*background-color: #33333330;*/
+            /*border: 1px solid #33333330;*/
+            /*color: #333333;*/
+
             background: #eaea80;
             color: gray;
             border: solid 1px white;
             border-radius: 10px;
         }
+
+        .btn{
+            background-color: #ffffff;
+            border: 1px solid #33333330;
+            color:#33333370;
+        }
+        .btn:hover{
+            background-color: #33333330;
+            border: 1px solid #33333330;
+            color: #333333;
 
         .setting {
             margin-left: 120px;
@@ -60,20 +83,20 @@
         #update, #deleteAccount {
             margin-top: 30px;
             margin-left: 10px;
-            background: white;
             outline: none;
             cursor: pointer;
             border-radius: 10px;
-            color: #333;
-            border: solid 1px #2D7100;
             font-weight: bold;
+            background-color: #ffffff;
+            border: 1px solid #33333330;
+            color:#33333370;
         }
 
         #update:hover, #deleteAccount:hover {
-            background: #eaea80;
-            color: gray;
-            border: solid 1px white;
             border-radius: 10px;
+            background-color: #33333330;
+            border: 1px solid #33333330;
+            color: #333333;
         }
 
 
@@ -90,13 +113,13 @@
 
         #logout {
             margin-top: 20px;
-            background: white;
             outline: none;
             cursor: pointer;
             border-radius: 10px;
-            color: #333;
-            border: solid 1px #2D7100;
             font-weight: bold;
+            background-color: #ffffff;
+            border: 1px solid #33333330;
+            color:#33333370;
         }
 
         #logout:hover{
@@ -307,7 +330,7 @@
             <div class="form-group">
                 <label th:for="userImage">프로필 사진 선택</label>
                 <div id="preview">
-                    <img th:src="${userProfileImage}" width="150" style="margin:12px;"/>
+                    <img th:src="${userProfileImage}" width="150" style="margin:12px;" src="/static/AdminImage/profile.png"/>
                 </div>
                 <img style="width: 150px; margin-top: 5px;" id="View" class="form-control">
                 <input style="display: block;" type="file" id="input-image" name="userImage">
@@ -316,7 +339,7 @@
             <div class="form-group">
                 <label th:for="userCoverImage">개인 커버 사진 선택</label>
                 <div id="previewCover">
-                    <img th:src="${userCoverImage}" width="150" style="margin:12px;"/>
+                    <img th:src="${userCoverImage}" width="150" style="margin:12px;" src="/static/AdminImage/cover.png"/>
                 </div>
                 <img style="width: 150px; margin-top: 5px;" id="ViewCover" class="form-control" >
                 <input style="display: block;" type="file" id="input-coverimage" name="userCoverImage">
