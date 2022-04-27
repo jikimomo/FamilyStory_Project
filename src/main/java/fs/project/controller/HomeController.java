@@ -86,8 +86,7 @@ public class HomeController {
         else model.addAttribute("kakaoLogin", false);
 
         if (user.getMainTid()==null) {
-            return "explain";
-         //   return "AfterJoin";
+            return "AfterJoin";
         } else{
             if(curTID != 0L)
                 return "redirect:/loadMainPage/" + curTID;
@@ -321,13 +320,12 @@ public class HomeController {
         return userVOInSameTeam;
     }
 
-    @GetMapping("/moveimage")
-    public String moveimage(){
-        return "moveimage";
+
+
+    @GetMapping("/explain")
+    public String explain(){
+        return "explain";
     }
 
-    @GetMapping("/pade")
-    public String pade(){
-        return "pade";
-    }
+
 }
