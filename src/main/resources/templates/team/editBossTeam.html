@@ -194,8 +194,6 @@
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
-    <br>
-    <br>
     <div id="teamName"><h2 th:text="${team.teamID}">팀 이름</h2></div>
     <form id="imgf" th:action="@{/{tid}/updateTeamImage (tid=${tId})}" method="post" enctype="multipart/form-data">
         <div class="mb-3"><img th:src="${photo}" id="View" class="rounded img-thumbnail mx-auto d-block">
