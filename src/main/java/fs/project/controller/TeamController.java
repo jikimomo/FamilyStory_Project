@@ -117,10 +117,10 @@ public class TeamController extends BaseEntity {
         team.setTeamName(teamForm.getTeamName());
         team.setBoss(loginUser.getUID());
         Long saveId = teamService.saveTeam(team);
-
         Team findTeam = teamService.findTeam(saveId);
         if(teamForm.isMainTeamChecked()){
             teamService.updateMainTID(loginUser.getUID(),findTeam.getTID());
+
             User user = teamService.findUser(loginUser.getUID());
 
             HttpSession session = request.getSession();

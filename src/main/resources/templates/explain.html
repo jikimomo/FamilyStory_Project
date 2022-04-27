@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Title</title>
+    <style>
+        .container {
+            width: 400vw;
+            transition: transform 1s;
+        }
+        .inner {
+            width:100vw;
+            float:left;
+        }
+
+        .inner img{
+            width: 80%
+        }
+
+        .start{
+            margin-top: 150px ;
+            margin-left: 300px;
+            text-align: center;
+            width:100vm; float:left;
+        }
+        .start img{
+            width: 50%;
+        }
+        div { text-align: center; }
+        img { display: block; margin: 0px auto; }
+
+
+    </style>
+    <link rel="stylesheet" href="/css/button.css">
+
+</head>
+
+<body style="margin-top: 200px">
+
+<div style="overflow:hidden">
+    <div class="container">
+
+        <div class="start" >
+            <div class="row" style="text-align: center;">
+                <h1 style="margin: 40px">패밀리 스토리 시작해볼까요??</h1>
+                <a th:href="@{/afterJoin}">
+                    <button class="w-btn-outline w-btn-green-outline" type="button">
+                        GO!
+                    </button>
+                </a>
+            </div>
+        </div>
+        <div class="inner" >
+            <img src="../images/explain1.png"  >
+        </div>
+        <div class="inner">
+            <img src="../images/explain2.png"  >
+        </div>
+        <div class="inner">
+            <img src="../images/explain3.png"  >
+        </div>
+
+
+    </div>
+</div>
+
+<div style="margin-top: 10px">
+    <input class="버튼1" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
+    <input class="버튼2" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+    <input class="버튼3" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
+    <input class="버튼4" type="radio" name="flexRadioDefault" id="flexRadioDefault4">
+</div>
+
+<script>
+
+    document.querySelector('.버튼1').addEventListener('click', function (){
+        document.querySelector('.container').style.transform = 'translate(-1vw)';
+    });
+
+    document.querySelector('.버튼2').addEventListener('click', function (){
+        document.querySelector('.container').style.transform = 'translate(-100vw)';
+    });
+
+    document.querySelector('.버튼3').addEventListener('click', function (){
+        document.querySelector('.container').style.transform = 'translate(-200vw)';
+    });
+
+    document.querySelector('.버튼4').addEventListener('click', function (){
+        document.querySelector('.container').style.transform = 'translate(-300vw)';
+    });
+
+
+</script>
+
+</body>
+</html>
+
+<!--
+<input type="checkbox">
+
+<div class="jb"></div>
+-->
+
+<!--
+
+     <input type="checkbox">
+            <div class="jb"></div>
+
+.jb {
+box-sizing: border-box;
+width: 64px;
+height: 64px;
+margin: 10px 0px;
+background-color: #2d520d;
+border-radius: 100%;
+transition: all ease 2s 0s;
+}
+
+input:checked ~ .jb {
+width: 100%;
+height: 500px;
+border-radius: 0;
+background-color: #d9efd2;
+}-->
+
+<!--    <link rel="stylesheet" href="/js/bootstrap.js">-->

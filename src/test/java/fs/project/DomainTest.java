@@ -27,6 +27,7 @@ public class DomainTest {
     @Test
     @Transactional
     public void testUser() throws Exception{
+
         //given
         User user = new User();
         user.setUserID("iiii");

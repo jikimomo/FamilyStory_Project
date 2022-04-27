@@ -12,16 +12,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 
 @Controller
 @RequiredArgsConstructor
@@ -109,6 +108,67 @@ public class LoginController {
         // 로그인 페이지로 이동
         return "redirect:/";
     }
+
+
+
+
+    @PostMapping("/loginCheck")
+    @ResponseBody
+    public String loginChk(HttpServletRequest request, HttpServletResponse response) {
+
+        String id = request.getParameter("id");
+        String pw = request.getParameter("pw");
+
+        log.info("id : {}", id);
+        log.info("pw : {}", pw);
+
+        User loginUser = userService.login(id, pw);
+
+        if (loginUser == null) {
+
+            return "아이디 또는 비밀번호가 일치하지 않습니다.";
+        }
+        else{
+
+            HttpSession session = request.getSession();
+            // 세션에 LOGIN_USER라는 이름(SessionConst.class에 LOGIN_USER값을 "loginUser")을 가진 상자에 loginUser 객체를 담음.
+            // 즉, 로그인 회원 정보를 세션에 담아놓는다.
+            session.setAttribute(SessionConst.LOGIN_USER, loginUser);
+//"loginUser"
+            // users/login으로 매핑하는 컨트롤러를 찾아간다. (HomeController에 있다)
+//        return "redirect:/loginHome";
+
+            String access_Token = (String)session.getAttribute("access_Token");
+            //카카오 토큰 삭제. 왜냐? 이전 사용자가 카카오 서비스 계정 로그아웃 안하고 이후 사람이 일반 로그인 할 경우 보안에 문제가 생기기 때문에.
+            if(access_Token != null && !"".equals(access_Token)) {
+                kakaoService.kakaoLogout(access_Token);
+                session.removeAttribute("access_Token");
+                session.removeAttribute("userId");
+            }
+
+            Long mainTID = loginUser.getMainTid();
+            Long curTID = loginUser.getCurTid();
+            Long tID;
+
+            if(mainTID == null){
+                tID = 0L;
+            }
+            else{
+                if(curTID == null){
+                    tID = mainTID;
+                }
+                else{
+                    tID = curTID;
+                }
+            }
+            String Msg = "/loginHome/"+tID;
+            return Msg;
+
+        }
+    }
+
+
+//        int insertRst = sqlSession.insert("login.insert", loginVO);
 
 
 

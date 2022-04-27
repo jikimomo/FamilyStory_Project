@@ -256,6 +256,7 @@
                             isIdValid=false;
                             console.log('존재하는 아이디')
                         }
+
                         if(isIdValid){
                             teamId.classList.remove("is-invalid");
                             teamId.classList.add("is-valid");
@@ -286,8 +287,6 @@
                 }
                 evt.preventDefault();
                 let res = confirm("그룹을 생성하시겠습니까?");
-
-
                 $('#users').val("");
                 edate.value="";
                 ename.value="";

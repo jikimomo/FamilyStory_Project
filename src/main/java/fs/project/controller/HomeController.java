@@ -87,7 +87,8 @@ public class HomeController {
         else model.addAttribute("kakaoLogin", false);
 
         if (user.getMainTid()==null) {
-            return "AfterJoin";
+            return "explain";
+         //   return "AfterJoin";
         } else{
             if(curTID != 0L)
                 return "redirect:/loadMainPage/" + curTID;
@@ -95,6 +96,12 @@ public class HomeController {
                 return "redirect:/loadMainPage/" + user.getMainTid();
             }
         }
+    }
+
+    @GetMapping("/afterJoin")
+    public String afterJoin()
+    {
+        return "AfterJoin";
     }
 
     // 단순히 메인 페이지를 띄우는 용도, 보내줘야 하는 데이터는 없음
@@ -312,21 +319,16 @@ public class HomeController {
             userVO.setMainTid(u.getMainTid());
             userVOInSameTeam.add(userVO);
         }
-
         return userVOInSameTeam;
     }
 
-
     @GetMapping("/moveimage")
     public String moveimage(){
-
         return "moveimage";
     }
 
-
     @GetMapping("/pade")
     public String pade(){
-
         return "pade";
     }
 }
