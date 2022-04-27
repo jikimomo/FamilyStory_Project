@@ -149,6 +149,7 @@ public class HomeController {
         userVO.setNickName(u.getNickName());
         userVO.setBirthday(u.getBirthday());
         userVO.setUserImage(u.getUserImage());
+        userVO.setCoverImage(u.getCoverImage());
         userVO.setMainTid(u.getMainTid());
         if(u.getCurTid() == null){
             userVO.setCurTid(u.getMainTid());
@@ -201,7 +202,8 @@ public class HomeController {
             cVO.setWhen(c.getWhen());
             cVO.setPhotoRoute(c.getPhotoRoute());
             cVO.setUploadTime(c.getUploadTime());
-            cVO.setUID(c.getUser().getUID());
+            cVO.setUserImage(c.getUser().getUserImage());
+            cVO.setUserNickname(c.getUser().getNickName());
             cVO.setTID(c.getTeam().getTID());
             contentVO.add(cVO);
         }
@@ -311,6 +313,7 @@ public class HomeController {
             userVO.setNickName(u.getNickName());
             userVO.setBirthday(u.getBirthday());
             userVO.setUserImage(u.getUserImage());
+            userVO.setCoverImage(u.getCoverImage());
             userVO.setMainTid(u.getMainTid());
             userVOInSameTeam.add(userVO);
         }

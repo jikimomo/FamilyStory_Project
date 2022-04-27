@@ -15,7 +15,7 @@ public class UserVO {
     private String nickName;
     private LocalDate birthday;
     private String userImage;
+    private String coverImage;
     private Long mainTid;
     private Long curTid;
-
 }
