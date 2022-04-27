@@ -143,13 +143,13 @@ public class TeamController extends BaseEntity {
         }
 
         if (saveId != 0) {
-            Team findT = teamService.findTeam(saveId);
+//            Team findT = teamService.findTeam(saveId);
             // 기념일 정보 저장 ( 데이터가 여러개 일 수 있어서 반복문 사용 )
             for (int i = 0; i < teamForm.getEventName().length; i++) {
                 if(teamForm.getEventName()[i] != ""){
                     // 전달받은 데이터를 TeamEvent 테이블에 저장
                     TeamEvent te = new TeamEvent();
-                    te.setTeam(findT);
+                    te.setTeam(findTeam);
                     te.setEventName(teamForm.getEventName()[i]);
                     // DB에서 날짜 타입이 LocalDate이기 때문에 문자열로 받은 내용을 파싱.
                     LocalDate date = LocalDate.parse(teamForm.getEventDate()[i], DateTimeFormatter.ISO_DATE);
@@ -159,7 +159,7 @@ public class TeamController extends BaseEntity {
             }
 
             UserTeam ut = new UserTeam();
-            ut.setTeam(findT);
+            ut.setTeam(findTeam);
             ut.setUser(loginUser);
             ut.setJoinUs(true); // 팀을 만든 사람은 가입 허락이 필요없다.
             ut.setJoinTime(LocalDateTime.now());
@@ -176,7 +176,7 @@ public class TeamController extends BaseEntity {
                     }
                     // 그룹의 구성원이 추가되었으므로, 유저-팀테이블을 업데이트 해준다.
                     ut = new UserTeam();
-                    ut.setTeam(findT);
+                    ut.setTeam(findTeam);
                     ut.setJoinUs(true); // 생성시 추가된 구성원들은 팀에 소속된다. (JoinUs=true)
                     ut.setUser(userInfo);
                     ut.setJoinTime(LocalDateTime.now());
