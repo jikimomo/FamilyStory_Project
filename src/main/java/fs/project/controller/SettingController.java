@@ -57,8 +57,20 @@ public class SettingController {
         else model.addAttribute("kakaoLogin", false);
 
         model.addAttribute("userSetForm", userSetForm);
-        model.addAttribute("userProfileImage", user.getUserImage());
-        model.addAttribute("userCoverImage", user.getCoverImage());
+//        model.addAttribute("userProfileImage", user.getUserImage());
+//        model.addAttribute("userCoverImage", user.getCoverImage());
+
+        if(user.getUserImage() == null) {
+            model.addAttribute("userProfileImage", "/AdminImage/profile.png");
+        } else {
+            model.addAttribute("userProfileImage", user.getUserImage());
+        }
+
+        if (user.getCoverImage() == null) {
+            model.addAttribute("userCoverImage", "/AdminImage/cover.png");
+        } else {
+            model.addAttribute("userCoverImage", user.getCoverImage());
+        }
 
         Long curTID;
         if(user.getCurTid() == null){
