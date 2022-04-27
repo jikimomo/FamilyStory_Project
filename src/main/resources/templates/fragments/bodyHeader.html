@@ -2,7 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <div class="header" th:fragment="bodyHeader">
 
-    <a id="aHeader"><img src="/AdminImage/full_logo.png" width="250px" style="margin: 30px;"/></a>
+    <div style="width: 850px">
+        <div style="width: 400px; margin: 60px auto;">
+            <a id="aHeader" ><img src="/AdminImage/logo3.png" width="400px"/></a>
+        </div>
+    </div>
 
     <script th:inline="javascript">
         var currentTID = [[${curTID}]];

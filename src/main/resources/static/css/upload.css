@@ -55,7 +55,7 @@ body {
     margin: 20px;
 }
 #preview {
-    border: 1px solid #C3EFBE;
+    border: 1px solid gray;
     border-radius: 3px;
 }
 
