@@ -2,14 +2,14 @@ package fs.project.service;
 
 import fs.project.domain.*;
 import fs.project.repository.ContentRepository;
+import fs.project.repository.TeamRepository;
+import fs.project.repository.UserRepository;
 import fs.project.vo.ContentInputVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -21,26 +21,16 @@ import java.util.List;
 public class ContentService {
 
     private final ContentRepository contentRepository;
-
-    /* user, team 임시 service */
-    @Transactional(readOnly = true)
-    public User findUser(Long uID) {
-        return contentRepository.findUser(uID);
-    }
-
-    @Transactional(readOnly = true)
-    public Team findTeam(Long tID) {
-        return contentRepository.findTeam(tID);
-    }
-
+    private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
 
     /* content service */
     //content를 upload하는 메서드
     @Transactional
     public Long uploadContent(Long uID, Long tID, ContentInputVO contentInput){
 
-        User user = contentRepository.findUser(uID);
-        Team team = contentRepository.findTeam(tID);
+        User user = userRepository.findUser(uID);
+        Team team = teamRepository.findTeam(tID);
         Content content = Content.createContent(user, team, contentInput);
         contentRepository.save(content);
 
@@ -52,10 +42,6 @@ public class ContentService {
     public Content findOne(Long cID){
         return contentRepository.findOne(cID);
     }
-
-//    public List<Content> findAll(){
-//        return contentRepository.findAll();
-//    }
 
     //tID가 동일한 List<Content>를 리턴하는 메서드 -> 메인 페이지용
     @Transactional(readOnly = true)
@@ -83,6 +69,11 @@ public class ContentService {
     @Transactional
     public void deleteContent(Long cID){
         contentRepository.delete(cID);
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> findTid(LocalDate when, Long tid) {
+        return contentRepository.findTid(when, tid);
     }
 
     //파일 경로 처리를 위한 메서드
@@ -128,11 +119,5 @@ public class ContentService {
         }
 
         return photoRoute;
-    }
-
-
-    public List<String> findTid(LocalDate when, Long tid) {
-           return contentRepository.findTid(when, tid);
-
     }
 }

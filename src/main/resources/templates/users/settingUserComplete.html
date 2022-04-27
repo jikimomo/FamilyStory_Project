@@ -5,6 +5,14 @@
     <link th:href="@{/css/bootstrap.min.css}"
           href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Poppins:wght@200;300;400&family=Roboto+Serif:wght@800&display=swap');
+    </style>
+
+    <style>
+        *{
+            font-family: "Poppins", sans-serif;
+        }
+
         .container {
             max-width: 560px;
         }
@@ -26,12 +34,12 @@
         }
 
         #container > div > h1 {
-            color: black;
+            color: #333;
             margin-top: 30px;
         }
 
         #container > div > h3 {
-            color: rgb(75, 74, 74);
+            color: #333;
             margin-bottom: 20px;
         }
 
@@ -40,12 +48,13 @@
             padding-top: 10px;
             padding-left: 10px;
             padding-right: 10px;
-            border: 0;
             border-radius: 10px;
             outline: none;
             cursor: pointer;
-            color: black;
-            background: #C3EFBE;
+            background-color: #ffffff;
+            border: 1px solid #33333330;
+            color:#33333370;
+
         }
 
         #home {
@@ -53,20 +62,27 @@
             padding-top: 10px;
             padding-left: 10px;
             padding-right: 10px;
-            background: #C3EFBE;
-            border: 0;
             border-radius: 10px;
             outline: none;
             cursor: pointer;
-            color: black;
+            background-color: #ffffff;
+            border: 1px solid #33333330;
+            color:#33333370;
 
+        }
+
+        #settingUserComplete:hover, #home:hover{
+            background-color: #33333330;
+            border: 1px solid #33333330;
+            color: #333333;
         }
     </style>
 </head>
 <body>
 <div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
     <div class="py-1 text-center">
-        <img src="images/logo2.jpg" width="300px" height="300px">
+        <a th:href="@{/loginHome/{curTID}(curTID=${curTID})}" ><img src="images/logo2.jpg" width="300px" height="300px"></a>
     </div>
 
     <div>
@@ -92,7 +108,7 @@
             </div>
         </form>
     </div>
-<!-- 위치 수정 필요 <div th:replace="fragments/footer :: footer"/>-->
+<!--<div th:replace="fragments/footer :: footer"/>-->
 </div>
 </body>
 </html>
