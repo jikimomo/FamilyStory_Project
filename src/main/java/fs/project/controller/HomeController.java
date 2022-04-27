@@ -1,7 +1,7 @@
 package fs.project.controller;
 
 import fs.project.domain.*;
-import fs.project.service.UserService;
+import fs.project.service.*;
 import fs.project.vo.ContentVO;
 import fs.project.vo.TeamEventVO;
 import fs.project.vo.TeamVO;
@@ -11,6 +11,7 @@ import fs.project.service.MainPageService;
 import fs.project.argumentresolver.Login;
 import fs.project.domain.User;
 import fs.project.form.LoginForm;
+import fs.project.service.UserService;
 import fs.project.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ public class HomeController {
     private final ContentService contentService;
     private final MainPageService mainPageService;
     private final UserService userService;
+    private final TeamService teamService;
 
     // 최초 접근 시 해당 GetMapping을 통해서 home.html로 보여준다.
     @GetMapping("/")
@@ -62,7 +64,7 @@ public class HomeController {
         Long curTID;
         User user = userService.findUser(loginUser.getUID());
         if(user.getCurTid() == null){
-            curTID = 0L;
+            curTID = user.getMainTid();
         }else{
             curTID = user.getCurTid();
         }
@@ -138,7 +140,7 @@ public class HomeController {
     @GetMapping("/initMainPage/loginUser")
     public UserVO initLoginUser(@Login User loginUser) {
         Long uid = loginUser.getUID();
-        User u = contentService.findUser(uid);
+        User u = userService.findUser(uid);
 
         UserVO userVO = new UserVO();
         userVO.setUID(u.getUID());
@@ -162,7 +164,7 @@ public class HomeController {
     @GetMapping("/initMainPage/myTeams")
     public List<TeamVO> initMainPageForMyTeams(@Login User loginUser) {
         Long uid = loginUser.getUID();
-        User user = contentService.findUser(uid);
+        User user = userService.findUser(uid);
 
         List<Team> myTeams = mainPageService.findCurrentTeamsByU(user.getUID());
         List<TeamVO> myTeamVO = new ArrayList<>();
@@ -184,7 +186,7 @@ public class HomeController {
     @PostMapping("/initMainPage/contents")
     public List<ContentVO> initMainPageForContents(@Login User loginUser, @RequestParam String tID) {
         Long uid = loginUser.getUID();
-        User user = contentService.findUser(uid);
+        User user = userService.findUser(uid);
 
         //db에다가 curTid를 업데이트해야 함!
         mainPageService.updateUserCurID(uid, Long.parseLong(tID));
@@ -210,7 +212,7 @@ public class HomeController {
     @PostMapping("/initMainPage/teamEvents")
     public List<TeamEventVO> initMainPageForTeamEvents(@Login User loginUser, @RequestParam String tID){
         Long uid = loginUser.getUID();
-        User user = contentService.findUser(uid);
+        User user = userService.findUser(uid);
 
         List<TeamEvent> teamEvents = mainPageService.findTeamEvent(Long.parseLong(tID));
         List<TeamEventVO> teamEventVO = new ArrayList<>();
@@ -229,7 +231,7 @@ public class HomeController {
     @PostMapping("/initMainPage/todayBirthday")
     public List<UserVO> initMainPageForTodayBirthday(@Login User loginUser, @RequestParam String tID){
         Long uid = loginUser.getUID();
-        User user = contentService.findUser(uid);
+        User user = userService.findUser(uid);
 
         List<User> userTodayBirthday = mainPageService.findBirthday(Long.parseLong(tID)); //오늘 생일인 사람에 관한 정보
         List<UserVO> userVOTodayBirthday = new ArrayList<>();
@@ -252,7 +254,7 @@ public class HomeController {
     @PostMapping("/initMainPage/newRequest")
     public List<UserVO> initMainPageForNewRequest(@Login User loginUser, @RequestParam String tID){
         Long uid = loginUser.getUID();
-        User user = contentService.findUser(uid);
+        User user = userService.findUser(uid);
 
         List<User> userNewRequest = mainPageService.findRequestJoinUs(uid, Long.parseLong(tID));
         List<UserVO> userVONewRequest = new ArrayList<>();
@@ -275,8 +277,9 @@ public class HomeController {
     public String mainPage(@Login User loginUser, Model model){
 
         Long uid = loginUser.getUID();
-        User user = contentService.findUser(uid);
-        Team team = contentService.findTeam(user.getMainTid());
+        User user = userService.findUser(uid);
+
+        Team team = teamService.findTeam(user.getMainTid());
         List<Content> content = contentService.findAllByT(team.getTID());
         List<TeamEvent> teamEvent = mainPageService.findTeamEvent(user.getMainTid()); // 오늘 해당되는 기념일에 관한 정보
         List<User> userTodayBirthday = mainPageService.findBirthday(user.getMainTid()); //오늘 생일인 사람에 관한 정보
@@ -296,7 +299,7 @@ public class HomeController {
     @PostMapping("/initMainPage/userInSameTeam")
     public List<UserVO> initMainPageForUserInSameTeam(@Login User loginUser, @RequestParam String tID) {
         Long uid = loginUser.getUID();
-        User user = contentService.findUser(uid);
+        User user = userService.findUser(uid);
 
         List<User> userInSameTeam = mainPageService.findUserInSameTeam(Long.parseLong(tID));
         List<UserVO> userVOInSameTeam = new ArrayList<>();

@@ -8,44 +8,59 @@
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
 
-        <h1>Family Story</h1>
-        <h2>메인 페이지</h2>
-        <div>
-            <h4>그룹 생성 및 가입</h4>
-            <a href="/AfterJoin">그룹 생성 및 가입</a>
-        </div>
-        <hr>
+    <div id="wrapper">
+        <div id="buttonBox">
+            <div id="groupBtn">
+                <a href="/AfterJoin"><img src="/AdminImage/group.png" width="45px"/></a>
+            </div>
 
-        <div id="userData">
+            <div id="settingBtn">
+                <a th:href="@{/users/settinguser}"><img src="/AdminImage/setting.png" width="45px"/></a>
+            </div>
         </div>
-        <button id="uploadBtn" type="button">글 올리기</button>
-        <hr/>
 
-        <div id="curTeam">
+
+        <div id="navBox">
+            <h4>내가 속한 팀들</h4>
+            <div id="myTeams">
+            </div>
+            <hr/>
+
+            <h4>구성원들</h4>
+            <div id="userInSameTeam">
+            </div>
+            <hr/>
+
+            <h4>알림</h4>
+            <div id="notice">
+            </div>
+            <hr/>
+
+            <h4>1년전 미리보기</h4>
+            <div>
+            </div>
+            <hr/>
         </div>
-        <hr/>
 
-        <h4>내가 속한 팀들</h4>
-        <div id="myTeams">
+        <div id="contentBox">
+            <!-- 현재 무슨 팀인지 보려고 임시로 생성, 나중에 지울 것임! -->
+            <div id="curTeam">
+            </div>
+            <hr/>
+
+            <div id="userData">
+            </div>
+            <button id="uploadBtn" type="button">글 올리기</button>
+            <hr/>
+
+            <h4>게시물</h4>
+            <div id="contents">
+            </div>
+            <hr/>
         </div>
-        <hr/>
+    </div>
 
-        <h4>구성원들</h4>
-        <div id="userInSameTeam">
-        </div>
-        <hr/>
 
-        <h4>알림</h4>
-        <div id="notice">
-        </div>
-        <hr/>
-
-        <h4>게시물</h4>
-        <div id="contents">
-        </div>
-        <hr/>
-
-    <li><a th:href="@{/users/settinguser}">내 정보 수정하기</a></li>
 
     <div th:replace="fragments/footer :: footer" /> <!-- fragments/footer에 있는 파일이 대체됨 -->
 </div> <!-- /container -->
@@ -55,7 +70,8 @@
 
     var curURL = window.location.href;
     console.log(curURL);
-    var currentTID = curURL.charAt(curURL.length-1);
+    var urlArr = curURL.split("/");
+    var currentTID = urlArr[urlArr.length-1];
     console.log(currentTID);
 
     //로그인 사용자 정보를 받아옴
@@ -112,7 +128,8 @@
         console.log(currentTID);
 
         var btn = document.getElementById('uploadBtn');
-        btn.setAttribute("onclick", "location.href='/uploadContent/"+currentTID+"'");
+<!--        btn.setAttribute("onclick", "location.href='/uploadContent/"+currentTID+"'");-->
+        btn.setAttribute("onclick", "location.href='/uploadContent'");
         console.log(btn.getAttribute('href'));
 
         var curTeam = document.getElementById('curTeam');
@@ -210,7 +227,8 @@
         console.log(currentTID);
 
         var btn = document.getElementById('uploadBtn');
-        btn.setAttribute("onclick", "location.href='/uploadContent/"+currentTID+"'");
+<!--        btn.setAttribute("onclick", "location.href='/uploadContent/"+currentTID+"'");-->
+        btn.setAttribute("onclick", "location.href='/uploadContent'");
         console.log(btn.getAttribute('href'));
 
         //현재

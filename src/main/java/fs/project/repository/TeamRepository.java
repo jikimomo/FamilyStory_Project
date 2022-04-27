@@ -14,10 +14,14 @@ public class TeamRepository {
 
     private final EntityManager em;
 
-    public Long saveTeam(Team team) { em.persist(team); return team.getTID(); }
+    // Team
+    public Long saveTeam(Team team) {
+        em.persist(team);
+        return team.getTID();
+    }
 
-    public Team findTeam(Long tid) {
-        return em.find(Team.class, tid);
+    public Team findTeam(Long id) {
+        return em.find(Team.class, id);
     }
 
     public List<Team> findByTeamID(String teamID) {
