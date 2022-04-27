@@ -108,7 +108,6 @@ public class UserService {
         else {
             user.setCoverImage(login.getCoverImage());
         }
-
         userRepository.updateUser(updateUid, user);
     }
 

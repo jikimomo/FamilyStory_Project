@@ -3,7 +3,6 @@ package fs.project.service;
 import fs.project.domain.*;
 import fs.project.repository.ContentRepository;
 import fs.project.repository.MainPageRepository;
-import fs.project.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
