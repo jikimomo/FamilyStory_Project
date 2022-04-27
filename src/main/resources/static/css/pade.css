@@ -95,16 +95,19 @@ body::before {
 /* slider */
 .slider-wrap {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
-   // height: 100vh;
+
+   /* height: 100vh;*/
 }
 
 .slider-img {
+    text-align: right;
     position: relative;
     width: 480px;
     height: 480px;
 }
+
 
 .slider-img img {
     width:90%;

@@ -67,6 +67,7 @@ public class UserService {
         else return null;
 
         아래 코드는 위의 코드를 축약 시켜놓은 코드.
+
         */
         return userRepository.findByLoginId(loginId).filter(u -> u.getPassword().equals(password))
                 .orElse(null);
