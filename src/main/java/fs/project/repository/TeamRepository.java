@@ -20,7 +20,7 @@ public class TeamRepository {
         return team.getTID();
     }
 
-    public Team findOneTeam(Long id) {
+    public Team findTeam(Long id) {
         return em.find(Team.class, id);
     }
 

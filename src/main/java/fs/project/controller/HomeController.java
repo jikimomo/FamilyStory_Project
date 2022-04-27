@@ -64,7 +64,7 @@ public class HomeController {
         Long curTID;
         User user = userService.findUser(loginUser.getUID());
         if(user.getCurTid() == null){
-            curTID = 0L;
+            curTID = user.getMainTid();
         }else{
             curTID = user.getCurTid();
         }

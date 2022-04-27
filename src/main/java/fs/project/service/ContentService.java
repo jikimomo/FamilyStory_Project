@@ -30,7 +30,7 @@ public class ContentService {
     public Long uploadContent(Long uID, Long tID, ContentInputVO contentInput){
 
         User user = userRepository.findUser(uID);
-        Team team = teamRepository.findOneTeam(tID);
+        Team team = teamRepository.findTeam(tID);
         Content content = Content.createContent(user, team, contentInput);
         contentRepository.save(content);
 
