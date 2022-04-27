@@ -20,8 +20,11 @@
 
     var curURL = window.location.href;
     console.log(curURL);
-    var tID = curURL.charAt(curURL.length-3);
-    var uID = curURL.charAt(curURL.length-1); //현재 페이지 유저
+    var urlArr = curURL.split("/");
+<!--    var tID = curURL.charAt(curURL.length-3);-->
+<!--    var uID = curURL.charAt(curURL.length-1); //현재 페이지 유저-->
+    var tID = urlArr[urlArr.length-2];
+    var uID = urlArr[urlArr.length-1]; //현재 페이지 유저
     var loginUID;
     console.log(tID);
     console.log(uID);
