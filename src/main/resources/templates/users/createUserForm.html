@@ -1,35 +1,38 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header" />
-
+<head th:replace="fragments/header :: header"/>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" >
 <link th:href="@{/css/bootstrap.min.css}"
       href="../css/bootstrap.min.css" rel="stylesheet">
 <style>
     .container {
         max-width: 350px;
     }
-    .fieldError{
+
+    .fieldError {
         border-color: #dc3545;
         color: #dc3545;
     }
-    .field-error{
+
+    .field-error {
         border-color: #dc3545;
         color: #dc3545;
     }
 
     .signup_form {
 
-        border:1px solid white;
-        width:400px;
-        height:auto;
-        margin:0 auto;
+        border: 1px solid white;
+        width: 400px;
+        height: auto;
+        margin: 0 auto;
     }
 
     .signup_form button {
 
         display: block;
         box-sizing: border-box;
-        margin:auto;
+        margin: auto;
         width: 50%;
         padding: 1rem;
         font-size: 1rem;
@@ -40,104 +43,187 @@
         margin-top: 2rem;
     }
 
-    .signup_form fieldset{
+    .signup_form fieldset {
 
         margin-top: 4em;
         margin-bottom: 5em;
-        border:2px solid #e2e2e2;
-        padding:1.8rem 2rem 1.8rem;
+        border: 2px solid #e2e2e2;
+        padding: 1.8rem 2rem 1.8rem;
 
     }
-    input[type="date"]::before {content:attr(data-placeholder);width:100%}
+
+    input[type="date"]::before {
+        content: attr(data-placeholder);
+        width: 100%
+    }
+
     input[type="date"]:focus::before,
-    input[type="date"]:valid::before{display:none}
+    input[type="date"]:valid::before {
+        display: none
+    }
+
+    .form-group {
+        position: relative;
+    }
+
+    label {
+        position: absolute;
+        left: 13px;
+        bottom: 7px;
+        transition: all 0.2s;
+        touch-action: manipulation;
+        transform-origin: left bottom;
+        opacity: 60%;
+
+        -ms-user-select: none;
+        -moz-user-select: -moz-none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    input {
+        height: 39px;
+        margin-top: 10px;
+    }
 
 </style>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        $('input[type=text]').keyup(function () {
+            $(this).siblings('label').attr('style', 'font-size:70%; top:4px;')
+            $(this).attr('style', 'font-size:70%; padding-top:20px')
+            /*if(this.value==""){
+                $(this).siblings('label').removeAttr('style');
+                this.removeAttribute('style')
+            }*/
+        })
+        $('input[type=password]').keyup(function () {
+            $(this).siblings('label').attr('style', 'font-size:70%; top:4px;')
+            $(this).attr('style', 'font-size:70%; padding-top:20px')
+            if(this.value==""){
+                $(this).siblings('label').removeAttr('style');
+                this.removeAttribute('style')
+            }
+        })
 
+        $('#id').focusout(function () {
+            let id = $('#id').val();
+            let idfield = document.querySelector('input[id="id"]')
+            $.ajax({
+                type: "POST",
+                url: "validateMem",
+                data: {sendData: id},
+                success: function (data) {
+                    if (data == 0) {
+                        isIdValid = true;
+                        console.log('아이디 가능')
+                    } else if (data == -1) {
+                        // $('#id').attr('placeholder','아이디는 알파벳, 숫자, 언더바(_)만 가능합니다.')
+                    } else {
+                        $('#id').val("")
+                        $('#id').focus()
+                        $('#id').attr('placeholder', '이미 존재하는 아이디입니다.')
+                        isIdValid = false;
+                        console.log('존재하는 아이디')
+                    }
+                    if (isIdValid) {
+                        idfield.classList.remove("is-invalid");
+                        idfield.classList.add("is-valid");
+                    } else {
+                        idfield.classList.remove("is-valid");
+                        idfield.classList.add("is-invalid");
+                    }
+                }
+            })
+        })
+
+        $('button').click(function (evt){
+            evt.preventDefault();
+            if ($('#name').val() == '') {
+                $('#name').focus();
+                evt.preventDefault();
+                return;
+            }
+            if ($('#id').val() == '') {
+                $('#id').focus();
+                evt.preventDefault();
+                return;
+            }
+            if ($('#passWord').val() == '') {
+                $('#passWord').focus();
+                evt.preventDefault();
+                return;
+            }
+            if ($('#nickName').val() == '') {
+                $('#nickName').focus();
+                evt.preventDefault();
+                return;
+            }
+            if ($('#email').val() == '') {
+                $('#email').focus();
+                evt.preventDefault();
+                return;
+            }
+            if ($('#phoneNumber').val() == '') {
+                $('#phoneNumber').focus();
+                evt.preventDefault();
+                return;
+            }
+            if ($('#birthDay').val() == '') {
+                $('#birthDay').focus();
+                evt.preventDefault();
+                return;
+            }
+
+            const formElement = document.getElementById('form');
+            formElement.setAttribute("action", "/signUp");
+            formElement.setAttribute("method", "post");
+            formElement.submit();
+        })
+    })
+</script>
 
 <body>
 <div class="signup_form" style="margin-top: 150px;">
-<!--    <div th:replace="fragments/bodyHeader :: bodyHeader" />-->
+    <!--    <div th:replace="fragments/bodyHeader :: bodyHeader" />-->
     <fieldset>
         <div style="text-align: center; margin-top: 8px; margin-bottom: 50px; ">
-            <img src="../images/headerimage.png" style="width : 70%;" >
+            <img src="../images/headerimage.png" style="width : 70%;">
         </div>
 
-
-    <form role="form" action="/signUp" th:object="${userForm}"  method="post">
-
-
-
-        <div class="form-group">
-            <!--            <label th:for="name">이름</label>-->
-            <input type="text" th:field="*{name}" class="form-control"
-                   placeholder="성명" style="margin-top: 10px; "
-                   th:class="${#fields.hasErrors('name')}? 'form-control fieldError' : 'form-control'">
-            <div class="field-error" th:errors="*{name}" />
-        </div>
-
-
-        <div class="form-group">
-
-<!--            <label th:for="id">아이디</label>-->
-
-            <input type="text" th:field="*{id}" class="form-control"
-                   placeholder="아이디"  style="margin-top: 10px; "
-                   th:class="${#fields.hasErrors('id')}? 'form-control fieldError' : 'form-control'">
-            <div class="field-error" th:errors="*{id}" />
-        </div>
-
-        <div th:if="${#fields.hasGlobalErrors()}">
-            <p class="field-error" th:each="err : ${#fields.globalErrors()}"
-               th:text="${err}">전체 오류 메시지</p>
-        </div>
-
-
-        <div class="form-group">
-<!--            <label th:for="passWord">비밀번호</label>-->
-            <input type="text" th:field="*{passWord}" class="form-control"
-                   placeholder="비밀번호" style="margin-top: 10px; "
-                   th:class="${#fields.hasErrors('passWord')}? 'form-control fieldError' : 'form-control'">
-            <div class="field-error" th:errors="*{passWord}" />
-        </div>
-
-
-        <div class="form-group">
-<!--            <label th:for="nickName">닉네임</label>-->
-            <input type="text" th:field="*{nickName}" class="form-control"
-                   placeholder="닉네임" style="margin-top: 10px; "
-                   th:class="${#fields.hasErrors('nickName')}? 'form-control fieldError' : 'form-control'">
-            <div class="field-error" th:errors="*{nickName}" />
-        </div>
-
-        <div class="form-group">
-<!--            <label th:for="email">E-mail</label>-->
-            <input type="text" th:field="*{email}" class="form-control"
-                   placeholder="E-mail" style="margin-top: 10px; "
-                   th:class="${#fields.hasErrors('email')}? 'form-control fieldError' : 'form-control'">
-            <div class="field-error" th:errors="*{email}" />
-        </div>
-
-        <div class="form-group">
-<!--            <label th:for="nickName">휴대폰 번호</label>-->
-            <input type="text" th:field="*{phoneNumber}" class="form-control"
-                   placeholder="휴대폰 번호" style="margin-top: 10px; "
-                   th:class="${#fields.hasErrors('phoneNumber')}? 'form-control fieldError' : 'form-control'">
-            <div class="field-error" th:errors="*{phoneNumber}" />
-        </div>
-
-        <div class="form-group">
-
-            <input type="date" id="birthDay" name="birthDay" class="form-control" data-placeholder="생년월일" required
-                   style="margin-top: 10px; "
-            >
-        </div>
-
-        <button type="submit" class="btn btn-outline-secondary">가입</button>
-
-    </form>
+        <form role="form" action="/signUp" th:object="${userForm}" method="post" id="form" novalidate>
+            <div class="form-group">
+                <label th:for="name">성명</label>
+                <input type="text" th:field="*{name}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label th:for="id">아이디</label>
+                <input type="text" th:field="*{id}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label th:for="passWord">비밀번호</label>
+                <input type="password" th:field="*{passWord}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label th:for="nickName">닉네임</label>
+                <input type="text" th:field="*{nickName}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label th:for="email">E-mail</label>
+                <input type="text" th:field="*{email}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label th:for="phoneNumber">휴대폰 번호</label>
+                <input type="text" th:field="*{phoneNumber}" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <input type="date" id="birthDay" name="birthDay" class="form-control" data-placeholder="생년월일" required>
+            </div>
+            <button type="submit" class="btn btn-outline-secondary">가입</button>
+        </form>
     </fieldset>
-<!--    <div th:replace="fragments/footer :: footer" />-->
+    <!--    <div th:replace="fragments/footer :: footer" />-->
 
 </div>
 </body>
