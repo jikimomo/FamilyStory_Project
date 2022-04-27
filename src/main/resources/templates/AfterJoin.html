@@ -7,18 +7,36 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <title>family story</title>
     <style>
-        #searching, #create{
-            height:200px;
-            width:200px;
-            border-radius: 100%;
-            font-size: 1.5em;
-        }
-        .btnx-indigo{
-            background: var(--bs-indigo); background: #C3EFBE; border: none;);
-            color: #2D7100;
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Poppins:wght@200;300;400&family=Roboto+Serif:wght@800&display=swap');
+    </style>
+    <style>
+        .btn{
+            border: none;
             font-weight: bold;
         }
-
+        .container {
+            width: 850px;
+        }
+        *{
+            font-family: "Poppins", sans-serif;
+        }
+        #create:hover, #searching:hover, #logout:hover, #logout2:hover{
+            background-color: #33333330;
+            color: #ffffff;
+        }
+        #searching, #create{
+            height:150px;
+            width:200px;
+            border-radius: 10%;
+            font-size: 1.5em;
+            color:#33333370;
+            background-color: #ffffff;
+            border: 1px solid #33333330;
+        }
+        #logout, #logout2{
+            background-color: #33333310;
+            color:#33333370;
+        }
     </style>
 
     <script>
@@ -38,42 +56,38 @@
 
 <div class="container">
     <div class="row mx-auto" style="width:400px; ">
-        <img src="/AdminImage/logo.jpg">
+        <img src="/AdminImage/logo3.png">
     </div>
-
-    <div class="row mb-3">
+    <br/><br/>
+    <div class="row " style="margin-bottom: 100px">
         <div class="col text-center">
             <div>
-                <button id="create" type="button" class="btn btn-success btnx-indigo">그룹 생성</button>
-<!--                <a href="./CreateTeam">그룹 생성하기</a>-->
+                <button id="create" type="button" class="btn">Create Group</button>
             </div>
         </div>
         <div class="col text-center">
             <div>
-                <button id="searching" type="button" class="btn btn-success btnx-indigo">그룹 검색</button>
-<!--                <a href="./SearchingTeam?teamId= ">그룹 검색하기</a>-->
+                <button id="searching" type="button" class="btn">Join as Member</button>
             </div>
         </div>
     </div>
-</div>
+    <div class="setting">
+        <div th:if="${kakaoLogin.booleanValue()==true}">
+            <a href = "https://kauth.kakao.com/oauth/logout?client_id=4d6bfc510b9480c47be3a30e3ae11deb&logout_redirect_uri=http://localhost:8080/" id="custom-logout-btn">
+                <button class="w-100 btn btn-dark btn-lg" id="logout2">로그아웃</button>
+            </a>
+        </div>
 
-<div class="setting">
-    <div th:if="${kakaoLogin.booleanValue()==true}">
-        <a href = "https://kauth.kakao.com/oauth/logout?client_id=4d6bfc510b9480c47be3a30e3ae11deb&logout_redirect_uri=http://localhost:8080/" id="custom-logout-btn">
-            <button class="w-100 btn btn-dark btn-lg">로그아웃</button>
-        </a>
+        <div th:if="${kakaoLogin.booleanValue()==false}">
+            <form th:action="@{/logout}" method="post">
+                <button class="w-100 btn btn-dark btn-lg" id="logout"
+                        type="submit">
+                    로그아웃
+                </button>
+            </form>
+        </div>
     </div>
-
-    <div th:if="${kakaoLogin.booleanValue()==false}">
-        <form th:action="@{/logout}" method="post">
-            <button class="w-100 btn btn-dark btn-lg" id="logout"
-                    type="submit">
-                로그아웃
-            </button>
-        </form>
-    </div>
+    <div th:replace="./fragments/footer :: footer"/>
 </div>
-
-<div th:replace="./fragments/footer :: footer"/>
 </body>
 </html>

@@ -45,8 +45,16 @@ public class TeamController extends BaseEntity {
 
     // 페이지 이동 _ 회원가입 후 이동할 페이지
     @GetMapping("/AfterJoin")
-    public String AfterJoin(@Login User loginUser, Model model) {
+    public String AfterJoin(@Login User loginUser, Model model, HttpServletRequest request) {
         System.out.println("AfterJoin Page");
+
+        HttpSession session = request.getSession();
+        String access_Token = (String)session.getAttribute("access_Token");
+        //카카오 로그인인지 아닌지 확인 로직
+        if(access_Token != null && !"".equals(access_Token)) {
+            model.addAttribute("kakaoLogin", true);
+        }
+        else model.addAttribute("kakaoLogin", false);
 
         Long curTID;
         if(loginUser.getCurTid() == null){

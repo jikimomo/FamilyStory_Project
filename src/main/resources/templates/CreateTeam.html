@@ -190,11 +190,9 @@
             })
 
             $('#mainTeamChecked').click(function(){
-            // let mainTeamChecked = $('input:checked').is(":checked");
                 $.ajax({
                     type: "POST",
                     url: "mainTeamChecked",
-                    // data: {checked:mainTeamChecked},
                     success: function (data) {
                         if(data==0){
                             alert('소속 그룹이 없는 경우엔 필수체크입니다.')

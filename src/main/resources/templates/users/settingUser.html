@@ -5,15 +5,23 @@
     <link th:href="@{/css/bootstrap.min.css}"
           href="/static/images/logo2.jpg" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Poppins:wght@200;300;400&family=Roboto+Serif:wght@800&display=swap');
+    </style>
+
+    <style>
+        *{
+            font-family: "Poppins", sans-serif;
+        }
+
         .container {
             /*max-width: 700px;*/
-            width: 700px;
+            width: 850px;
         }
 
         ul {
             list-style-type: none;
             padding: 0px;
-            margin: -30px;
+            margin: -120px;
             width: auto;
             background: white;
             height: auto;
@@ -21,7 +29,7 @@
             position: fixed;
             border-radius: 10px;
             color: #333;
-            border: solid 1px #2D7100;
+            border: solid 1px #33333330;
         }
 
         li {
@@ -39,26 +47,58 @@
         }
 
         li a:hover {
+            /*border-radius: 10px;*/
+            /*background-color: #33333330;*/
+            /*border: 1px solid #33333330;*/
+            /*color: #333333;*/
+
             background: #eaea80;
             color: gray;
             border: solid 1px white;
             border-radius: 10px;
         }
 
+        .btn{
+            background-color: #ffffff;
+            border: 1px solid #33333330;
+            color:#33333370;
+        }
+        .btn:hover{
+            background-color: #33333330;
+            border: 1px solid #33333330;
+            color: #333333;
+
         .setting {
             margin-left: 120px;
         }
 
-        #update,#deleteAccount{
+        #preview {
+            margin-top: 5px;
+        }
+
+        #previewCover {
+            margin-top: 5px;
+        }
+
+        #update, #deleteAccount {
             margin-top: 30px;
-            background: white;
+            margin-left: 10px;
             outline: none;
             cursor: pointer;
             border-radius: 10px;
-            color: #333;
-            border: solid 1px #2D7100;
             font-weight: bold;
+            background-color: #ffffff;
+            border: 1px solid #33333330;
+            color:#33333370;
         }
+
+        #update:hover, #deleteAccount:hover {
+            border-radius: 10px;
+            background-color: #33333330;
+            border: 1px solid #33333330;
+            color: #333333;
+        }
+
 
         #input-image {
             margin-top: 20px;
@@ -73,7 +113,22 @@
 
         #logout {
             margin-top: 20px;
+            outline: none;
+            cursor: pointer;
+            border-radius: 10px;
+            font-weight: bold;
+            background-color: #ffffff;
+            border: 1px solid #33333330;
+            color:#33333370;
         }
+
+        #logout:hover{
+            background: #eaea80;
+            color: gray;
+            border: solid 1px white;
+            border-radius: 10px;
+        }
+
         .kakaoChatPc {
             position: fixed;
             z-index: 999;
@@ -142,21 +197,21 @@
                 }
             })
 
-            // $('#pwCheck').focusout(function () {//pwCheck의 포커스가 나가면 if문 실행
-            //
-            //     if ($('#pw').val() != $('#pwCheck').val()) {
-            //         $('#pwCheck').val("")
-            //         $('#pwCheck').focus()
-            //     }
-            // })
-            // $('#pw').mouseover(function (){
-            //     console.log("over")
-            //     $('#pw').attr('type', 'text')
-            // })
-            // $('#pw').mouseleave(function (){
-            //     console.log("아웃")
-            //     $('#pw').attr('type', 'password')
-            // })
+            $('#pwCheck').focusout(function () {//pwCheck의 포커스가 나가면 if문 실행
+
+                if ($('#pw').val() != $('#pwCheck').val()) {
+                    $('#pwCheck').val("")
+                    $('#pwCheck').focus()
+                }
+            })
+            $('#pw').mouseover(function (){
+                // console.log("over")
+                $('#pw').attr('type', 'text')
+            })
+            $('#pw').mouseleave(function (){
+                // console.log("아웃")
+                $('#pw').attr('type', 'password')
+            })
 
 
             $('#update').click(function (evt){
@@ -201,16 +256,16 @@
 </head>
 <body>
 <div class="container">
-    <!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
+        <div th:replace="fragments/bodyHeader :: bodyHeader"/>
     <div class="py-1 text-center">
-        <img src="/images/logo2.jpg" width="300px" height="300px">
+        <a th:href="@{/loginHome/{curTID}(curTID=${curTID})}" ><img src="images/logo2.jpg" width="300px" height="300px"></a>
     </div>
 
     <ul class="menu">
         <li><a th:href="@{/loginHome/{curTID}(curTID=${curTID})}">홈</a></li>
         <li><a th:href="@{/users/settinguser}">내정보</a></li>
         <li><a th:href="@{/teamEdit}">내그룹</a></li>
-<!--    <li><a th:href="@{/logout}" >로그아웃</a></li>-->
+
     </ul>
 
 <!-- SettingController의 GetMapping의 /users/settinguser로 액션을 잡고 userSetForm이라는 오브젝트(객체)에 담는다. -->
@@ -275,7 +330,7 @@
             <div class="form-group">
                 <label th:for="userImage">프로필 사진 선택</label>
                 <div id="preview">
-                    <img th:src="${userProfileImage}" width="150" style="margin:12px;"/>
+                    <img th:src="${userProfileImage}" width="150" style="margin:12px;" src="/static/AdminImage/profile.png"/>
                 </div>
                 <img style="width: 150px; margin-top: 5px;" id="View" class="form-control">
                 <input style="display: block;" type="file" id="input-image" name="userImage">
@@ -284,7 +339,7 @@
             <div class="form-group">
                 <label th:for="userCoverImage">개인 커버 사진 선택</label>
                 <div id="previewCover">
-                    <img th:src="${userCoverImage}" width="150" style="margin:12px;"/>
+                    <img th:src="${userCoverImage}" width="150" style="margin:12px;" src="/static/AdminImage/cover.png"/>
                 </div>
                 <img style="width: 150px; margin-top: 5px;" id="ViewCover" class="form-control" >
                 <input style="display: block;" type="file" id="input-coverimage" name="userCoverImage">
@@ -299,38 +354,18 @@
                     th:onclick="|location.href='@{/users/settinguser}'|">수정하기
             </button>
 
-            <button type="button" class="btn btn-primary" id="deleteAccount" >회원탈퇴</button>
+            <button type="button" class="btn btn-primary" id="deleteAccount">회원탈퇴</button>
         </div>
     </form>
-
-    <br>
-
-    <div class="setting">
-        <div th:if="${kakaoLogin.booleanValue()==true}">
-            <a href = "https://kauth.kakao.com/oauth/logout?client_id=4d6bfc510b9480c47be3a30e3ae11deb&logout_redirect_uri=http://localhost:8080/" id="custom-logout-btn">
-                <button class="w-100 btn btn-dark btn-lg">로그아웃</button>
-            </a>
-        </div>
-
-        <div th:if="${kakaoLogin.booleanValue()==false}">
-            <form th:action="@{/logout}" method="post">
-                <button class="w-100 btn btn-dark btn-lg" id="logout"
-                        type="submit">
-                    로그아웃
-                </button>
-            </form>
-        </div>
-    </div>
-
-
+    <form th:action="@{/logout}" method="post">
+        <button class="w-100 btn btn-dark btn-lg" id="logout" type="submit">로그아웃</button>
+    </form>
 </div>
 
-<!--<a href="https://accounts.kakao.com/logout?/logout" class="link_logout" data-tiara-layer="logout">로그아웃</a>-->
 
 <a href="javascript:void kakaoChatStart()" class="kakaoChatPc hidden-md hidden-sm hidden-xs">
     <p id="kakao-talk-channel-chat-button"></p>
 </a>
-
 
 
 <script type="text/javascript">
@@ -374,34 +409,7 @@
 
 </script>
 
-
 <div id="footer" th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
-
-
-<!-- function readImage(input) {-->
-<!---->
-<!-- // 인풋 태그에 파일이 있는 경우-->
-<!-- if (input.files && input.files[0]) {-->
-<!---->
-<!--// FileReader 인스턴스 생성-->
-<!--const reader = new FileReader()-->
-<!---->
-<!--// 이미지가 로드가 된 경우-->
-<!--reader.onload = e => {-->
-<!--const previewImage = document.getElementById("userImage")-->
-<!--previewImage.setAttribute(src, e.target.result);-->
-<!--}-->
-<!---->
-<!--// reader가 이미지 읽도록 하기-->
-<!--reader.readAsDataURL(input.files[0])-->
-<!--}-->
-<!--}-->
-<!---->
-<!--// input file에 change 이벤트 부여-->
-<!--const inputImage = document.getElementById("input-image")-->
-<!--inputImage.addEventListener("change", e => {-->
-<!--readImage(e.target)-->
-<!--})-->
 </html>

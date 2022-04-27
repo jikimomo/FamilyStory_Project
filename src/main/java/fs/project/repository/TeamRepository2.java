@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TeamRepository2 extends JpaRepository<Team,Long> {
 
     Page<Team> findByTeamIDContaining(String id, Pageable pageable);
+
 }

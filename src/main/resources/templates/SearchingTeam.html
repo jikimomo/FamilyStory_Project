@@ -11,6 +11,9 @@
         @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Poppins:wght@200;300;400&family=Roboto+Serif:wght@800&display=swap');
     </style>
     <style>
+        .container{
+            width: 850px;
+        }
         *{
             font-family: "Poppins", sans-serif;
         }
@@ -84,11 +87,9 @@
                         url: "RequestTeamCancel",
                         data: {id: id},
                         success: function (res) {
-                            if (res == 1) {
                                 alert("요청이 취소되었습니다.");
                                 this2.val("가입 요청")
                                 history.go(0)
-                            }
                         },
                         error: function (error) {
                             console.log(error);
@@ -162,8 +163,8 @@
             </ul>
         </nav>
     </div>
+    <div th:replace="./fragments/footer :: footer"/>
 </div>
-<div th:replace="./fragments/footer :: footer"/>
 </body>
 <hr>
 </html>
