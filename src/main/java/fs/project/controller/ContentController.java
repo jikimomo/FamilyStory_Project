@@ -4,6 +4,7 @@ import fs.project.argumentresolver.Login;
 import fs.project.domain.Content;
 import fs.project.domain.Team;
 import fs.project.domain.User;
+import fs.project.service.TeamService;
 import fs.project.service.UserService;
 import fs.project.vo.ContentInputVO;
 import fs.project.service.ContentService;
@@ -31,27 +32,45 @@ public class ContentController {
 
     private final ContentService contentService;
     private final UserService userService;
+    private final TeamService teamService;
 
     /* 게시물 업로드 */
     //uploadContentForm.html을 띄우는 컨트롤러 부분
-    @GetMapping(value="/uploadContent/{tID}")
-    public String uploadForm(@Login User loginUser, @PathVariable("tID") Long tID, Model model){
-        User user = contentService.findUser(loginUser.getUID());
-        Team team = contentService.findTeam(tID);
-        System.out.println(tID);
+//    @GetMapping(value="/uploadContent/{tID}")
+//    public String uploadForm(@Login User loginUser, @PathVariable("tID") Long tID, Model model){
+//        User user = userService.findUser(loginUser.getUID());
+//        Team team = teamService.findTeam(tID);
+//        //System.out.println(tID);
+//
+//        Long curTID;
+//        if(user.getCurTid() == null){
+//            curTID = 0L;
+//        }else{
+//            curTID = user.getCurTid();
+//        }
+//        model.addAttribute("curTID", curTID);
+//
+//        model.addAttribute("user", user);
+//        model.addAttribute("teamName", team.getTeamName());
+//
+//        return "content/uploadContentForm";
+//    }
 
+    @GetMapping(value="/uploadContent")
+    public String uploadForm(@Login User loginUser, Model model){
+        User user = userService.findUser(loginUser.getUID());
         Long curTID;
         if(user.getCurTid() == null){
             curTID = 0L;
         }else{
             curTID = user.getCurTid();
         }
-        model.addAttribute("curTID", curTID);
 
+        Team team = teamService.findTeam(curTID);
+
+        model.addAttribute("curTID", curTID);
         model.addAttribute("user", user);
         model.addAttribute("teamName", team.getTeamName());
-
-
 
         return "content/uploadContentForm";
     }
@@ -67,8 +86,8 @@ public class ContentController {
                          Model model) throws Exception {
 
         //현재 사용자 및 팀의 정보
-        User user = contentService.findUser(loginUser.getUID());
-        Team team = contentService.findTeam(tID);
+        User user = userService.findUser(loginUser.getUID());
+        Team team = teamService.findTeam(tID);
 
         //사진 경로 관련 코드
         String photoRoute = contentService.filePath(images);
@@ -91,7 +110,7 @@ public class ContentController {
     @GetMapping(value="/uploadList/{tID}/{uID}")
     public String uploadList(@Login User loginUser, @PathVariable("tID") Long tID, @PathVariable("uID") Long uID, Model model){
         //현재 사용자 정보
-        User user = contentService.findUser(loginUser.getUID());
+        User user = userService.findUser(loginUser.getUID());
 //
 //        //현재 그룹과 어떤 구성원인지에 관한 정보
 //        User userInSameTeam = contentService.findUser(uID);
@@ -126,7 +145,7 @@ public class ContentController {
     @GetMapping(value="/uploadList/loginUser")
     public UserVO initLoginUser(@Login User loginUser){
         Long uid = loginUser.getUID();
-        User u = contentService.findUser(uid);
+        User u = userService.findUser(uid);
 
         UserVO userVO = new UserVO();
         userVO.setUID(u.getUID());
@@ -144,7 +163,7 @@ public class ContentController {
     @ResponseBody
     @GetMapping(value="/uploadList/pageUser")
     public UserVO initPageUser(@RequestParam String uID){
-        User u = contentService.findUser(Long.parseLong(uID));
+        User u = userService.findUser(Long.parseLong(uID));
 
         UserVO userVO = new UserVO();
         userVO.setUID(u.getUID());
@@ -185,8 +204,8 @@ public class ContentController {
     public String changeContentForm(@Login User loginUser, @PathVariable("cID") Long cID, Model model){
         Content content = contentService.findOne(cID);
 
-        User user = contentService.findUser(loginUser.getUID());
-        Team team = contentService.findTeam(user.getMainTid());
+        User user = userService.findUser(loginUser.getUID());
+        Team team = teamService.findTeam(user.getMainTid());
 
         Long curTID;
         if(user.getCurTid() == null){

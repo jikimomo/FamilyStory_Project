@@ -4,10 +4,28 @@
 연한 초록색: #C3EFBE
 */
 
-@media (min-width: 768px) {
-.container {
-max-width: 900px; /*수정했음*/
+@font-face {
+    font-family: 'NEXONLv1Gothic';
+    font-weight: 300;
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF Light.woff') format('woff');
+    font-style: normal;
+
 }
+
+@font-face {
+    font-family: 'NEXONLv1Gothic';
+    font-weight: 400;
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv1 Gothic OTF.woff') format('woff');
+    font-style: normal;
+}
+
+body {
+    font-family: 'Poppins', 'NEXONLv1Gothic';
+}
+
+.container {
+    max-width: 850px;
+
 }
 
 .formBox {
@@ -37,8 +55,12 @@ max-width: 900px; /*수정했음*/
     margin: 20px;
 }
 #preview {
-    border: 1px solid #C3EFBE;
+    border: 1px solid gray;
     border-radius: 3px;
+}
+
+#groupNameBox {
+    text-align: center;
 }
 
 .textInputBox {
@@ -52,15 +74,16 @@ max-width: 900px; /*수정했음*/
     grid-column: 1/3;
     text-align: center;
 }
-.backButton {
+#backA {
     width: 140px;
     height: 45px;
     margin: 10px;
-    border: none;
+    padding: 8px 35px;
+    border: 1px solid gray;
     border-radius: 3px;
-    background-color: lightgray;
     font-size: 20px;
-    color: white;
+    color: black;
+    text-decoration: none;
 }
 #submitButton {
     width: 140px;
@@ -68,19 +91,80 @@ max-width: 900px; /*수정했음*/
     margin: 10px;
     border: none;
     border-radius: 3px;
-    background-color: #2D7100;
+    background-color: #75bc63;
     font-size: 20px;
     color: white;
+}
+#backButton {
+    width: 140px;
+    height: 45px;
+    margin: 10px;
+    border: 1px solid gray;
+    border-radius: 3px;
+    font-size: 20px;
+    font-color: gray;
+    background-color: white;
 }
 #submitA {
     width: 140px;
     height: 45px;
     margin: 10px;
-    padding: 11px 35px;
+    padding: 9px 35px;
     border: none;
     border-radius: 3px;
-    background-color: #2D7100;
+    background-color: #75bc63;
     font-size: 20px;
     color: white;
     text-decoration: none;
+}
+
+#map_Area {
+    width: 300px;
+}
+#map {
+    width: 350px;
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+}
+#showMapBtn {
+    width: 100px;
+    height: 35px;
+    margin: 5px;
+    border: none;
+    border-radius: 3px;
+    background-color: #75bc63;
+    font-size: 16px;
+    color: white;
+}
+#hideMapBtn {
+    width: 100px;
+    height: 35px;
+    margin: 5px;
+    border: 1px solid gray;
+    border-radius: 3px;
+    font-size: 16px;
+    font-color: gray;
+    background-color: white;
+}
+#keyBox {
+    width: 360px;
+}
+#labelKeyWord {
+    display: inline-block;
+    margin-right: 5px;
+}
+#keyword {
+    display: inline-block;
+}
+#searchbtn {
+    display: inline-block;
+    width: 90px;
+    height: 30px;
+    margin: 5px;
+    border: none;
+    border-radius: 3px;
+    background-color: #75bc63;
+    font-size: 16px;
+    color: white;
 }

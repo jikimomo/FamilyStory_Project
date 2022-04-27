@@ -28,7 +28,7 @@ public class DomainRepository {
         return team.getTID();
     }
 
-    public Team findTeams(Long id){
+    public Team findOneTeam(Long id){
         return em.find(Team.class, id);
     }
 

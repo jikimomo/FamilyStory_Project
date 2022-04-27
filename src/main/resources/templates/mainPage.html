@@ -55,7 +55,8 @@
 
     var curURL = window.location.href;
     console.log(curURL);
-    var currentTID = curURL.charAt(curURL.length-1);
+    var urlArr = curURL.split("/");
+    var currentTID = urlArr[urlArr.length-1];
     console.log(currentTID);
 
     //로그인 사용자 정보를 받아옴
@@ -112,7 +113,8 @@
         console.log(currentTID);
 
         var btn = document.getElementById('uploadBtn');
-        btn.setAttribute("onclick", "location.href='/uploadContent/"+currentTID+"'");
+<!--        btn.setAttribute("onclick", "location.href='/uploadContent/"+currentTID+"'");-->
+        btn.setAttribute("onclick", "location.href='/uploadContent'");
         console.log(btn.getAttribute('href'));
 
         var curTeam = document.getElementById('curTeam');
@@ -210,7 +212,8 @@
         console.log(currentTID);
 
         var btn = document.getElementById('uploadBtn');
-        btn.setAttribute("onclick", "location.href='/uploadContent/"+currentTID+"'");
+<!--        btn.setAttribute("onclick", "location.href='/uploadContent/"+currentTID+"'");-->
+        btn.setAttribute("onclick", "location.href='/uploadContent'");
         console.log(btn.getAttribute('href'));
 
         //현재

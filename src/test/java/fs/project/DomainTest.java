@@ -60,7 +60,7 @@ public class DomainTest {
         team.setTeamName("우리가족");
 
         Long savedId = domainRepository.saveTeam(team);
-        Team findTeam = domainRepository.findTeams(savedId);
+        Team findTeam = domainRepository.findOneTeam(savedId);
 
         Assertions.assertThat(findTeam.getTID()).isEqualTo(team.getTID());
         Assertions.assertThat(findTeam.getTeamID()).isEqualTo(team.getTeamID());
@@ -76,7 +76,7 @@ public class DomainTest {
         team.setTeamID("asdfg");
         team.setTeamName("우리가족1");
         Long savedId11 = domainRepository.saveTeam(team);
-        Team findTeam = domainRepository.findTeams(savedId11);
+        Team findTeam = domainRepository.findOneTeam(savedId11);
 
         TeamEvent teamEvent = new TeamEvent();
         teamEvent.setTeam(findTeam);
@@ -112,7 +112,7 @@ public class DomainTest {
         team.setTeamName("우리가족");
 
         Long savedId11 = domainRepository.saveTeam(team);
-        Team findTeam = domainRepository.findTeams(savedId11);
+        Team findTeam = domainRepository.findOneTeam(savedId11);
 
         Content content = new Content();
         content.setUser(user);
@@ -153,7 +153,7 @@ public class DomainTest {
         team.setTeamName("우리가족");
 
         Long savedId11 = domainRepository.saveTeam(team);
-        Team findTeam = domainRepository.findTeams(savedId11);
+        Team findTeam = domainRepository.findOneTeam(savedId11);
 
         UserTeam userTeam = new UserTeam();
         userTeam.setUser(user);
