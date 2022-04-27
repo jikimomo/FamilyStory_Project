@@ -231,11 +231,11 @@
             // 그룹아이디 유효성 체크
             $('#teamId').focusout(function (evt){
                 let teamId = document.querySelector('#teamId')
-                if(/\W/.test(teamId.value)){
+                /*if(/\W/.test(teamId.value)){
                     isIdValid=false;
                     $('#teamId').val("")
                     $('#teamId').focus()
-                }
+                }*/
                 sendData = $('#teamId').val();
                 $.ajax({
                     type: "POST",
@@ -246,7 +246,7 @@
                             isIdValid=true;
                             console.log('아이디 가능')
                         }else if(data == -1) {
-                            teamId.setAttribute('placeholder','아이디는 알파벳, 숫자, 언더바(_)만 가능합니다.')
+                            // teamId.setAttribute('placeholder','아이디는 알파벳, 숫자, 언더바(_)만 가능합니다.')
                         } else{
                             $('#teamId').val("")
                             $('#teamId').focus()
@@ -263,7 +263,6 @@
                         }
                     }
                 })
-                console.log("ddd");
             })
 
             // 서버로 데이터 전송
@@ -271,11 +270,11 @@
                 let edate = document.querySelector('input[name="eventDate"]')
                 let ename = document.querySelector('input[name="eventName"]')
                 let teamName = document.querySelector('input[name="teamName"]');
-                if (!teamName.value) {
-                    teamName.focus();
-                    evt.preventDefault();
-                    return;
-                }
+                // if (!teamName.value) {
+                //     teamName.focus();
+                //     evt.preventDefault();
+                //     return;
+                // }
                 let teamId = document.querySelector('input[name="teamId"]');
                 if (!teamId.value) {
                     teamId.focus();
@@ -347,14 +346,14 @@
             <form class="form-horizontal needs-validation" id="CreateForm" novalidate>
                 <div class="mb-3 row">
                 </div>
-                <div class="mb-3 row">
+                <!--<div class="mb-3 row">
                     <label class="col-sm-2 control-label">*그룹명</label>
                     <div class="col-sm-10"><input type="text" name="teamName" placeholder="그룹명을 입력해주세요."
                                                   class="form-control" required/></div>
-                </div>
+                </div>-->
                 <div class="mb-3 row">
-                    <label class="col-sm-2 control-label">*그룹 ID</label>
-                    <div class="col-sm-10"><input type="text" name="teamId" id="teamId" placeholder="아이디는 알파벳, 숫자, 언더바(_)만 가능합니다."
+                    <label class="col-sm-2 control-label">*그룹명</label>
+                    <div class="col-sm-10"><input type="text" name="teamId" id="teamId" placeholder="그룹명을 입력해주세요."
                                                   class="form-control" required/></div>
                 </div>
                 <div class="mb-3 row">

@@ -19,7 +19,7 @@ public class Team{
     @NotNull
     private String teamID;
 
-    @NotNull
+//    @NotNull
     private String teamName;
 
     private String teamImage;

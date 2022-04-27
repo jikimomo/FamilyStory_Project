@@ -111,7 +111,7 @@
             <table class="table">
                 <thead style="text-align: center;">
                 <tr>
-                    <th>그룹 아이디</th>
+<!--                    <th>그룹 아이디</th>-->
                     <th>그룹 이름</th>
                     <th>메인그룹 설정</th>
                     <th>그룹관리</th>
@@ -121,7 +121,7 @@
                 <tbody style="text-align: center">
                 <tr th:each="team : ${teams}">
                     <td th:text="${team.teamID}">10000</td>
-                    <td th:text="${team.teamName}">10</td>
+<!--                    <td th:text="${team.teamName}">10</td>-->
                     <td>
                         <input type="radio" th:value="${team.getTID()}" name="mainTeam"/>
                     </td>
