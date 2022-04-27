@@ -83,7 +83,7 @@ public class MainPageService {
         List<User> newRequest = new ArrayList<>();
 
         if(tID != 0) {
-            Team team = teamRepository.findOneTeam(tID);
+            Team team = teamRepository.findTeam(tID);
             if (team.getBoss() == uID) { //현재 팀의 보스가 나인 경우
                 List<UserTeam> userTeams = mainPageRepository.findUserTeamByT(tID);
                 for (UserTeam ut : userTeams) {
@@ -107,7 +107,7 @@ public class MainPageService {
 
         for(UserTeam ut: userTeams){
             if(ut.isJoinUs() == true) {
-                currentTeams.add(teamRepository.findOneTeam(ut.getTeam().getTID()));
+                currentTeams.add(teamRepository.findTeam(ut.getTeam().getTID()));
             }
         }
 
