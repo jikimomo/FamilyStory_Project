@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Title</title>
+    <style>
+        .container {
+            width: 400vw;
+            transition: transform 1s;
+        }
+        .inner {
+            width:100vw;
+            height:25vw;
+            float:left;
+        }
+
+        .inner img{
+            width: 100vw;
+        }
+
+        .start{
+            margin-top: 150px ;
+            margin-left: 300px;
+            text-align: center;
+            width:100vm; float:left;
+        }
+        .start img{
+            width: 50%;
+        }
+        div { text-align: center; }
+        img { display: block; margin: 0px auto; }
+
+
+    </style>
+    <link rel="stylesheet" href="/css/button.css">
+
+</head>
+
+<body style="margin-top: 200px">
+
+<div style="overflow:hidden">
+    <div class="container" >
+        <div class="inner"  >
+            <div class="row" style="text-align: center; margin-top: 100px" >
+                <img src="" alt="">
+                <h1 style="margin: 40px">패밀리 스토리가 처음이신가요??</h1>
+                <h1>간단한 기능 설명을 해드릴게요!</h1>
+            </div>
+        </div>
+
+        <div class="inner">
+
+            <div class="row" style="text-align: center; margin-top: 100px" >
+                <h1 style="margin: 40px">패밀리 스토리에서 알림 서비스를 제공합니다</h1>
+                <br>
+                <h2>그룹 생성 후 기념일을 설정해주세요~ </h2>
+                <h2>속한 그룹의 기념일을 당일 발송해드려요! </h2>
+            </div>
+        </div>
+
+        <div class="inner">
+
+            <div class="row" style="text-align: center; margin-top: 100px" >
+
+                <img src="../images/kakaologo.png" alt="" style="width: 50px; height: 50px;" >
+                <h1 style="margin: 40px">상담톡 서비스를 제공합니다</h1>
+                <h2>개인정보 페이지 우측 하단에 상담톡 클릭하시면</h2>
+                <h2>카카오톡으로 알림톡이 발송됩니다!</h2>
+            </div>
+        </div>
+
+
+        <div class="inner">
+            <div class="row" style="text-align: center; margin-top: 100px" >
+                <h1 style="margin: 40px">패밀리 스토리가 처음이신가요??</h1>
+                <h1>간단한 기능 설명을 해드릴게요!</h1>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<div style="margin-top: 10px">
+    <input class="버튼1" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
+    <input class="버튼2" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+    <input class="버튼3" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
+    <input class="버튼4" type="radio" name="flexRadioDefault" id="flexRadioDefault4">
+</div>
+
+<div style="text-align: center; margin-top:  100px;">
+    <a th:href="@{/}" >
+        <button class="w-btn-outline w-btn-green-outline" type="button">
+            홈으로 돌아가기
+        </button>
+    </a>
+</div>
+
+
+
+
+<script>
+
+    document.querySelector('.버튼1').addEventListener('click', function (){
+        document.querySelector('.container').style.transform = 'translate(-1vw)';
+    });
+
+    document.querySelector('.버튼2').addEventListener('click', function (){
+        document.querySelector('.container').style.transform = 'translate(-100vw)';
+    });
+
+    document.querySelector('.버튼3').addEventListener('click', function (){
+        document.querySelector('.container').style.transform = 'translate(-200vw)';
+    });
+
+    document.querySelector('.버튼4').addEventListener('click', function (){
+        document.querySelector('.container').style.transform = 'translate(-300vw)';
+    });
+
+
+</script>
+
+</body>
+</html>
+
+<!--
+<input type="checkbox">
+
+<div class="jb"></div>
+-->
+
+<!--
+
+     <input type="checkbox">
+            <div class="jb"></div>
+
+.jb {
+box-sizing: border-box;
+width: 64px;
+height: 64px;
+margin: 10px 0px;
+background-color: #2d520d;
+border-radius: 100%;
+transition: all ease 2s 0s;
+}
+
+input:checked ~ .jb {
+width: 100%;
+height: 500px;
+border-radius: 0;
+background-color: #d9efd2;
+}-->
+
+<!--    <link rel="stylesheet" href="/js/bootstrap.js">-->
+
+
+<!--
+
+  <div class="inner" >
+            <img src="../images/explain1.png"  >
+        </div>
+        <div class="inner">
+            <img src="../images/explain2.png" >
+        </div>
+        <div class="inner">
+            <img src="../images/explain3.png"   >
+        </div>-->

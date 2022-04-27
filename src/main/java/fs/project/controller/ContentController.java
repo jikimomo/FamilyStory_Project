@@ -59,6 +59,7 @@ public class ContentController {
     @GetMapping(value="/uploadContent")
     public String uploadForm(@Login User loginUser, Model model){
         User user = userService.findUser(loginUser.getUID());
+        log.info("{}------------", user.getUID());
         Long curTID;
         if(user.getCurTid() == null){
             curTID = 0L;
@@ -264,8 +265,10 @@ public class ContentController {
 
     //1년 전에 올렸던 사진 보여주기
     @ResponseBody
-    @GetMapping("/{tid}/content")
-    public void event(@PathVariable Long tid, Model model){
+    @PostMapping("/agoYear")
+    public List <String> agoYear (@Login User loginUser,  @RequestParam String tID){
+
+        Long tId = Long.parseLong(tID);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date now = new Date();
@@ -274,19 +277,20 @@ public class ContentController {
         log.info("{}", y);
         String x = s.substring(4);
         int y1 = Integer.parseInt(y);
-        y1--;
+       // y1--;
         String y2 = Integer.toString(y1);
         String when1 = y2+x;
         LocalDate when = LocalDate.parse(when1, DateTimeFormatter.ISO_DATE);//local_date로 변환
-        List<String> photoRoute = contentService.findTid(when, tid); //team_event에서 오늘날짜와 같은 tid값을 받아온다.
+        List<String> photoRoute = contentService.findTid(when, tId); //team_event에서 오늘날짜와 같은 tid값을 받아온다.
+
+        for( String pr : photoRoute){
+            log.info("photoRoute {}", pr);
+        }
+
 
         if(photoRoute.isEmpty()){
-            model.addAttribute("photoRoute", null);
+            return null;
         }
-        for( String pr : photoRoute){
-            model.addAttribute("photoRoute", pr);
-            log.info(pr);
-            break;
-        }
+        else return photoRoute;
     }
 }
