@@ -46,7 +46,7 @@ public class ContentTest {
         team.setTeamName("우리가족");
         team.setBoss(findUser.getUID());
         teamRepository.saveTeam(team);
-        Team findTeam = teamRepository.findOneTeam(team.getTID());
+        Team findTeam = teamRepository.findTeam(team.getTID());
 
         ContentInputVO content = new ContentInputVO("/images/1.jpg", "가족 여행", "서울대공원", LocalDate.of(2022,04,11));
         Long findCID = contentService.uploadContent(findUser.getUID(), findTeam.getTID(), content);
@@ -75,7 +75,7 @@ public class ContentTest {
         team.setTeamName("우리가족");
         team.setBoss(findUser.getUID());
         teamRepository.saveTeam(team);
-        Team findTeam = teamRepository.findOneTeam(team.getTID());
+        Team findTeam = teamRepository.findTeam(team.getTID());
 
         ContentInputVO content = new ContentInputVO("/images/1.jpg", "가족 여행", "서울대공원", LocalDate.of(2022,04,11));
         contentService.uploadContent(findUser.getUID(), findTeam.getTID(), content);
@@ -105,7 +105,7 @@ public class ContentTest {
         team.setTeamName("우리가족");
         team.setBoss(findUser.getUID());
         teamRepository.saveTeam(team);
-        Team findTeam = teamRepository.findOneTeam(team.getTID());
+        Team findTeam = teamRepository.findTeam(team.getTID());
 
         ContentInputVO content = new ContentInputVO("/images/1.jpg", "가족 여행", "서울대공원", LocalDate.of(2022,04,11));
         contentService.uploadContent(findUser.getUID(), findTeam.getTID(), content);
@@ -135,7 +135,7 @@ public class ContentTest {
         team.setTeamName("우리가족");
         team.setBoss(findUser.getUID());
         teamRepository.saveTeam(team);
-        Team findTeam = teamRepository.findOneTeam(team.getTID());
+        Team findTeam = teamRepository.findTeam(team.getTID());
 
         ContentInputVO content = new ContentInputVO("/images/1.jpg", "가족 여행", "서울대공원", LocalDate.of(2022,04,11));
         Long inputCID = contentService.uploadContent(findUser.getUID(), findTeam.getTID(), content);
