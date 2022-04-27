@@ -23,6 +23,9 @@
     </script>
     <script>
         var aHeader = document.getElementById('aHeader');
+        if(currentTID==null){
+            currentTID=0;
+        }
         aHeader.setAttribute("href", "/loginHome/" + currentTID);
     </script>
 </div>
