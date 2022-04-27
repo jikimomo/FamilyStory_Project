@@ -323,8 +323,6 @@ public class HomeController {
         return userVOInSameTeam;
     }
 
-
-
     @GetMapping("/explain")
     public String explain(){
         return "explain";

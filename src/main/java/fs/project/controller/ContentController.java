@@ -59,6 +59,7 @@ public class ContentController {
     @GetMapping(value="/uploadContent")
     public String uploadForm(@Login User loginUser, Model model){
         User user = userService.findUser(loginUser.getUID());
+        log.info("{}------------", user.getUID());
         Long curTID;
         if(user.getCurTid() == null){
             curTID = 0L;

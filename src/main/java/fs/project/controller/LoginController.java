@@ -39,7 +39,6 @@ public class LoginController {
             //result에 에러가 있다면 다시 home.html로 보낸다. 이때 form에서 message 문장들을 출력해준다.
             return "home";
         }
-
         //입력받은 아이디와 패스워드를 userService의 login 메소드에 전달하고 데이터베이스의 정보와 일치한지 확인한다.
         //이후 일치한다면 그 객체를 반환해서 loginUser에 담아주고 일치하지않는다면 null값을 넣어준다.
         User loginUser = userService.login(form.getLoginId(), form.getPassword());
@@ -86,6 +85,7 @@ public class LoginController {
         return "redirect:/loginHome/"+tID;
     }
 
+
     //로그아웃 버튼 클릭 시
     @PostMapping("/logout")
     public String logout(HttpServletRequest request) {
@@ -108,8 +108,6 @@ public class LoginController {
         // 로그인 페이지로 이동
         return "redirect:/";
     }
-
-
 
 
     @PostMapping("/loginCheck")
@@ -167,10 +165,7 @@ public class LoginController {
         }
     }
 
-
 //        int insertRst = sqlSession.insert("login.insert", loginVO);
-
-
 
 
 
