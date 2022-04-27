@@ -7,23 +7,22 @@
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
     <script>
-        document.getElementById("map_Area").style.display="none";
+        document.getElementById("map_Area").style.display = "none";
 
-                    function getShow(){
-	                  document.getElementById("map_Area").style.display = "";
-	                  relayout()
-                      }
-                     function getHide(){
-	               document.getElementById("map_Area").style.display = "none";
-                    }
-
+        function getShow(){
+          document.getElementById("map_Area").style.display = "block";
+          relayout()
+        }
+        function getHide(){
+          document.getElementById("map_Area").style.display = "none";
+        }
 
     </script>
 
     <form role="form" id="uploadContentForm" enctype="multipart/form-data" >
         <div class="formBox">
             <div class="titleBox">
-                <h2 class="title">게시물을 추가해주세요</h2>
+                <h2 class="title">게시물 등록</h2>
             </div>
 
 
@@ -38,11 +37,11 @@
             </div>
 
             <div class="textInputBox">
-                <div>
-                    <h5>현재 로그인 아이디 & 소속된 팀</h5>
-                    현재 접속한 아이디 : <span th:text="${user.userID}"></span><br>
-                    현재 함께하는 가족(tID) : <span th:text="${tID}"></span><br>
-                    현재 함께하는 가족(teamName) : <span th:text="${teamName}"></span><br>
+                <div id="groupNameBox">
+                    <h5>현재 함께하는 가족</h5>
+<!--                    현재 접속한 아이디 : <span th:text="${user.userID}"></span><br>-->
+<!--                    현재 함께하는 가족(tID) : <span th:text="${tID}"></span><br>-->
+                    그룹 이름 : <span th:text="${teamName}"></span><br>
                 </div>
                 <br>
 
@@ -56,21 +55,17 @@
                     <input type="text" id="location" name="location" class="form-control" placeholder="장소를 입력하세요" onkeypress="if(event.keyCode=='13'){event.preventDefault();}">
                     <span class="alertMessage" id="locationMessage">alert message</span>
                     <div>
-                        <input type ="button" onclick="getShow()" value="장소찾기">
-                        <input type ="button" onclick="getHide()" value="지도숨기기">
+                        <input type ="button" id="showMapBtn" onclick="getShow()" value="장소찾기">
+                        <input type ="button" id="hideMapBtn" onclick="getHide()" value="지도숨기기">
                     </div>
-                    <div id ="map_Area" style="display:none">
+                    <div id="map_Area" style="display:none">
                         <div class="map_wrap">
-
-                            <div>
-                                <!--                                "searchPlaces(); return false;"-->
-                                키워드 : <input type="text" placeholder="키워드를 입력해주세요!" id="keyword" size="25" onkeypress="if(event.keyCode=='13'){event.preventDefault(); searchEvt();}">
-                                <br>
-                                <button  id="searchbtn" type="button">검색하기</button>
+                            <div id="keyBox">
+                                <label id="labelKeyWord" for="keyword">키워드 :</label><input type="text" placeholder="키워드를 입력해주세요!" id="keyword" size="20" onkeypress="if(event.keyCode=='13'){event.preventDefault(); searchEvt();}">
+                                <button id="searchbtn" type="button">검색하기</button>
                             </div>
-                            <!--                            <input type="text" id="keyword" value="멀티캠퍼스 본사" class="form-control" placeholder="장소를 입력하세요" >-->
-                            <div id="map" style="width:400px;height:500px;position:relative;overflow:hidden;"></div>
-
+                            <div id="map">
+                            </div>
                         </div>
                         <hr>
                         <ul id="placesList"></ul>
@@ -87,8 +82,7 @@
 
             <div class="buttonBox">
                 <br>
-                <a id="back">돌아가기</a>
-                <!--                <button type="button" onclick="history.back()" class="backButton">돌아가기</button>-->
+                <a id="backA">돌아가기</a>
                 <button type="submit" id="submitButton">등록하기</button>
             </div>
         </div>
@@ -100,11 +94,10 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=eaa00faba9dc40c43a9aa7326a6cc82b&libraries=services,clusterer,drawing"></script>
 <script type="text/javascript" th:src="@{/js/changeContentImage.js}"></script>
 <script th:inline="javascript">
-    var currentTID = [[${tID}]];
+    var currentTID = [[${curTID}]];
 </script>
 <script>
 function relayout() {
-
     // 지도를 표시하는 div 크기를 변경한 이후 지도가 정상적으로 표출되지 않을 수도 있습니다
     // 크기를 변경한 이후에는 반드시  map.relayout 함수를 호출해야 합니다
     // window의 resize 이벤트에 의한 크기변경은 map.relayout 함수가 자동으로 호출됩니다
@@ -146,19 +139,15 @@ map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
 
 function searchEvt() {
-    	// 엔터키가 눌렸을 때
-    	console.log('enter');
-    	searchPlaces();
+    // 엔터키가 눌렸을 때
+    console.log('enter');
+    searchPlaces();
 }
 
  document.getElementById("searchbtn").addEventListener("click", function(){
-            //console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-                //console.log(document.getElementById("keyword").value);
-                 searchPlaces();
-
-
-                 return false;
-             });
+     searchPlaces();
+     return false;
+ });
 
 // 키워드 검색을 요청하는 함수입니다
 function searchPlaces() {
@@ -235,7 +224,6 @@ function displayPlaces(places) {
                 displayInfowindow(marker, title);
             });
 
-
             kakao.maps.event.addListener(marker, 'click', function() {      //마커 클릭시 장소에 정보 입력
                 displayInfowindow(marker, title);
                 //console.log(title)
@@ -250,15 +238,14 @@ function displayPlaces(places) {
                 //console.log(title)
             };
 
-
-
             itemEl.onmouseout =  function () {
                 infowindow.close();
             };
         })(marker, places[i].place_name);
 
-        if(i<5)
+        if(i<5){
             fragment.appendChild(itemEl);               //목록 5개만 나오게
+        }
     }
 
     // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
@@ -372,14 +359,10 @@ function removeAllChildNods(el) {
     }
 }
 
-    var back = document.getElementById('back');
+    var back = document.getElementById('backA');
     back.setAttribute("href", "/loginHome/"+currentTID);
-
-    console.log(currentTID);
-    var back = document.getElementById('back');
-    back.setAttribute("href", "/loginHome/"+currentTID);
-
-    console.log(currentTID);
+    //back.setAttribute("href", "/loginHome/"+currentTID);
+    //console.log(currentTID);
 
     const submitButton = document.querySelector('#submitButton');
     submitButton.addEventListener('click', function(evt){

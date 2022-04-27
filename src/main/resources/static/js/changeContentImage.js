@@ -49,7 +49,7 @@
                             reader.onload = function(evt){
                                 var img = document.createElement("img");
                                 img.setAttribute("src", evt.target.result);
-                                img.setAttribute("width", "170px");
+                                img.setAttribute("width", "160px");
                                 img.setAttribute("height", "120px");
                                 imgBox.appendChild(img);
                                 imgBox.appendChild(imgBtn);

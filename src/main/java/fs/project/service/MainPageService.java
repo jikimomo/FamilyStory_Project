@@ -3,6 +3,9 @@ package fs.project.service;
 import fs.project.domain.*;
 import fs.project.repository.ContentRepository;
 import fs.project.repository.MainPageRepository;
+import fs.project.repository.TeamRepository;
+import fs.project.repository.UserRepository;
+import fs.project.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MainPageService {
 
-    private final ContentRepository contentRepository;
     private final MainPageRepository mainPageRepository;
+    private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
 
     /* 알림을 위한 service */
     //tID를 통해서 repository에서 List<teamEvent>를 받아옴
@@ -54,7 +58,7 @@ public class MainPageService {
         List<UserTeam> userTeams = mainPageRepository.findUserTeamByT(tID);
         for(UserTeam ut : userTeams){
             if(ut.isJoinUs() == true) { //같은 팀으로 확정된 사람들만!
-                userInOneTeam.add(contentRepository.findUser(ut.getUser().getUID()));
+                userInOneTeam.add(userRepository.findUser(ut.getUser().getUID()));
             }
         }
 
@@ -79,12 +83,12 @@ public class MainPageService {
         List<User> newRequest = new ArrayList<>();
 
         if(tID != 0) {
-            Team team = contentRepository.findTeam(tID);
+            Team team = teamRepository.findOneTeam(tID);
             if (team.getBoss() == uID) { //현재 팀의 보스가 나인 경우
                 List<UserTeam> userTeams = mainPageRepository.findUserTeamByT(tID);
                 for (UserTeam ut : userTeams) {
                     if (!ut.isJoinUs()) {
-                        User joinUsUser = contentRepository.findUser(ut.getUser().getUID());
+                        User joinUsUser = userRepository.findUser(ut.getUser().getUID());
                         newRequest.add(joinUsUser);
                     }
                 }
@@ -103,7 +107,7 @@ public class MainPageService {
 
         for(UserTeam ut: userTeams){
             if(ut.isJoinUs() == true) {
-                currentTeams.add(contentRepository.findTeam(ut.getTeam().getTID()));
+                currentTeams.add(teamRepository.findOneTeam(ut.getTeam().getTID()));
             }
         }
 
@@ -118,7 +122,7 @@ public class MainPageService {
 
         for(UserTeam ut : userTeams){
             if(ut.isJoinUs() == true) {
-                users.add(contentRepository.findUser(ut.getUser().getUID()));
+                users.add(userRepository.findUser(ut.getUser().getUID()));
             }
         }
 
@@ -128,7 +132,7 @@ public class MainPageService {
     //수정된 user를 update하기 위해 영속성 user로 만들어줌
     @Transactional
     public void updateUserCurID(Long uID, Long curTID){
-        User user = contentRepository.findUser(uID);
+        User user = userRepository.findUser(uID);
         user.setCurTid(curTID);
     }
 

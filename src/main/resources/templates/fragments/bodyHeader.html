@@ -1,17 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <div class="header" th:fragment="bodyHeader">
-   <!-- <ul class="nav nav-pills pull-right">
-        <li><a href="/">Home</a></li>
-    </ul>-->
-<!--    href="/loginHome"-->
-    <a id="aHeader"><h3 class="text-muted">Family Story</h3></a>
+
+    <a id="aHeader"><img src="/AdminImage/full_logo.png" width="250px" style="margin: 30px;"/></a>
 
     <script th:inline="javascript">
         var currentTID = [[${curTID}]];
     </script>
     <script>
-
         var aHeader = document.getElementById('aHeader');
         aHeader.setAttribute("href", "/loginHome/"+currentTID);
     </script>
