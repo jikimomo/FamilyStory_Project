@@ -9,7 +9,7 @@
     </style>
 
     <style>
-        *{
+        * {
             font-family: "Poppins", sans-serif;
         }
 
@@ -18,18 +18,49 @@
             width: 850px;
         }
 
+        .setting_form {
+            border: 1px solid white;
+            width: 480px;
+            height: auto;
+            margin: 0 auto;
+        }
+
+        .setting_form button {
+            display: block;
+            box-sizing: border-box;
+            margin: auto;
+            width: 50%;
+            padding: 1rem;
+            font-size: 1rem;
+            background-color: #333333;
+            border: 1px solid #b1b1b1;
+            color: #fff;
+            border-radius: 0.3rem;
+            margin-top: 2rem;
+        }
+
+        .setting_form fieldset {
+
+            margin-top: 4em;
+            margin-bottom: 5em;
+            border: 2px solid #e2e2e2;
+            padding: 1.8rem 2rem 1.8rem;
+
+        }
+
         ul {
             list-style-type: none;
             padding: 0px;
-            margin-left: 20px;
+            margin-left: 80px;
             width: auto;
             background: white;
             height: auto;
             overflow: auto;
             position: fixed;
-            border-radius: 10px;
+            /*border-radius: 10px;*/
             color: #333;
-            border: solid 1px #33333330;
+            border: solid 2px #33333330;
+            text-align: center;
         }
 
         li {
@@ -71,15 +102,28 @@
         }
 
         #update, #deleteAccount {
-            margin-top: 30px;
-            margin-left: 5px;
-            outline: none;
-            cursor: pointer;
-            border-radius: 10px;
-            font-weight: bold;
-            background-color: #ffffff;
-            border: 1px solid #33333330;
-            color:#33333370;
+            /*margin-top: 30px;*/
+            /*margin-left: 5px;*/
+            /*outline: none;*/
+            /*cursor: pointer;*/
+            /*border-radius: 10px;*/
+            /*font-weight: bold;*/
+            /*background-color: #ffffff;*/
+            /*border: 1px solid #33333330;*/
+            /*color: #33333370;*/
+
+            display: block;
+            box-sizing: border-box;
+            margin: auto;
+            width: 50%;
+            padding: 1rem;
+            font-size: 1rem;
+            background-color: #333333;
+            border: 1px solid #b1b1b1;
+            color: #fff;
+            border-radius: 0.3rem;
+            margin-top: 2rem;
+            opacity: 70%;
         }
 
         #update:hover, #deleteAccount:hover {
@@ -102,17 +146,29 @@
         }
 
         #logout {
-            margin-top: 20px;
-            outline: none;
-            cursor: pointer;
-            border-radius: 10px;
-            font-weight: bold;
-            background-color: #ffffff;
-            border: 1px solid #33333330;
-            color:#33333370;
+            /*margin-top: 20px;*/
+            /*outline: none;*/
+            /*cursor: pointer;*/
+            /*border-radius: 10px;*/
+            /*font-weight: bold;*/
+            /*background-color: #ffffff;*/
+            /*border: 1px solid #33333330;*/
+            /*color: #33333370;*/
+
+            display: block;
+            box-sizing: border-box;
+            margin: auto;
+            width: 50%;
+            padding: 1rem;
+            font-size: 1rem;
+            background-color: #333333;
+            border: 1px solid #b1b1b1;
+            color: #fff;
+            border-radius: 0.3rem;
+            margin-top: 2rem;
         }
 
-        #logout:hover{
+        #logout:hover {
             /*background: #eaea80;*/
             /*color: gray;*/
             /*border: solid 1px white;*/
@@ -181,10 +237,10 @@
             }
         }
 
-        $(document).ready(function (){
-            $('#deleteAccount').click(function (){
+        $(document).ready(function () {
+            $('#deleteAccount').click(function () {
                 let check = confirm("탈퇴하시겠습니까?")
-                if(check){
+                if (check) {
                     location.replace("/deleteUser");
                 }
             })
@@ -196,25 +252,25 @@
                     $('#pwCheck').focus()
                 }
             })
-            $('#pw').mouseover(function (){
+            $('#pw').mouseover(function () {
                 // console.log("over")
                 $('#pw').attr('type', 'text')
             })
-            $('#pw').mouseleave(function (){
+            $('#pw').mouseleave(function () {
                 // console.log("아웃")
                 $('#pw').attr('type', 'password')
             })
 
 
-            $('#update').click(function (evt){
+            $('#update').click(function (evt) {
                 evt.preventDefault();
-                if($('#pw').val() != $('#pwCheck').val()) {
+                if ($('#pw').val() != $('#pwCheck').val()) {
                     alert("비밀번호가 일치하지 않습니다.")
                     $('#pw').focus();
                     document.querySelector('input[id="pw"]').focus();
                     return;
                     // document.querySelector('#pw').focus();
-                }else{
+                } else {
 
                     const formElement = document.getElementById('form');
                     formElement.setAttribute("action", "/users/settinguser");
@@ -223,9 +279,9 @@
                 }
             });
 
-            $('#logout').click(function (evt){
+            $('#logout').click(function (evt) {
                 let checklog = confirm("로그아웃 하시겠습니까?")
-                if(checklog){
+                if (checklog) {
                     location.replace("/logout");
                 } else {
                     evt.preventDefault();
@@ -258,160 +314,133 @@
 </head>
 <body>
 <div class="container">
-        <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
     <div class="py-1 text-center">
-        <a th:href="@{/loginHome/{curTID}(curTID=${curTID})}" ><img th:src="${userProfileImage}" width="230px" height="230px" style="border-radius: 50%"></a>
+        <a th:href="@{/loginHome/{curTID}(curTID=${curTID})}"><img th:src="${userProfileImage}" width="230px"
+                                                                   height="230px" style="border-radius: 50%"></a>
     </div>
 
-    <ul class="menu">
+    <ul class="menu" >
         <li><a th:href="@{/loginHome/{curTID}(curTID=${curTID})}">홈</a></li>
         <li><a th:href="@{/users/settinguser}">내정보</a></li>
         <li><a th:href="@{/teamEdit}">내그룹</a></li>
-
     </ul>
 
-<!-- SettingController의 GetMapping의 /users/settinguser로 액션을 잡고 userSetForm이라는 오브젝트(객체)에 담는다. -->
-    <form role="form" id="form" th:object="${userSetForm}" enctype="multipart/form-data" style="width: 700px">
-        <div class="setting">
-            <div class="form-group">
-                <label th:for="id">아이디</label>
-                <input type="text" th:field="*{id}" class="form-control"
-                       placeholder="아이디를 입력하세요" th:value="*{id}" readonly
-                       th:class="${#fields.hasErrors('id')}? 'form-control fieldError' : 'form-control'">
-                <div class="field-error" th:errors="*{id}"/>
-            </div>
-
-            <div class="form-group">
-                <label th:for="name">이름</label>
-                <input type="text" th:field="*{name}" class="form-control" th:value="*{name}"
-                       placeholder="이름을 입력하세요"
-                       th:class="${#fields.hasErrors('name')}? 'form-control fieldError' : 'form-control'">
-                <div class="field-error" th:errors="*{name}"/>
-            </div>
-
-            <div class="form-group">
-                <label th:for="pw">비밀번호</label>
-                <input type="password" id="pw" name="password" class="form-control"
-                       placeholder="비밀번호를 입력하세요"
-                       th:class="${#fields.hasErrors('password')}? 'form-control fieldError' : 'form-control'" th:value="*{password}">
-                <div class="field-error" th:errors="*{password}"/>
-            </div>
-
-            <div class="form-group">
-                <label th:for="pwCheck">비밀번호 확인</label>
-                <input type="password" name="passwordCheck" id="pwCheck" class="form-control"
-                       placeholder="비밀번호를 입력하세요"
-                       th:class="${#fields.hasErrors('passwordCheck')}? 'form-control fieldError' : 'form-control'">
-                <div class="field-error" th:errors="*{passwordCheck}"/>
-            </div>
-
-            <div class="form-group">
-                <label th:for="nickName">닉네임</label>
-                <input type="text" th:field="*{nickName}" class="form-control" th:value="*{nickName}"
-                       placeholder="닉네임을 입력하세요"
-                       th:class="${#fields.hasErrors('nickName')}? 'form-control fieldError' : 'form-control'">
-                <div class="field-error" th:errors="*{nickName}"/>
-            </div>
-
-            <div class="form-group">
-                <label th:for="email">E-mail</label>
-                <input type="text" th:field="*{email}" class="form-control" th:value="*{email}"
-                       placeholder="E-mail을 입력하세요"
-                       th:class="${#fields.hasErrors('email')}? 'form-control fieldError' : 'form-control'">
-                <div class="field-error" th:errors="*{email}"/>
-            </div>
-
-            <div class="form-group">
-                <label th:for="phoneNumber">핸드폰 번호</label>
-                <input type="text" th:field="*{phoneNumber}" class="form-control" th:value="*{phoneNumber}"
-                       placeholder="Phone_number을 입력하세요"
-                       th:class="${#fields.hasErrors('phoneNumber')}? 'form-control fieldError' : 'form-control'">
-                <div class="field-error" th:errors="*{phoneNumber}"/>
-            </div>
-
-            <div class="form-group" style="margin-top: 10px;">
-                <label th:for="userImage">프로필 사진 선택</label>
-                <div id="preview">
-                    <img th:src="${userProfileImage}" width="150" style="margin:12px;"/>
+    <div class="setting_form" style="margin-top: 10px;">
+        <!--    <div th:replace="fragments/bodyHeader :: bodyHeader" />-->
+        <fieldset>
+            <form role="form" id="form" th:object="${userSetForm}" enctype="multipart/form-data" method="post"
+                  novalidate>
+                <div class="form-group">
+                    <label th:for="id">아이디</label>
+                    <input type="text" th:field="*{id}" class="form-control" th:value="*{id}" readonly>
                 </div>
-                <img style="width: 150px;" id="View" class="form-control">
-                <input style="display: block;" type="file" id="input-image" name="userImage">
-            </div>
-
-            <div class="form-group" style="margin-top: 10px;">
-                <label th:for="userCoverImage">개인 커버 사진 선택</label>
-                <div id="previewCover">
-                    <img th:src="${userCoverImage}" width="150" style="margin:12px;"/>
+                <div class="form-group">
+                    <label th:for="name">이름</label>
+                    <input type="text" th:field="*{name}" class="form-control" th:value="*{name}"
+                           placeholder="이름을 입력하세요" >
                 </div>
-                <img style="width: 150px;" id="ViewCover" class="form-control" >
-                <input style="display: block;" type="file" id="input-coverimage" name="userCoverImage">
-            </div>
+                <div class="form-group">
+                    <label th:for="pw">비밀번호</label>
+                    <input type="password" id="pw" name="password" class="form-control" th:value="*{password}" >
+                </div>
+                <div class="form-group">
+                    <label th:for="pwCheck">비밀번호 확인</label>
+                    <input type="password" name="passwordCheck" id="pwCheck" class="form-control"
+                           placeholder="비밀번호를 입력하세요" >
+                </div>
+                <div class="form-group">
+                    <label th:for="nickName">닉네임</label>
+                    <input type="text" th:field="*{nickName}" class="form-control" >
 
-            <div th:if="${#fields.hasGlobalErrors()}">
-                <p class="field-error" th:each="err : ${#fields.globalErrors()}"
-                   th:text="${err}">전체 오류 메시지</p>
-            </div>
-            <br>
-            <button type="submit" class="btn btn-primary" id="update"
-                    th:onclick="|location.href='@{/users/settinguser}'|">저장하기
-            </button>
+                    <div class="form-group">
+                        <label th:for="email">E-mail</label>
+                        <input type="text" th:field="*{email}" class="form-control" th:value="*{email}"
+                               placeholder="E-mail을 입력하세요." >
+                    </div>
+                    <div class="form-group">
+                        <label th:for="phoneNumber">핸드폰 번호</label>
+                        <input type="text" th:field="*{phoneNumber}" class="form-control" th:value="*{phoneNumber}"
+                               placeholder="Phone_number을 입력하세요">
+                    </div>
 
-            <button type="button" class="btn btn-primary" id="deleteAccount">회원탈퇴</button>
-        </div>
-    </form>
-    <form th:action="@{/logout}" method="post" style="width: 400px; margin-left: 120px;">
-        <button class="w-100 btn btn-dark btn-lg" id="logout" type="submit">로그아웃</button>
-    </form>
-</div>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label th:for="userImage">프로필 사진 선택</label>
+                        <div id="preview">
+                            <img th:src="${userProfileImage}" width="150" style="margin:12px;"/>
+                        </div>
+                        <img style="width: 150px;" id="View" class="form-control">
+                        <input style="display: block;" type="file" id="input-image" name="userImage">
+                    </div>
 
-
-<a href="javascript:void kakaoChatStart()" class="kakaoChatPc hidden-md hidden-sm hidden-xs">
-    <p id="kakao-talk-channel-chat-button"></p>
-</a>
-
-
-<script type="text/javascript">
-
-
-    /*  function logoutWithKakao() {
-          if (!Kakao.Auth.getAccessToken()) {
-              console.log('Not logged in.');
-              return;
-          }
-          console.log(Kakao.Auth.getAccessToken()); //before Logout
-          Kakao.Auth.logout(function () {
-              console.log(Kakao.Auth.getAccessToken()); //after Logout
-              //★ 추가 할 것 : 로그아웃 성공 후 처리
-          });
-      }*/
-
-
-    function chat() {
-        Kakao.Channel.chat({
-            channelPublicId: '_pPPkb' // 카카오톡 채널 홈 URL에 명시된 id로 설정합니다.
-        });
-    }
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label th:for="userCoverImage">개인 커버 사진 선택</label>
+                        <div id="previewCover">
+                            <img th:src="${userCoverImage}" width="150" style="margin:12px;"/>
+                        </div>
+                        <img style="width: 150px;" id="ViewCover" class="form-control">
+                        <input style="display: block;" type="file" id="input-coverimage" name="userCoverImage">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-outline-secondary" id="update">저장하기</button>
+                <button type="button" class="btn btn-primary" id="deleteAccount">회원탈퇴</button>
+            </form>
+        </fieldset>
+        <form th:action="@{/logout}" method="post">
+            <button class="w-100 btn btn-dark btn-lg" id="logout" type="submit">로그아웃</button>
+        </form>
+        <!--    <div th:replace="fragments/footer :: footer" />-->
+    </div>
 
 
-    btn_chat();
-    function btn_chat() {
-        Kakao.Channel.createChatButton({
-            container: '#kakao-talk-channel-chat-button',
-            channelPublicId: '_pPPkb' // 카카오톡 채널 홈 URL에 명시된 id로 설정합니다.
-        });
-    }
+    <a href="javascript:void kakaoChatStart()" class="kakaoChatPc hidden-md hidden-sm hidden-xs">
+        <p id="kakao-talk-channel-chat-button"></p>
+    </a>
 
-    /*    btn_added();
-        function btn_added() {
-            Kakao.Channel.createAddChannelButton({
-                container: '#kakao-add-channel-button',
-                channelPublicId: '_pPPkb' // 채널 홈 URL에 명시된 id로 설정합니다.
+
+    <script type="text/javascript">
+
+
+        /*  function logoutWithKakao() {
+              if (!Kakao.Auth.getAccessToken()) {
+                  console.log('Not logged in.');
+                  return;
+              }
+              console.log(Kakao.Auth.getAccessToken()); //before Logout
+              Kakao.Auth.logout(function () {
+                  console.log(Kakao.Auth.getAccessToken()); //after Logout
+                  //★ 추가 할 것 : 로그아웃 성공 후 처리
+              });
+          }*/
+
+
+        function chat() {
+            Kakao.Channel.chat({
+                channelPublicId: '_pPPkb' // 카카오톡 채널 홈 URL에 명시된 id로 설정합니다.
             });
-        }*/
+        }
 
-</script>
 
-<div id="footer" th:replace="fragments/footer :: footer"/>
+        btn_chat();
+
+        function btn_chat() {
+            Kakao.Channel.createChatButton({
+                container: '#kakao-talk-channel-chat-button',
+                channelPublicId: '_pPPkb' // 카카오톡 채널 홈 URL에 명시된 id로 설정합니다.
+            });
+        }
+
+        /*    btn_added();
+            function btn_added() {
+                Kakao.Channel.createAddChannelButton({
+                    container: '#kakao-add-channel-button',
+                    channelPublicId: '_pPPkb' // 채널 홈 URL에 명시된 id로 설정합니다.
+                });
+            }*/
+
+    </script>
+
+    <div id="footer" th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
 </body>
 </html>
