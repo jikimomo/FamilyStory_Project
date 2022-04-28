@@ -1,8 +1,10 @@
 package fs.project.service;
-import fs.project.argumentresolver.Login;
-import fs.project.domain.*;
+
+import fs.project.domain.Content;
+import fs.project.domain.Team;
+import fs.project.domain.User;
+import fs.project.domain.UserTeam;
 import fs.project.form.FindPwForm;
-import fs.project.form.LoginForm;
 import fs.project.form.UserSetForm;
 import fs.project.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +20,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.io.File;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,18 +59,6 @@ public class UserService {
     }
 
     public User login(String loginId, String password) {
-/*
-
-        Optional<User> findUserOptional = userRepository.findByLoginId(loginId);
-        User user = findUserOptional.get();
-        if(user.getPassword().equals(password)){
-            return user;
-        }
-        else return null;
-
-        아래 코드는 위의 코드를 축약 시켜놓은 코드.
-
-        */
         return userRepository.findByLoginId(loginId).filter(u -> u.getPassword().equals(password))
                 .orElse(null);
     }
@@ -81,7 +71,6 @@ public class UserService {
         }
         return null;
     }
-
 
     //SettingController에서 postMapping에서 updateUser를 찾아들어오고 userRepository.updateUser로 이동
     public void updateUser(Long updateUid, UserSetForm form) throws Exception {
@@ -112,10 +101,8 @@ public class UserService {
         userRepository.updateUser(updateUid, user);
     }
 
-
-
     //그룹(팀)찾기
-    //teamRepository의 findTeam의 userId라는 매개변수로 리던한다.
+    //teamRepository의 findTeam의 userId라는 매개변수로 리턴한다.
     //타입은 List형식
     public List<Team> findTeam(Long userId){
         return teamRepository.findTeams(userId);
@@ -295,8 +282,6 @@ public class UserService {
             }
         }
         userRepository.deleteUserUid(uid);
-
-        //내가 보스가 아닌경우 팀을 탈퇴하면 content가 지워져야 함
     }
 
     //유저 프로필 사진
@@ -326,8 +311,6 @@ public class UserService {
 
                 String newFileName = System.nanoTime()+originalFileExtension; //이미지 이름이 겹치지 않게 나노시간을 이름으로 사진 저장
                 File file = new File(absolutePath+File.separator+"userProfileImage"+File.separator+newFileName);
-//                System.out.println(System.nanoTime()+" "+originalFileExtension);
-//                System.out.println(newFileName);
                 image.transferTo(file);
                 file.setWritable(true);
                 file.setReadable(true);
@@ -336,7 +319,6 @@ public class UserService {
 
             }
         }
-
         return userPhoto;
     }
 
@@ -367,14 +349,11 @@ public class UserService {
 
                 String newFileName = System.nanoTime()+originalFileExtension; //이미지 이름이 겹치지 않게 나노시간을 이름으로 사진 저장
                 File file = new File(absolutePath+File.separator+"userCoverImage"+File.separator+newFileName);
-//                System.out.println(System.nanoTime()+" "+originalFileExtension);
-//                System.out.println(newFileName);
                 image.transferTo(file);
                 file.setWritable(true);
                 file.setReadable(true);
 
                 userPhoto = File.separator + "userCoverImage" + File.separator + newFileName;
-
             }
         }
 

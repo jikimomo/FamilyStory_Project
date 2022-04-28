@@ -33,7 +33,7 @@ public class TeamSettingController {
 
     // 페이지 이동 _ 내 그룹 페이지
     @GetMapping("/teamEdit")
-    public String groupEditPage(@Login User loginUser, Model model) {
+    public String groupEditPage(@Login User loginUser, Model model, HttpServletRequest request) {
         List<Team> team =  new ArrayList<>();
 
         List<UserTeam> ut = teamService.findByUID(loginUser.getUID());
@@ -44,6 +44,15 @@ public class TeamSettingController {
         }
         model.addAttribute("teams", team); // 유저가 소속된 팀
         model.addAttribute("mainChecked",loginUser.getMainTid()); // 유저의 메인팀
+
+        //로그인 성공하였고 세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성하는 코드 작성.
+        HttpSession session = request.getSession();
+        String access_Token = (String)session.getAttribute("access_Token");
+        //카카오 토큰 삭제. 왜냐? 이전 사용자가 카카오 서비스 계정 로그아웃 안하고 이후 사람이 일반 로그인 할 경우 보안에 문제가 생기기 때문에.
+        if(access_Token != null && !"".equals(access_Token)) {
+            model.addAttribute("kakaoLogin", true);
+        }
+        else model.addAttribute("kakaoLogin", false);
 
         Long curTID;
         if(loginUser.getCurTid() == null){
@@ -68,7 +77,17 @@ public class TeamSettingController {
 
     // 페이지 이동 _ 내 그룹 페이지
     @GetMapping("/{tid}/teamEdit")
-    public String groupPageEdit(@Login User loginUser, @PathVariable("tid") Long tId, Model model) {
+    public String groupPageEdit(@Login User loginUser, @PathVariable("tid") Long tId, Model model, HttpServletRequest request) {
+
+        //로그인 성공하였고 세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성하는 코드 작성.
+        HttpSession session = request.getSession();
+        String access_Token = (String)session.getAttribute("access_Token");
+        //카카오 토큰 삭제. 왜냐? 이전 사용자가 카카오 서비스 계정 로그아웃 안하고 이후 사람이 일반 로그인 할 경우 보안에 문제가 생기기 때문에.
+        if(access_Token != null && !"".equals(access_Token)) {
+            model.addAttribute("kakaoLogin", true);
+        }
+        else model.addAttribute("kakaoLogin", false);
+
         // joinUs가 False인 유저를 가져온다.
         List<User> users = userService.waitMember(tId);
         model.addAttribute("user",users);
