@@ -340,5 +340,9 @@ public class HomeController {
         return "explain";
     }
 
+    @GetMapping("/moveimage")
+    public String move(){
+        return "moveimage";
+    }
 
 }

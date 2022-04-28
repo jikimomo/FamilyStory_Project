@@ -3,7 +3,6 @@ package fs.project.controller;
 import fs.project.argumentresolver.Login;
 import fs.project.domain.User;
 import fs.project.form.UserSetForm;
-import fs.project.kakalogin.kakaoService;
 import fs.project.service.UserService;
 import fs.project.session.SessionConst;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor

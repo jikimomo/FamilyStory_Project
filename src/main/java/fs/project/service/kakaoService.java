@@ -1,4 +1,4 @@
-package fs.project.kakalogin;
+package fs.project.service;
 
 import com.google.gson.*;
 import lombok.RequiredArgsConstructor;
