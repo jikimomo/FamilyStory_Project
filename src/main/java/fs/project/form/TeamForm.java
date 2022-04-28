@@ -14,9 +14,6 @@ public class TeamForm implements Persistable<Long> {
     @NotEmpty(message = "필수 사항입니다.")
     private String teamId;
 
-//    @NotEmpty(message = "필수 사항입니다.")
-//    private String teamName;
-
     private String teamImage;
 
     private String[] users;

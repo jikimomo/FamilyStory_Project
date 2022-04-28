@@ -15,6 +15,7 @@
 
         .container {
             width: 850px;
+            text-align: center;
         }
         *{
             font-family: "Poppins", sans-serif;
@@ -35,7 +36,6 @@
             background-color: #33333310;
         }
     </style>
-<!--    이미지 미리 보여주기-->
     <script type="text/javascript">
         $(function() {
             $("#file").on('change', function(){
@@ -133,7 +133,6 @@
                 group2.append(evtdatediv);
                 group2.append(evttxtdiv);
                 group2.append(evtbtndiv)
-                console.log('?')
 
                 div2.append(group2);
             }
@@ -148,7 +147,6 @@
                     data: {sendData:sendData},
                     success: function (data) {
                         if(data == 1){
-                            // console.log("넘어갔다.")
                             if (me == sendData) {
                                 $('#users').focus();
                                 $('#users').val("");
@@ -212,7 +210,6 @@
                 if(eventName != "" && eventDate != "" ){
                     plusEvt(eventName,eventDate);
                     document.querySelector('input[name="eventDate"]').focus();
-                    // events.set(eventName,eventDate);
                     document.querySelector('input[name="eventName"]').value="";
                     document.querySelector('input[name="eventDate"]').value="";
                 }
@@ -231,11 +228,6 @@
             // 그룹아이디 유효성 체크
             $('#teamId').focusout(function (evt){
                 let teamId = document.querySelector('#teamId')
-                /*if(/\W/.test(teamId.value)){
-                    isIdValid=false;
-                    $('#teamId').val("")
-                    $('#teamId').focus()
-                }*/
                 sendData = $('#teamId').val();
                 $.ajax({
                     type: "POST",
@@ -244,7 +236,6 @@
                     success: function(data) {
                         if (data == 0) {
                             isIdValid=true;
-                            console.log('아이디 가능')
                         }else if(data == -1) {
                             // teamId.setAttribute('placeholder','아이디는 알파벳, 숫자, 언더바(_)만 가능합니다.')
                         } else{
@@ -252,7 +243,6 @@
                             $('#teamId').focus()
                             teamId.setAttribute('placeholder','이미 존재하는 아이디입니다.')
                             isIdValid=false;
-                            console.log('존재하는 아이디')
                         }
 
                         if(isIdValid){
@@ -271,11 +261,7 @@
                 let edate = document.querySelector('input[name="eventDate"]')
                 let ename = document.querySelector('input[name="eventName"]')
                 let teamName = document.querySelector('input[name="teamName"]');
-                // if (!teamName.value) {
-                //     teamName.focus();
-                //     evt.preventDefault();
-                //     return;
-                // }
+
                 let teamId = document.querySelector('input[name="teamId"]');
                 if (!teamId.value) {
                     teamId.focus();
@@ -289,7 +275,6 @@
                 ename.value="";
                 if (res == true) {
                     let qs = $('#CreateForm').serialize();
-                    console.log("예");
 
                     $.ajax({
                         type: "POST",
@@ -329,8 +314,12 @@
 
 <div class="container">
     <div th:replace="./fragments/bodyHeader :: bodyHeader"/>
+</div>
+
+<div>
     <div class="row">
-        <div class="col-12">
+        <div class="col-2"></div>
+        <div class="col-8">
             <form id="imgf" action="upload" method="post" enctype="multipart/form-data">
                 <div class="mb-3"><img src="/AdminImage/temp.png" id="View" class="rounded img-thumbnail mx-auto d-block" ></div>
                 <div class="mb-3">
@@ -341,15 +330,15 @@
                 </div>
             </form>
         </div>
-        <div class="col-12">
-            <form class="form-horizontal needs-validation" id="CreateForm" novalidate>
+        <div class="col-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-5" style="margin: 10px auto">
+            <form class="form-horizontal needs-1validation" id="CreateForm" novalidate>
                 <div class="mb-3 row">
                 </div>
-                <!--<div class="mb-3 row">
-                    <label class="col-sm-2 control-label">*그룹명</label>
-                    <div class="col-sm-10"><input type="text" name="teamName" placeholder="그룹명을 입력해주세요."
-                                                  class="form-control" required/></div>
-                </div>-->
+
                 <div class="mb-3 row">
                     <label class="col-sm-2 control-label">*그룹명</label>
                     <div class="col-sm-10"><input type="text" name="teamId" id="teamId" placeholder="그룹명을 입력해주세요."
@@ -359,51 +348,59 @@
                     <div class="col-sm-2">
                         <label class="control-label">구성원</label>
                     </div>
-                    <div class="col-sm-10 row" id="plususers" >
-                        <div class="btn-group" role="group">
-                            <div class="col-sm-10" ><input type="text" name="users" id="users" class="form-control" placeholder="구성원 아이디를 입력해주세요."/></div>
-                            <div class="col-sm-2" ><input type="button" value="추가" id="usersplus" class="btn btn-outline-secondary"/></div>
+                    <div class="col-sm-10" id="plususers" >
+                        <div class="row">
+                            <div class="btn-group" role="group">
+                                <div class="col-sm-10" ><input type="text" name="users" id="users" class="form-control" placeholder="구성원 아이디를 입력해주세요."/></div>
+                                <div class="col-sm-2" style="text-align: right;" ><input type="button" value="추가" id="usersplus" class="btn btn-outline-secondary"/></div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="mb-3 row" id="pu">
-
                 </div>
                 <div class="mb-3 row ">
                     <div class="col-sm-2">
                         <label class="control-label">기념일</label>
                     </div>
                     <div class="col-sm-10" id="plusevents">
-                        <div class="btn-group" role="group">
-                            <div class="col-sm-5">
-                                <input type="date" name="eventDate" class="form-control" style="color:#00000090" />
-                            </div>
-                            <div class="col-sm-6">
-                                <input type="text" name="eventName" placeholder="기념일을 입력해주세요." class="form-control " />
-                            </div>
-                            <div class="col-sm-1">
-                                <input type="button" value="추가" id="eventplus" class="btn btn-outline-secondary"/>
+                        <div class="row">
+                            <div class="btn-group" role="group">
+                                <div class="col-sm-4">
+                                    <input type="date" name="eventDate" class="form-control" style="color:#00000090" />
+                                </div>
+                                <div class="col-sm-6" >
+                                    <input type="text" name="eventName" placeholder="기념일을 입력해주세요." class="form-control "/>
+                                </div>
+                                <div class="col-sm-2" style="text-align: right">
+                                    <input type="button" value="추가" id="eventplus" class="btn btn-outline-secondary"/>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <div class="input-group mb-3">
-                        <div class="input-group-text">
-                            <input class="form-check-input mt-0" type="checkbox" name="mainTeamChecked" id="mainTeamChecked" checked/>
+
+                    <div class="col-sm-2">
+                        <label class="control-label">메인 그룹</label>
+                    </div>
+                    <div class="col-sm-10"  >
+                        <div class="input-group mb-3">
+                            <div class="input-group-text">
+                                <input class="form-check-input mt-0" type="checkbox" name="mainTeamChecked" id="mainTeamChecked" checked/>
+                            </div>
+                            <input type="text" class="form-control" placeholder="로그인 시 보여지는 그룹 화면" readonly/>
                         </div>
-                         <input type="text" class="form-control" placeholder="메인 그룹으로 설정하기 (소속 그룹이 없는 경우엔 필수체크입니다.)" readonly/>
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <div class="d-grid gap-2 col-12 mx-auto">
+                    <div class="d-grid gap-2 col-6 mx-auto">
                         <button type="submit" class="btn btn-lg" id="submit">그룹 생성</button>
                     </div>
                 </div>
             </form>
         </div>
+        <div class="col-3"></div>
     </div>
 </div>
-<!--<div th:replace="./fragments/footer :: footer"/>-->
+<div th:replace="./fragments/footer :: footer"/>
 </body>
 </html>

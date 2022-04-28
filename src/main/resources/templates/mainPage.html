@@ -12,6 +12,7 @@
     h5{
         margin-bottom: 25px;
     }
+
     hr{
         opacity: 10%;
     }
@@ -21,15 +22,6 @@
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
 
     <div id="wrapper">
-        <!--<div id="buttonBox">
-            <div id="groupBtn">
-                <a href="/AfterJoin"><img src="/AdminImage/group.png" width="30px"/></a>
-            </div>
-            <div id="settingBtn">
-                <a th:href="@{/users/settinguser}"><img src="/AdminImage/setting.png" width="30px"/></a>
-            </div>
-        </div>-->
-
 
         <div id="navBox">
             <h5>내 그룹</h5>
@@ -46,24 +38,20 @@
             </div>
             <hr/>
 
-            <h4>1년전 우리는</h4>
             <div id="agoYearPhoto">
+
+
             </div>
-            <hr/>
+
+
         </div>
 
         <div id="contentBox">
-            <!-- 현재 무슨 팀인지 보려고 임시로 생성, 나중에 지울 것임! -->
-            <div id="curTeam">
-            </div>
-            <hr/>
-
             <div id="userData">
             </div>
-            <button id="uploadBtn" type="button">글 올리기</button>
-            <hr/>
-
-            <h4>게시물</h4>
+            <div id="uploadBtnBox">
+                <button id="uploadBtn" type="button">+</button>
+            </div>
             <div id="contents">
             </div>
             <hr/>
@@ -76,15 +64,11 @@
 </div> <!-- /container -->
 </body>
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
-</html>
-
 <script>
 
     var curURL = window.location.href;
-    console.log(curURL);
     var urlArr = curURL.split("/");
     var currentTID = urlArr[urlArr.length-1];
-    console.log(currentTID);
 
     //로그인 사용자 정보를 받아옴
     $.ajax({
@@ -92,12 +76,10 @@
         url: "/initMainPage/loginUser",
         datatype: 'json',
         success: function(data) {
-            console.log(data);
             getMyTeams();
             initInformation(currentTID);
 
             var userData = document.getElementById('userData');
-            userData.innerHTML = "<h4>현재 로그인한 아이디 : "+data.userID+"</h4>";
         },
         error: function(request, status, error) {
             console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
@@ -105,20 +87,17 @@
     });
 
     function getMyTeams(){
-        console.log('getMyTeams 함수 안');
         $.ajax({
             type: "get",
             url: "/initMainPage/myTeams",
             datatype: 'json',
             success: function(data) {
-                console.log('myTeams');
-                console.log(data);
 
                 var myTeams = document.getElementById('myTeams'); // div
                 data.forEach(function(item){
                     let teamimg = document.createElement('img');
                     teamimg.setAttribute("src",item.teamImage);
-                    teamimg.setAttribute("style",'width:53px; height:53px; border-radius: 50%; margin-bottom:10px;')
+                    teamimg.setAttribute("style",'width:53px; height:53px; border-radius: 50%; margin-bottom:10px; border: 1px solid gray;')
                     teamimg.setAttribute("id",item.tid);
                     teamimg.addEventListener("click", getInformation);
 
@@ -130,17 +109,9 @@
                     eachTeam.append(teamimg);
                     eachTeam.append(teamName);
                     eachTeam.setAttribute("style","float:left; margin-right:30px; margin-bottom:15px")
-                    /*
-                    var teamBtn = document.createElement("button");
-                    teamBtn.setAttribute("type", "button");
-                    teamBtn.setAttribute("class", "teamBtn");
-                    teamBtn.setAttribute("id", item.tid);
-                    teamBtn.addEventListener("click", getInformation);
-*/
-                    // teamBtn.appendChild(teamText);
+
                     myTeams.appendChild(eachTeam);
                     myTeams.setAttribute("style","display:inline-block");
-                    // myTeams.appendChild(teamName)
                 });
 
             },
@@ -151,15 +122,10 @@
     }
 
     function initInformation(currentTID){
-        console.log('initInformation 함수 안');
-        console.log(currentTID);
         var btn = document.getElementById('uploadBtn');
-        <!--        btn.setAttribute("onclick", "location.href='/uploadContent/"+currentTID+"'");-->
         btn.setAttribute("onclick", "location.href='/uploadContent'");
-        console.log(btn.getAttribute('href'));
 
         var curTeam = document.getElementById('curTeam');
-        curTeam.innerHTML = "<h4>현재 속한 그룹(이건 TID) : "+currentTID+"</h4>";
 
         var notice = document.getElementById('notice');
         notice.innerHTML = '';
@@ -172,8 +138,6 @@
             },
             datatype: 'json',
             success: function(data) {
-                console.log('contents');
-                console.log(data);
                 showContents(data);
             },
             error: function(request, status, error) {
@@ -188,8 +152,6 @@
             },
             datatype: 'json',
             success: function(data) {
-                console.log('teamEvents');
-                console.log(data);
                 showTeamEvent(data);
             },
             error: function(request, status, error) {
@@ -204,8 +166,6 @@
             },
             datatype: 'json',
             success: function(data) {
-                console.log('birthday');
-                console.log(data);
                 showBirthday(data);
             },
             error: function(request, status, error) {
@@ -220,8 +180,6 @@
             },
             datatype: 'json',
             success: function(data) {
-                console.log('newRequest');
-                console.log(data);
                 showNewRequest(data);
             },
             error: function(request, status, error) {
@@ -238,16 +196,12 @@
             },
             datatype: 'json',
             success: function(data) {
-                console.log('userInSameTeam');
-                console.log(data);
                 showUserInSameTeam(data, currentTID);
             },
             error: function(request, status, error) {
                 console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
             }
         });
-
-        //agoYear ----------------------------------------------
 
         $.ajax({
             type: "post",
@@ -257,7 +211,6 @@
             },
             datatype: 'json',
             success: function(data) {
-                console.log("성공적으로 받아옴")
                 showAgoYear(data);
             },
             error: function(request, status, error) {
@@ -265,25 +218,16 @@
             }
         });
 
-        // ----------------------------------------------
-
     }
 
     function getInformation(evt){
-        console.log('getInformation 함수 안');
-        console.log(evt.target);
         var currentTID = $(evt.target).attr('id');
-        console.log(currentTID);
 
         var btn = document.getElementById('uploadBtn');
-        <!--        btn.setAttribute("onclick", "location.href='/uploadContent/"+currentTID+"'");-->
         btn.setAttribute("onclick", "location.href='/uploadContent'");
-        console.log(btn.getAttribute('href'));
 
         //현재
         var curTeam = document.getElementById('curTeam');
-        curTeam.innerHTML = "<h4>현재 속한 그룹(이건 TID) : "+currentTID+"</h4>";
-
         var notice = document.getElementById('notice');
         notice.innerHTML = '';
 
@@ -295,8 +239,6 @@
             },
             datatype: 'json',
             success: function(data) {
-                console.log('contents');
-                console.log(data);
                 showContents(data);
             },
             error: function(request, status, error) {
@@ -311,8 +253,6 @@
             },
             datatype: 'json',
             success: function(data) {
-                console.log('teamEvents');
-                console.log(data);
                 showTeamEvent(data);
             },
             error: function(request, status, error) {
@@ -327,8 +267,6 @@
             },
             datatype: 'json',
             success: function(data) {
-                console.log('birthday');
-                console.log(data);
                 showBirthday(data);
             },
             error: function(request, status, error) {
@@ -343,8 +281,6 @@
             },
             datatype: 'json',
             success: function(data) {
-                console.log('newRequest');
-                console.log(data);
                 showNewRequest(data);
             },
             error: function(request, status, error) {
@@ -361,8 +297,6 @@
             },
             datatype: 'json',
             success: function(data) {
-                console.log('userInSameTeam');
-                console.log(data);
                 showUserInSameTeam(data, currentTID);
             },
             error: function(request, status, error) {
@@ -371,9 +305,6 @@
         });
 
 
-
-        //    ------- agoYear  함수 -------
-
         $.ajax({
             type: "post",
             url: "/agoYear",
@@ -381,10 +312,7 @@
                 tID : currentTID
             },
             datatype: 'json',
-
             success: function(data) {
-                console.log('teamEvents');
-                console.log(data);
                 showAgoYear(data);
             },
             error: function(request, status, error) {
@@ -394,37 +322,35 @@
     }
 
     function showAgoYear(data){
-        console.log("showAgoYear함수 안")
         var contents = document.getElementById('agoYearPhoto');
         contents.innerHTML = '';
-        data.forEach(function(p){
+
+        if(data!=""){
+
+
             var imgBox = document.createElement("div");
             var img = document.createElement("img");
-            img.setAttribute("src", p);
+            var h = document.createElement("h5");
+            h.innerHTML = '1년전 우리는'
+            img.setAttribute("src", data);
             img.setAttribute("width", "200px");
             img.setAttribute("height", "160px");
+            imgBox.appendChild(h);
             imgBox.appendChild(img);
             contents.appendChild(imgBox);
-        });
+        }
     }
-    //----------------------- agoyear 함수 끝 ------------------------------------
 
     function showUserInSameTeam(data, currentTID){
-        console.log('showUserInSameTeam 함수 안');
 
         var userInSameTeam = document.getElementById('userInSameTeam');
         userInSameTeam.innerHTML = '';
         data.forEach(function(item){
-            // var userBtn = document.createElement("button");
             let memberimg = document.createElement("img")
             memberimg.setAttribute("src",item.userImage);
-            memberimg.setAttribute("style","width:53px; height:53px; border-radius:50%; margin-bottom:7px;")
+            memberimg.setAttribute("style","width:53px; height:53px; border-radius:50%; margin-bottom:7px; border: 1px solid gray;")
             memberimg.setAttribute("id",item.uid+" "+currentTID);
             memberimg.addEventListener("click", movePersonalPage);
-            // userBtn.setAttribute("type", "button");
-            // userBtn.setAttribute("class", "userBtn");
-            // userBtn.setAttribute("id", item.uid+" "+currentTID);
-            // userBtn.addEventListener("click", movePersonalPage);
 
             let memberName = document.createElement("div");
             memberName.innerHTML = item.nickName
@@ -435,47 +361,39 @@
             eachMember.append(memberName);
             eachMember.setAttribute("style","margin-right:30px; margin-bottom:7px;")
 
-            // var userText = document.createTextNode(item.nickName);
-            // userBtn.appendChild(userText);
             userInSameTeam.appendChild(eachMember);
-            // userInSameTeam.setAttribute("style","display:inline-block")
         });
     }
 
     function movePersonalPage(evt){
         var userBtnID = $(evt.target).attr('id');
         var ids = userBtnID.split(' ');
-        console.log(ids[0]);
-        console.log(ids[1]);
         location.href = '/uploadList/'+ids[1]+'/'+ids[0];
     }
 
     function showTeamEvent(data){
-        console.log('showTeamEvent 함수 안');
 
         var notice = document.getElementById('notice');
         data.forEach(function(item){
             var teText = document.createElement("span");
-            teText.innerHTML = '오늘은 '+item.eventDate+'로 '+item.eventName+'입니다.<br>';
+            teText.innerHTML = '오늘은 '+item.eventName+'입니다.<br>';
 
             notice.appendChild(teText);
         });
     }
 
     function showBirthday(data){
-        console.log('showBirthday 함수 안');
 
         var notice = document.getElementById('notice');
         data.forEach(function(item){
             var bText = document.createElement("span");
-            bText.innerHTML = '오늘은 '+item.birthday+'로 '+item.nickName+'의 생일 입니다.<br>';
+            bText.innerHTML = '오늘은 '+item.nickName+'의 생일 입니다.<br>';
 
             notice.appendChild(bText);
         });
     }
 
     function showNewRequest(data){
-        console.log('showNewRequest 함수 안');
 
         var notice = document.getElementById('notice');
         data.forEach(function(item){
@@ -487,32 +405,121 @@
     }
 
     function showContents(data){
-        console.log('showContents 함수 안');
 
         var contents = document.getElementById('contents');
         contents.innerHTML = '';
         data.forEach(function(item){
-            var imgBox = document.createElement("div");
+            var head = document.createElement("div");
+            head.setAttribute("class", "headerContent");
+            var userImg = document.createElement("img");
+            if(item.userImage == null){
+                 userImg.setAttribute("src", "/AdminImage/userIcon.png");
+            }
+            else{
+                userImg.setAttribute("src", item.userImage);
+            }
+            userImg.setAttribute("class", "userImage");
+            head.appendChild(userImg);
+            var headText = document.createElement("span");
+            headText.innerHTML = item.userNickname;
+            head.appendChild(headText);
 
+            var cContainer = document.createElement("div");
+            cContainer.setAttribute("class", "carousel-container");
+
+            var cSlide = document.createElement("div");
+            cSlide.setAttribute("class", "carousel-slide");
+            cSlide.setAttribute("data", 0);
+            cContainer.appendChild(cSlide);
+
+            var imgCount = 0;
             var photo = item.photoRoute.split(' ');
             photo.forEach(function(p){
                 var img = document.createElement("img");
                 img.setAttribute("src", p);
-                img.setAttribute("width", "200px");
-                img.setAttribute("height", "160px");
-                imgBox.appendChild(img);
+                img.setAttribute("class", "contentImg");
+                cSlide.appendChild(img);
+                imgCount++;
             });
+            cSlide.setAttribute("count", imgCount);
 
-            var imgText = document.createElement("span");
-            imgText.innerHTML = item.uid+"가 올림.... "+item.explanation+" "+item.location+" "+item.when;
-            imgBox.appendChild(imgText);
+            var pButton = document.createElement("button");
+            pButton.addEventListener('click', ()=> {
+                let counter = cSlide.attributes.data.value;
+                const size = 550;
+                cSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
 
-            contents.appendChild(imgBox);
-        });
+                if(counter <= 0) return;
+                cSlide.style.transition = "transform 0.4s ease-in-out";
+                counter--;
+                cSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+
+                cSlide.attributes.data.value = counter;
+            });
+            pButton.setAttribute("id", "prevBtn");
+            var pBtnText = document.createTextNode("<");
+            pButton.appendChild(pBtnText);
+            cContainer.appendChild(pButton);
+
+
+            var nButton = document.createElement("button");
+            nButton.addEventListener('click', ()=> {
+                let counter = cSlide.attributes.data.value;
+                const size = 550;
+                cSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+
+                let imgCount = cSlide.attributes.count.value;
+
+                if(counter >= imgCount-1) return;
+                cSlide.style.transition = "transform 0.4s ease-in-out";
+                counter++;
+                cSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+
+                cSlide.attributes.data.value = counter;
+            });
+            nButton.setAttribute("id", "nextBtn");
+            var nBtnText = document.createTextNode(">");
+            nButton.appendChild(nBtnText);
+            cContainer.appendChild(nButton);
+
+            var foot = document.createElement("div");
+            foot.setAttribute("class", "footerContent");
+            var footText = document.createElement("span");
+            footText.innerHTML = item.explanation+" "+item.location+"<br>"+item.when;
+            foot.appendChild(footText);
+
+            var content = document.createElement("div");
+            content.setAttribute("class", "content");
+
+            content.appendChild(head);
+            content.appendChild(cContainer);
+            content.appendChild(foot);
+
+            contents.appendChild(content);
+       });
     }
-
-
-
-
-
 </script>
+<script>
+    $(document).ready(function() {
+        var num = 0;
+        start();
+        function start() {
+            $('#agoYearPhoto img').eq(num - 1).css({left: -1200});
+            setInterval(function () {
+                slide();
+            }, 5000);
+        }
+        function slide() {
+            if (num == 2) {
+                num = 0;
+            } else {
+                num++;
+            }
+            $('#mainimg img').eq(num - 1).animate({left: 1200}, 4000, function () {
+                $('#mainimg img').eq(num - 1).css({left: -1200});
+            });
+            $('#mainimg img').eq(num).animate({left: 0}, 4000);
+        }
+    });
+</script>
+</html>

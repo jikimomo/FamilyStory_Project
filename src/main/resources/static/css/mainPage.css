@@ -32,3 +32,99 @@
 #settingBtn {
     display: inline-block;
 }
+
+
+/* upload Button */
+#uploadBtnBox {
+    width: 70px;
+    margin: 10px auto;
+}
+
+#uploadBtn {
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+    border: none;
+    border-radius: 50%;
+    background-color: #75bc63;
+    font-size: 20px;
+    color: white;
+}
+
+
+/* content */
+.content{
+    margin-bottom: 40px;
+}
+.headerContent{
+    width: 550px;
+    height: 45px;
+    box-sizing : border-box;
+    border: 1px solid black;
+    margin: 0px auto;
+    padding: 5px;
+}
+.userImage {
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+    border-radius: 50%;
+    margin-left: 3px;
+    margin-right: 5px;
+}
+.carousel-container{
+    width: 550px;
+    height: 400px;
+    margin: 0px auto;
+    border: 1px solid black;
+    overflow: hidden;
+    position: relative;
+}
+.carousel-slide{
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.imgWrapper{
+    width: 550px;
+    height: 400px;
+    overflow: hidden;
+}
+.contentImg {
+    width: 550px;
+    height: auto;
+    background-size: cover;
+}
+#prevBtn{
+    position:absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(8%, -48%);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: none;
+    background-color: white;
+    opacity: 70%;
+}
+#nextBtn{
+    position:absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(-5%, -50%);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: none;
+    background-color: white;
+    opacity: 70%;
+}
+.footerContent{
+    width: 550px;
+    height: 100px;
+    box-sizing : border-box;
+    border: 1px solid black;
+    margin: 0px auto;
+    padding: 5px;
+}

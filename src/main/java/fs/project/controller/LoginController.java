@@ -1,26 +1,19 @@
 package fs.project.controller;
 
-import fs.project.argumentresolver.Login;
 import fs.project.domain.User;
 import fs.project.form.LoginForm;
-import fs.project.kakalogin.kakaoService;
+import fs.project.service.kakaoService;
 import fs.project.service.UserService;
 import fs.project.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Locale;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,7 +24,7 @@ public class LoginController {
     private final kakaoService kakaoService;
 
 
-    @PostMapping("/")
+//    @PostMapping("/")
     public String login(@Valid @ModelAttribute LoginForm form, BindingResult result, HttpServletRequest request) {
         // @Valid 는 BindingResult result 검증작업에 사용하는 애노테이션이다.
         // @ModelAttribute는 html에서 받아온 데이터 값들을 UserForm form에 고대로 넣어준다.
@@ -110,9 +103,9 @@ public class LoginController {
     }
 
 
-    @PostMapping("/loginCheck")
+    @PostMapping("/")
     @ResponseBody
-    public String loginChk(HttpServletRequest request, HttpServletResponse response) {
+    public String loginCheck(HttpServletRequest request) {
 
         String id = request.getParameter("id");
         String pw = request.getParameter("pw");

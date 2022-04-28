@@ -46,7 +46,6 @@ public class TeamController extends BaseEntity {
     // 페이지 이동 _ 회원가입 후 이동할 페이지
     @GetMapping("/AfterJoin")
     public String AfterJoin(@Login User loginUser, Model model, HttpServletRequest request) {
-        System.out.println("AfterJoin Page");
 
         HttpSession session = request.getSession();
         String access_Token = (String)session.getAttribute("access_Token");
@@ -70,7 +69,6 @@ public class TeamController extends BaseEntity {
     // 페이지 이동 _ 그룹 생성 클릭 후 페이지로 이동
     @GetMapping("/CreateTeam")
     public String CreateTeam(Model model, @Login User loginUser) {
-        System.out.println("CreateTeam Page");
 
         Long curTID;
         if(loginUser.getCurTid() == null){
@@ -124,7 +122,6 @@ public class TeamController extends BaseEntity {
     @ResponseBody
     @PostMapping(value = "/CreateTeam")
     public void  CreateTeamForm(@Valid TeamForm teamForm,@Login User loginUser, HttpServletRequest request) {
-        System.out.println("CreateTeam Controller");
 
         // 전달받은 데이터를 Team 테이블에 저장
         Team team = new Team();
@@ -190,7 +187,6 @@ public class TeamController extends BaseEntity {
     @PostMapping("/upload")
     public String saveFile(@Login User loginUser, @RequestParam String tid, @RequestParam MultipartFile file, Model model
     ) throws IOException {
-        System.out.println("upload Controller");
 
         if(!file.isEmpty()){
             // ========================== 파일 업로드 ========================== //
@@ -246,7 +242,6 @@ public class TeamController extends BaseEntity {
     // 페이지 이동 & 기능 _ 아이디로 그룹 검색하는 페이지
     @GetMapping("/SearchingTeam")
     public String SearchingTeam(@Login User loginUser,@PageableDefault(page=0,size = 10,sort = "tID", direction = Sort.Direction.ASC) Pageable pageable, Model model, @RequestParam(required = false, defaultValue = "", name = "teamId") String teamId ) {
-        System.out.println("SearchingTeam Controller");
 
         // 유저가 가입 및 가입 신청한 팀을 찾을 목적 ( 중복 신청을 방지하기 위함 )
         List<UserTeam> ut = teamService.findByUID(loginUser.getUID());
@@ -292,7 +287,6 @@ public class TeamController extends BaseEntity {
     @ResponseBody
     @PostMapping("/RequestTeam")
     public int RequestTeam(@RequestParam String id,@Login User loginUser) { // 요청한 그룹의 id값이 들어온다.
-        System.out.println("requestTeam");
 
         // 요청과 동시에 유저팀 테이블에 소속된다. (JoinUs=false)
         UserTeam ut = new UserTeam();
@@ -318,7 +312,6 @@ public class TeamController extends BaseEntity {
     @ResponseBody
     @PostMapping("/RequestTeamCancel")
     public int RequestTeamCancel(@Login User LoginUser , @RequestParam String id) { // 요청한 그룹의 id값이 들어온다.
-        System.out.println("RequestTeamCancel");
         // 전달받은 팀 정보와 유저정보를 통해 해당하는 내역을 삭제한다.
         Long Tid=teamService.findByTeamID(id);
         Long utid=teamService.findUTID(LoginUser.getUID(),Tid);

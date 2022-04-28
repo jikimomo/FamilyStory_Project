@@ -3,7 +3,6 @@ package fs.project.controller;
 import fs.project.argumentresolver.Login;
 import fs.project.domain.User;
 import fs.project.form.UserSetForm;
-import fs.project.kakalogin.kakaoService;
 import fs.project.service.UserService;
 import fs.project.session.SessionConst;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -88,7 +86,6 @@ public class SettingController {
     @PostMapping("/users/settinguser")
     public String updateUser(@Login User loginUser, @ModelAttribute UserSetForm form, Model model, HttpServletRequest request) throws Exception {
 
-        System.out.println("넘어가라넘어가라");
         //Long타입의 updateUid라는 객체에 현재 로그인된 유저의 ID를 getUID로 가져온다.
         Long updateUid = loginUser.getUID();
 
