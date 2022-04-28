@@ -17,7 +17,7 @@
                 $('#mainimg img').eq(num - 1).css({left: -1200});
                 setInterval(function () {
                     slide();
-                }, 5000);
+                }, 1000);
             }
             function slide() {
                 if (num == 2) {
@@ -25,14 +25,13 @@
                 } else {
                     num++;
                 }
-                $('#mainimg img').eq(num - 1).animate({left: 1200}, 4000, function () {
+                $('#mainimg img').eq(num - 1).animate({left: 1200}, 2000, function () {
                     $('#mainimg img').eq(num - 1).css({left: -1200});
                 });
-                $('#mainimg img').eq(num).animate({left: 0}, 4000);
+                $('#mainimg img').eq(num).animate({left: 0}, 2000);
             }
         });
     </script>
-    
 </head>
 <body>
 

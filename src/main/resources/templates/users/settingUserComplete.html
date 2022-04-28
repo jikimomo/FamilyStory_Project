@@ -35,7 +35,7 @@
 
         #container > div > h1 {
             color: #333;
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         #container > div > h3 {
@@ -80,9 +80,9 @@
 </head>
 <body>
 <div class="container">
-    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+<!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
     <div class="py-1 text-center">
-        <a th:href="@{/loginHome/{curTID}(curTID=${curTID})}" ><img src="images/logo2.jpg" width="300px" height="300px"></a>
+        <a th:href="@{/loginHome/{curTID}(curTID=${curTID})}"><img src="/AdminImage/logo3.png" width="450px" height="150px" style="margin-top: 30px"></a>
     </div>
 
     <div>
@@ -101,9 +101,9 @@
                         <h3>내정보로 돌아가기</h3>
                     </button>
                     </br>
-                    <button type="button" id="home" th:onclick="|location.href='@{/loginHome/{curTID}(curTID=${curTID})}'|">
-                        <h5>홈으로 돌아가기</h5>
-                    </button>
+<!--                    <button type="button" id="home" th:onclick="|location.href='@{/loginHome/{curTID}(curTID=${curTID})}'|">-->
+<!--                        <h5>홈으로 돌아가기</h5>-->
+<!--                    </button>-->
                 </div>
             </div>
         </form>

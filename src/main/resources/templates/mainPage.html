@@ -4,11 +4,8 @@
     <title>Hello</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="/css/pade.css">
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    <style>
-        #agoYearPhoto {position: relative; width:100px; height:50px; overflow:hidden; }
-        #agoYearPhoto img {position:absolute; left:0; top:0;}
-    </style>
 </head>
 <style>
     div>img:hover{
@@ -22,6 +19,8 @@
         opacity: 10%;
     }
 </style>
+
+
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
@@ -52,14 +51,14 @@
             </div>
             <hr/>
 
-            <h4>1년전 우리는</h4>
+
 
             <div id="agoYearPhoto">
 
 
             </div>
 
-            <hr/>
+
         </div>
 
         <div id="contentBox">
@@ -79,7 +78,6 @@
             <hr/>
         </div>
     </div>
-
 
 
     <div th:replace="fragments/footer :: footer" /> <!-- fragments/footer에 있는 파일이 대체됨 -->
@@ -265,8 +263,9 @@
             },
             datatype: 'json',
             success: function(data) {
-                console.log("성공적으로 받아옴")
+                console.log("성공적으로 받아옴");
                 showAgoYear(data);
+
             },
             error: function(request, status, error) {
                 console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
@@ -379,8 +378,7 @@
         });
 
 
-
-        //    ------- agoYear  함수 -------
+        //  ------- agoYear  함수 -------
 
         $.ajax({
             type: "post",
@@ -388,8 +386,8 @@
             data: {
                 tID : currentTID
             },
-            datatype: 'json',
 
+            datatype: 'json',
             success: function(data) {
                 console.log('teamEvents');
                 console.log(data);
@@ -401,47 +399,26 @@
         });
     }
 
-
     function showAgoYear(data){
         console.log("showAgoYear함수 안")
         var contents = document.getElementById('agoYearPhoto');
         contents.innerHTML = '';
-        data.forEach(function(p){
-                var imgBox = document.createElement("div");
-                var img = document.createElement("img");
-                img.setAttribute("src", p);
-                img.setAttribute("width", "200px");
-                img.setAttribute("height", "160px");
-                imgBox.appendChild(img);
-                contents.appendChild(imgBox);
-        });
-    }
 
-    $(document).ready(function() {
-        var num = 0;
-        movephoto();
-        function movephoto(){
-            {
-                $('#agoYearPhoto img').eq(num - 1).css({left: -1200});
-                setInterval(function () {
-                    slide();
-                }, 5000);
-            }
-            function slide() {
-                if (num == 2) {
-                    num = 0;
-                } else {
-                    num++;
-                }
-                $('#agoYearPhoto img').eq(num - 1).animate({left: 120}, 4000, function () {
-                    $('#agoYearPhoto img').eq(num - 1).css({left: -120});
-                });
-                $('#agoYearPhoto img').eq(num).animate({left: 0}, 4000);
-            }
+        if(data!=""){
+
+
+            var imgBox = document.createElement("div");
+            var img = document.createElement("img");
+            var h = document.createElement("h5");
+            h.innerHTML = '1년전 우리는'
+            img.setAttribute("src", data);
+            img.setAttribute("width", "200px");
+            img.setAttribute("height", "160px");
+            imgBox.appendChild(h);
+            imgBox.appendChild(img);
+            contents.appendChild(imgBox);
         }
-
-    });
-
+    }
 
 
     //----------------------- agoyear 함수 끝 ------------------------------------
@@ -507,11 +484,10 @@
 
     function showBirthday(data){
         console.log('showBirthday 함수 안');
-
         var notice = document.getElementById('notice');
         data.forEach(function(item){
             var bText = document.createElement("span");
-            bText.innerHTML = '오늘은 '+item.birthday+'로 '+item.nickName+'의 생일 입니다.<br>';
+            bText.innerHTML = '오늘은 '+ item.nickName+'님의 생일 입니다.<br>';
 
             notice.appendChild(bText);
         });

@@ -266,7 +266,7 @@ public class ContentController {
     //1년 전에 올렸던 사진 보여주기
     @ResponseBody
     @PostMapping("/agoYear")
-    public List <String> agoYear (@Login User loginUser,  @RequestParam String tID){
+    public String agoYear (@Login User loginUser,  @RequestParam String tID){
 
         Long tId = Long.parseLong(tID);
 
@@ -287,10 +287,13 @@ public class ContentController {
             log.info("photoRoute {}", pr);
         }
 
-
         if(photoRoute.isEmpty()){
-            return null;
+            log.info("비었음");
+            return "";
         }
-        else return photoRoute;
+        else {
+            log.info("사진 경로 : {}", photoRoute.get(0));
+            return photoRoute.get(0);
+        }
     }
 }
