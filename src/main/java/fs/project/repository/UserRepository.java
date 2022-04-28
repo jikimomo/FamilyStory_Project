@@ -131,6 +131,13 @@ public class UserRepository {
                 .executeUpdate();
     }
 
+    public void deleteContentUid2(Long uid) {
+
+        em.createQuery("delete from Content c where c.user.uID =:uid")
+                .setParameter("uid", uid)
+                .executeUpdate();
+    }
+
     public void deleteUserTeamUid(Long uid){
 
         em.createQuery("delete from UserTeam ut where ut.user.uID =:uid")
