@@ -181,7 +181,11 @@ public class HomeController {
             tVO.setBoss(t.getBoss());
             tVO.setTeamID(t.getTeamID());
             tVO.setTeamName(t.getTeamName());
-            tVO.setTeamName(t.getTeamName());
+            if(t.getTeamImage()==null){
+                tVO.setTeamImage("/AdminImage/temp.png");
+            }else{
+                tVO.setTeamImage(t.getTeamImage());
+            }
             myTeamVO.add(tVO);
         }
         return myTeamVO;
@@ -318,7 +322,11 @@ public class HomeController {
             userVO.setName(u.getName());
             userVO.setNickName(u.getNickName());
             userVO.setBirthday(u.getBirthday());
-            userVO.setUserImage(u.getUserImage());
+            if(u.getUserImage()==null){
+                userVO.setUserImage("/AdminImage/temp.png");
+            }else{
+                userVO.setUserImage(u.getUserImage());
+            }
             userVO.setCoverImage(u.getCoverImage());
             userVO.setMainTid(u.getMainTid());
             userVOInSameTeam.add(userVO);

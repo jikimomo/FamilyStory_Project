@@ -102,10 +102,10 @@
     </script>
 </head>
 <body>
-<div th:replace="fragments/bodyHeader :: bodyHeader" />
 
 <div class="container">
-    <div>
+<div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div style="margin-top: 30px">
         <form class="row mb-3" th:action="@{/SearchingTeam}">
             <div class="col-sm-11">
                 <input class="form-control form-control-lg" type="text" name="teamId" th:value="${param.teamId}" placeholder="그룹명을 검색하세요"/>

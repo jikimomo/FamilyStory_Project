@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <div class="header" th:fragment="bodyHeader">
-
     <div style="width: 850px">
-        <div style="width: 400px; margin: 60px auto;">
-            <a id="aHeader" ><img src="/AdminImage/logo3.png" width="400px"/></a>
+        <div style="height: 30px;"></div>
+        <div id="buttonBox" style="display:inline-block; float: right">
+            <div id="groupBtn" style="float: left; margin-right: 7px">
+                <a href="/AfterJoin"><img src="/AdminImage/group.png" width="30px"/></a>
+            </div>
+            <div id="settingBtn"  style="float: left">
+                <a th:href="@{/users/settinguser}"><img src="/AdminImage/setting.png" width="30px"/></a>
+            </div>
         </div>
+        <div style="width: 400px; margin: left;">
+            <a id="aHeader"><img src="/AdminImage/logo3.png" width="150px"/></a>
+        </div>
+        <div style="height: 10px;"></div>
+        <hr style="opacity: 10%"/>
     </div>
 
     <script th:inline="javascript">
@@ -13,7 +23,10 @@
     </script>
     <script>
         var aHeader = document.getElementById('aHeader');
-        aHeader.setAttribute("href", "/loginHome/"+currentTID);
+        if(currentTID==null){
+            currentTID=0;
+        }
+        aHeader.setAttribute("href", "/loginHome/" + currentTID);
     </script>
 </div>
 fragments/footer
