@@ -1,33 +1,19 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/header :: header"/>
 <head>
     <meta charset="utf-8">
     <link th:href="@{/css/bootstrap.min.css}"
           href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Poppins:wght@200;300;400&family=Roboto+Serif:wght@800&display=swap');
-    </style>
-
-    <style>
-        *{
+        * {
             font-family: "Poppins", sans-serif;
         }
 
         .container {
-            max-width: 560px;
+            width: 850px;
         }
 
-        #container {
-            width: 80%;
-            margin: 20px auto;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: 10px;
-        }
-
-        #container > div,
         #container > form {
             text-align: center;
             align-items: center;
@@ -53,25 +39,10 @@
             cursor: pointer;
             background-color: #ffffff;
             border: 1px solid #33333330;
-            color:#33333370;
-
+            color: #33333370;
         }
 
-        #home {
-            margin-top: 20px;
-            padding-top: 10px;
-            padding-left: 10px;
-            padding-right: 10px;
-            border-radius: 10px;
-            outline: none;
-            cursor: pointer;
-            background-color: #ffffff;
-            border: 1px solid #33333330;
-            color:#33333370;
-
-        }
-
-        #settingUserComplete:hover, #home:hover{
+        #settingUserComplete:hover {
             background-color: #33333330;
             border: 1px solid #33333330;
             color: #333333;
@@ -80,35 +51,25 @@
 </head>
 <body>
 <div class="container">
-<!--    <div th:replace="fragments/bodyHeader :: bodyHeader"/>-->
-    <div class="py-1 text-center">
-        <a th:href="@{/loginHome/{curTID}(curTID=${curTID})}"><img src="/AdminImage/logo3.png" width="450px" height="150px" style="margin-top: 30px"></a>
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div style="text-align: center">
+    <form method="post" action="/users/settingUserComplete">
+        <div class="col-12">
+            <td>
+                <tr>
+                    <h1>내 정보 변경이 완료되었습니다!</h1>
+                </tr>
+            </td>
+        </div>
+        <div class="col-12">
+            <button type="button" id="settingUserComplete" th:onclick="|location.href='@{/users/settinguser}'|">
+                <h3>내정보로 돌아가기</h3>
+            </button>
+            </br>
+        </div>
+    </form>
     </div>
-
-    <div>
-        <form method="post" action="/users/settingUserComplete">
-            <div id="container">
-                <div class="col-12">
-                    <td>
-                        <tr>
-                            <h1>내 정보 변경이 완료되었습니다!</h1>
-                        </tr>
-                    </td>
-                </div>
-
-                <div class="col-12">
-                    <button type="button" id="settingUserComplete" th:onclick="|location.href='@{/users/settinguser}'|">
-                        <h3>내정보로 돌아가기</h3>
-                    </button>
-                    </br>
-<!--                    <button type="button" id="home" th:onclick="|location.href='@{/loginHome/{curTID}(curTID=${curTID})}'|">-->
-<!--                        <h5>홈으로 돌아가기</h5>-->
-<!--                    </button>-->
-                </div>
-            </div>
-        </form>
-    </div>
-<!--<div th:replace="fragments/footer :: footer"/>-->
+    <div th:replace="fragments/footer :: footer"/>
 </div>
 </body>
 </html>

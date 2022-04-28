@@ -1,25 +1,19 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/header :: header"/>
 <head>
     <meta charset="utf-8">
     <link th:href="@{/css/bootstrap.min.css}"
           href="/static/images/logo2.jpg" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Poppins:wght@200;300;400&family=Roboto+Serif:wght@800&display=swap');
-    </style>
-
-    <style>
         * {
             font-family: "Poppins", sans-serif;
         }
-
         .container {
-            /*max-width: 700px;*/
             width: 850px;
         }
 
         .setting_form {
-            border: 1px solid white;
             width: 480px;
             height: auto;
             margin: 0 auto;
@@ -32,34 +26,29 @@
             width: 50%;
             padding: 1rem;
             font-size: 1rem;
-            background-color: #333333;
-            border: 1px solid #b1b1b1;
-            color: #fff;
             border-radius: 0.3rem;
-            margin-top: 2rem;
         }
 
         .setting_form fieldset {
-
+            border-radius: 3px;
             margin-top: 4em;
-            margin-bottom: 5em;
-            border: 2px solid #e2e2e2;
+            border: 1px solid #e2e2e2;
             padding: 1.8rem 2rem 1.8rem;
-
         }
 
         ul {
             list-style-type: none;
             padding: 0px;
-            margin-left: 80px;
+            margin-top: 63px;
+            margin-left: 50px;
             width: auto;
             background: white;
             height: auto;
             overflow: auto;
-            position: fixed;
-            /*border-radius: 10px;*/
+            position: absolute;
+            border-radius: 5px;
             color: #333;
-            border: solid 2px #33333330;
+            border: solid 1px #33333330;
             text-align: center;
         }
 
@@ -78,50 +67,27 @@
         }
 
         li a:hover {
-            /*background: #eaea80;*/
-            /*color: gray;*/
-            /*border: solid 1px white;*/
-            /*border-radius: 10px;*/
-
             border-radius: 10px;
             background-color: #33333330;
             border: 1px solid #33333330;
             color: #333333;
         }
 
-        .setting {
-            margin-left: 120px;
-        }
-
-        #preview {
-            margin-top: 5px;
-        }
-
-        #previewCover {
-            margin-top: 5px;
+        .form-group {
+            margin-bottom: 15px;
         }
 
         #update, #deleteAccount {
-            /*margin-top: 30px;*/
-            /*margin-left: 5px;*/
-            /*outline: none;*/
-            /*cursor: pointer;*/
-            /*border-radius: 10px;*/
-            /*font-weight: bold;*/
-            /*background-color: #ffffff;*/
-            /*border: 1px solid #33333330;*/
-            /*color: #33333370;*/
-
             display: block;
             box-sizing: border-box;
             margin: auto;
-            width: 50%;
+            width: 100%;
             padding: 1rem;
             font-size: 1rem;
-            background-color: #333333;
+            background-color: #fff;
             border: 1px solid #b1b1b1;
-            color: #fff;
-            border-radius: 0.3rem;
+            color: #333333;
+            border-radius: 10px;
             margin-top: 2rem;
             opacity: 70%;
         }
@@ -145,40 +111,6 @@
             margin-left: -15px;
         }
 
-        #logout {
-            /*margin-top: 20px;*/
-            /*outline: none;*/
-            /*cursor: pointer;*/
-            /*border-radius: 10px;*/
-            /*font-weight: bold;*/
-            /*background-color: #ffffff;*/
-            /*border: 1px solid #33333330;*/
-            /*color: #33333370;*/
-
-            display: block;
-            box-sizing: border-box;
-            margin: auto;
-            width: 50%;
-            padding: 1rem;
-            font-size: 1rem;
-            background-color: #333333;
-            border: 1px solid #b1b1b1;
-            color: #fff;
-            border-radius: 0.3rem;
-            margin-top: 2rem;
-        }
-
-        #logout:hover {
-            /*background: #eaea80;*/
-            /*color: gray;*/
-            /*border: solid 1px white;*/
-            /*border-radius: 10px;*/
-            border-radius: 10px;
-            background-color: #33333330;
-            border: 1px solid #33333330;
-            color: #333333;
-        }
-
         .kakaoChatPc {
             position: fixed;
             z-index: 999;
@@ -191,13 +123,18 @@
     <script>
         // SDK를 초기화 합니다. 사용할 앱의 JavaScript 키를 설정해 주세요.
         Kakao.init('241e8e5d885ad576b5c291865fbe3373'); // 사용할 앱의 JavaScript키를 입력해 주세요.
-        // SDK 초기화 여부를 판단합니다.
-        console.log(Kakao.isInitialized());
     </script>
 
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script type="text/javascript">
+        function logout(){
+            const formElement = document.getElementById('form');
+            formElement.setAttribute("action", "/logout");
+            formElement.setAttribute("method", "post");
+            formElement.submit();
+        }
+
         <!--이미지 미리 보여주기-->
         $(function () {
             $("#input-image").on('change', function () {
@@ -245,19 +182,10 @@
                 }
             })
 
-            $('#pwCheck').focusout(function () {//pwCheck의 포커스가 나가면 if문 실행
-
-                if ($('#pw').val() != $('#pwCheck').val()) {
-                    $('#pwCheck').val("")
-                    $('#pwCheck').focus()
-                }
-            })
             $('#pw').mouseover(function () {
-                // console.log("over")
                 $('#pw').attr('type', 'text')
             })
             $('#pw').mouseleave(function () {
-                // console.log("아웃")
                 $('#pw').attr('type', 'password')
             })
 
@@ -269,9 +197,7 @@
                     $('#pw').focus();
                     document.querySelector('input[id="pw"]').focus();
                     return;
-                    // document.querySelector('#pw').focus();
                 } else {
-
                     const formElement = document.getElementById('form');
                     formElement.setAttribute("action", "/users/settinguser");
                     formElement.setAttribute("method", "post");
@@ -282,52 +208,42 @@
             $('#logout').click(function (evt) {
                 let checklog = confirm("로그아웃 하시겠습니까?")
                 if (checklog) {
-                    location.replace("/logout");
+                    logout()
                 } else {
                     evt.preventDefault();
-
                 }
             })
 
         })
 
-        // function isSame() {
-        //     var pw = document.pw.value;
-        //     var pwc = document.pwCheck.value;
-        //     if (pw.length < 6 || pw.length > 16) {
-        //         window.alert('비밀번호는 6글자 이상, 16글자 이하만 이용 가능합니다.');
-        //         document.getElementById('pw').value=document.getElementById('pwCheck').value='';
-        //         document.getElementById('same').innerHTML='';
-        //     }
-        //     if(document.getElementById('pw').value!='' && document.getElementById('pwCheck').value!='') {
-        //         if(document.getElementById('pw').value==document.getElementById('pwCheck').value) {
-        //             document.getElementById('same').innerHTML='비밀번호가 일치합니다.';
-        //             document.getElementById('same').style.color='blue';
-        //         }
-        //         else {
-        //             document.getElementById('same').innerHTML='비밀번호가 일치하지 않습니다.';
-        //             document.getElementById('same').style.color='red';
-        //         }
-        //     }
-        // }
     </script>
 </head>
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
     <div class="py-1 text-center">
-        <a th:href="@{/loginHome/{curTID}(curTID=${curTID})}"><img th:src="${userProfileImage}" width="230px"
-                                                                   height="230px" style="border-radius: 50%"></a>
+        <a th:href="@{/loginHome/{curTID}(curTID=${curTID})}"><img class="img-thumbnail mx-auto d-block" th:src="${userProfileImage}"
+                                                                   style="border-radius: 50%; width:230px; height:230px"></a>
     </div>
 
-    <ul class="menu" >
+    <form id="form1">
+    <ul class="menu">
         <li><a th:href="@{/loginHome/{curTID}(curTID=${curTID})}">홈</a></li>
         <li><a th:href="@{/users/settinguser}">내정보</a></li>
         <li><a th:href="@{/teamEdit}">내그룹</a></li>
+        <li th:if="${kakaoLogin.booleanValue()==true}">
+            <a href = "https://kauth.kakao.com/oauth/logout?client_id=4d6bfc510b9480c47be3a30e3ae11deb&logout_redirect_uri=http://localhost:8080/" id="custom-logout-btn">로그아웃
+            </a>
+        </li>
+        <li th:if="${kakaoLogin.booleanValue()==false}">
+            <a id="logout">
+                    로그아웃
+            </a>
+        </li>
     </ul>
+    </form>
 
-    <div class="setting_form" style="margin-top: 10px;">
-        <!--    <div th:replace="fragments/bodyHeader :: bodyHeader" />-->
+    <div class="setting_form">
         <fieldset>
             <form role="form" id="form" th:object="${userSetForm}" enctype="multipart/form-data" method="post"
                   novalidate>
@@ -338,58 +254,52 @@
                 <div class="form-group">
                     <label th:for="name">이름</label>
                     <input type="text" th:field="*{name}" class="form-control" th:value="*{name}"
-                           placeholder="이름을 입력하세요" >
+                           placeholder="이름을 입력하세요">
                 </div>
                 <div class="form-group">
                     <label th:for="pw">비밀번호</label>
-                    <input type="password" id="pw" name="password" class="form-control" th:value="*{password}" >
+                    <input type="password" id="pw" name="password" class="form-control" th:value="*{password}">
                 </div>
                 <div class="form-group">
                     <label th:for="pwCheck">비밀번호 확인</label>
                     <input type="password" name="passwordCheck" id="pwCheck" class="form-control"
-                           placeholder="비밀번호를 입력하세요" >
+                           placeholder="비밀번호를 입력하세요">
                 </div>
                 <div class="form-group">
                     <label th:for="nickName">닉네임</label>
-                    <input type="text" th:field="*{nickName}" class="form-control" >
-
-                    <div class="form-group">
-                        <label th:for="email">E-mail</label>
-                        <input type="text" th:field="*{email}" class="form-control" th:value="*{email}"
-                               placeholder="E-mail을 입력하세요." >
-                    </div>
-                    <div class="form-group">
-                        <label th:for="phoneNumber">핸드폰 번호</label>
-                        <input type="text" th:field="*{phoneNumber}" class="form-control" th:value="*{phoneNumber}"
-                               placeholder="Phone_number을 입력하세요">
-                    </div>
-
-                    <div class="form-group" style="margin-top: 10px;">
-                        <label th:for="userImage">프로필 사진 선택</label>
-                        <div id="preview">
-                            <img th:src="${userProfileImage}" width="150" style="margin:12px;"/>
-                        </div>
-                        <img style="width: 150px;" id="View" class="form-control">
-                        <input style="display: block;" type="file" id="input-image" name="userImage">
-                    </div>
-
-                    <div class="form-group" style="margin-top: 10px;">
-                        <label th:for="userCoverImage">개인 커버 사진 선택</label>
-                        <div id="previewCover">
-                            <img th:src="${userCoverImage}" width="150" style="margin:12px;"/>
-                        </div>
-                        <img style="width: 150px;" id="ViewCover" class="form-control">
-                        <input style="display: block;" type="file" id="input-coverimage" name="userCoverImage">
-                    </div>
+                    <input type="text" th:field="*{nickName}" class="form-control">
                 </div>
-                <button type="submit" class="btn btn-outline-secondary" id="update">저장하기</button>
-                <button type="button" class="btn btn-primary" id="deleteAccount">회원탈퇴</button>
+                <div class="form-group">
+                    <label th:for="email">E-mail</label>
+                    <input type="text" th:field="*{email}" class="form-control" th:value="*{email}"
+                           placeholder="E-mail을 입력하세요.">
+                </div>
+                <div class="form-group">
+                    <label th:for="phoneNumber">핸드폰 번호</label>
+                    <input type="text" th:field="*{phoneNumber}" class="form-control" th:value="*{phoneNumber}"
+                           placeholder="Phone_number을 입력하세요">
+                </div>
+
+                <div class="form-group">
+                    <label th:for="userImage">프로필 사진 수정</label>
+                    <img style="width: 150px;" id="View" class="form-control img-thumbnail" th:src="${userProfileImage}">
+                    <input type="file" id="input-image" name="userImage" style="margin:0; width:250px" class="form-control">
+                </div>
+
+                <div class="form-group" >
+                    <label th:for="userCoverImage">개인 커버 사진 수정</label>
+                    <img style="width: 150px;" id="ViewCover" class="form-control img-thumbnail" th:src="${userCoverImage}">
+                    <input type="file" id="input-coverimage" name="userCoverImage" style="width:250px" class="form-control">
+                </div>
             </form>
         </fieldset>
-        <form th:action="@{/logout}" method="post">
-            <button class="w-100 btn btn-dark btn-lg" id="logout" type="submit">로그아웃</button>
+        <div class="form-group">
+            <button type="submit" class="btn btn-outline-secondary" id="update" style="display:inline-block; float: left">저장하기</button>
+        </div>
+        <form >
+            <button type="button" class="btn btn-primary" id="deleteAccount" style="display: inline-block">회원탈퇴</button>
+
         </form>
-        <!--    <div th:replace="fragments/footer :: footer" />-->
     </div>
 
 
@@ -399,45 +309,19 @@
 
 
     <script type="text/javascript">
-
-
-        /*  function logoutWithKakao() {
-              if (!Kakao.Auth.getAccessToken()) {
-                  console.log('Not logged in.');
-                  return;
-              }
-              console.log(Kakao.Auth.getAccessToken()); //before Logout
-              Kakao.Auth.logout(function () {
-                  console.log(Kakao.Auth.getAccessToken()); //after Logout
-                  //★ 추가 할 것 : 로그아웃 성공 후 처리
-              });
-          }*/
-
-
         function chat() {
             Kakao.Channel.chat({
                 channelPublicId: '_pPPkb' // 카카오톡 채널 홈 URL에 명시된 id로 설정합니다.
             });
         }
 
-
         btn_chat();
-
         function btn_chat() {
             Kakao.Channel.createChatButton({
                 container: '#kakao-talk-channel-chat-button',
                 channelPublicId: '_pPPkb' // 카카오톡 채널 홈 URL에 명시된 id로 설정합니다.
             });
         }
-
-        /*    btn_added();
-            function btn_added() {
-                Kakao.Channel.createAddChannelButton({
-                    container: '#kakao-add-channel-button',
-                    channelPublicId: '_pPPkb' // 채널 홈 URL에 명시된 id로 설정합니다.
-                });
-            }*/
-
     </script>
 
     <div id="footer" th:replace="fragments/footer :: footer"/>

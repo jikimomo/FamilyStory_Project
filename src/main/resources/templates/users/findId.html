@@ -1,24 +1,30 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
 <head>
     <meta charset="utf-8">
     <link th:href="@{/css/bootstrap.min.css}"
           href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
+        * {
+            font-family: "Poppins", sans-serif;
+        }
+
+        .container {
+            width: 850px;
+        }
 
         .signup_form {
-
-            border:1px solid white;
-            width:400px;
-            height:auto;
-            margin:0 auto;
+            border: 1px solid white;
+            width: 400px;
+            height: auto;
+            margin: 0 auto;
         }
 
         .signup_form button {
-
             display: block;
             box-sizing: border-box;
-            margin:auto;
+            margin: auto;
             width: 50%;
             padding: 1rem;
             font-size: 1rem;
@@ -29,53 +35,47 @@
             margin-top: 2rem;
         }
 
-        .signup_form fieldset{
-
+        .signup_form fieldset {
             margin-top: 4em;
             margin-bottom: 5em;
-            border:2px solid #e2e2e2;
-            padding:1.8rem 2rem 1.8rem;
+            border: 2px solid #e2e2e2;
+            padding: 1.8rem 2rem 1.8rem;
         }
     </style>
 </head>
 <body>
 
-<div class="signup_form" style="margin-top: 150px;">
-    <!--    <div th:replace="fragments/bodyHeader :: bodyHeader" />-->
-    <fieldset>
-
-        <div style="text-align: center; margin-top: 8px; margin-bottom: 50px; ">
-            <img src="../images/headerimage.png" style="width : 70%;" >
-        </div>
-
-        <div style="text-align: center; margin-top: 10px;">
-            <h4>회원님의 아이디</h4>
-            <h1 th:text="${findId}">찾은 아이디</h1>
-        </div>
-
-        <hr class="my-10" style="margin-top: 30px;">
-        <div class="row">
-
-
-           <div class="col">
-         <!--      <a class="w-100 btn btn-success btn-lg" onclick="location.href='home.html'" th:onclick="|location.href='@{/}'|">로그인 하기</a>
--->
-               <button class="w-100 btn btn-success btn-lg" type="submit" onclick="location.href='home.html'" th:onclick="|location.href='@{/}'|">
-                   로그인 하기</button>
-           </div>
-            <div class="col">
-<!--                <a class="w-100 btn btn-warning btn-lg" href="/users/findPw">PW 찾기</a>-->
-                <a href="/users/findPw" style="text-decoration:none">
-                    <button class="w-100 btn btn-warning btn-lg" >
-                        PW 찾기
-                   </button>
-                </a>
+<div class="container">
+    <div class="signup_form" style="margin-top: 150px;">
+        <fieldset>
+            <div style="text-align: center; margin-top: 8px; margin-bottom: 50px; ">
+                <img src="../images/headerimage.png" style="width : 70%;">
             </div>
-        </div>
 
-    </fieldset>
-    <!--    <div th:replace="fragments/footer :: footer" />-->
+            <div style="text-align: center; margin-top: 10px;">
+                <h4>회원님의 아이디</h4>
+                <h1 th:text="${findId}">찾은 아이디</h1>
+            </div>
 
+            <hr class="my-10" style="margin-top: 30px;">
+            <div class="row">
+                <div class="col">
+                    <button class="w-100 btn btn-success btn-lg" type="submit" onclick="location.href='home.html'"
+                            th:onclick="|location.href='@{/}'|">
+                        로그인 하기
+                    </button>
+                </div>
+                <div class="col">
+                    <a href="/users/findPw" style="text-decoration:none">
+                        <button class="w-100 btn btn-warning btn-lg">
+                            PW 찾기
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div th:replace="fragments/footer :: footer"/>
 </div>
 </body>
 </html>
