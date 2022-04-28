@@ -47,8 +47,8 @@
             margin: 0px 16px;
         }
 
-        a{
-            color : #4d4d4d;
+        a {
+
         }
 
     </style>
@@ -102,10 +102,6 @@
 </head>
 <body>
 <div class="container">
-
-
-
-
     <div class="row">
         <div class="col-7">
             <div class="slider-wrap">
@@ -137,7 +133,7 @@
             <div style="margin-left: 80px; margin-bottom: 70px; ">
                 <a href="https://kauth.kakao.com/oauth/authorize?client_id=4d6bfc510b9480c47be3a30e3ae11deb&redirect_uri=http://localhost:8080/kakaoLogin&response_type=code" style="text-decoration:none; text-align-all: center;">
                     <img src="../images/kakaologo.png" alt="" style= "width: 23px; height: 23px; float: left; margin-right: 10px; ">
-                    <h5> 카카오계정으로 로그인</h5>
+                    <h5 style=" text-decoration: none; color: #595858;"> 카카오계정으로 로그인</h5>
                 </a>
             </div>
 
@@ -154,10 +150,34 @@
 
 </div>
 
+<!--<div th:replace="fragments/footer :: footer" />-->
 
-<div style="text-align: center; margin-top: 200px;">
-    <a href="/explain">도움말</a>
+<div style="text-align: center; margin-top: 180px;">
+    <span>
+        <a href="#" style = "text-decoration: none; color: #595858;"  >도움말</a>
+    </span>
+    &nbsp;
+    <span>|</span>
+    &nbsp;
+    <span>
+        <a href="#" style = "text-decoration: none; color: #595858;"  >소개</a>
+    </span>
+    &nbsp;
+    <span>|</span>
+    &nbsp;
+    <span>
+        <a href="/explain" style = "text-decoration: none; color: #595858;">서비스</a>
+    </span>
+    &nbsp;
+    <span>|</span>
+    &nbsp;
+    <span>
+        <a href="#" style = "text-decoration: none; color: #595858;">약관</a>
+    </span>
+
 </div>
+
+<div th:replace="fragments/footer :: footer" />
 
 <script>
     const sliderWrap = document.querySelector(".slider-wrap");
@@ -208,8 +228,6 @@
 
 
 <!--
-
-
 
             <form action="/"  th:object="${loginForm}" method="post">
 
