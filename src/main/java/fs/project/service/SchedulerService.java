@@ -2,6 +2,8 @@ package fs.project.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.java_sdk.api.Message;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
+import org.json.simple.JSONObject;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
@@ -18,7 +20,7 @@ public class SchedulerService {
     private final UserService userService;
     String api_key = " NCSO4XDT7CHQHZVD";  //api_key 유출되면 안됩니다.
     String api_secret = "WDBIGEVM6PYAMSDV3H27YMEAVQST8RXQ";  //api_secret 유출되면 안됩니다.
-    @Scheduled(cron = "0 42 3 * * *") //매일 00시 00분 00초에 메세지 발송
+    @Scheduled(cron = "0 0 8 * * *") //매일 00시 00분 00초에 메세지 발송
     public void cronJobSch() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         Date now = new Date();
@@ -33,7 +35,10 @@ public class SchedulerService {
             //user_team 테이블에서 tid에 속한 유저의 휴대폰 번호를 list형태로 받아온다.
             List<String> phoneNumber = userService.findPhoneNumber(t);
 
+            log.info("보낼 메세지 : {} ", e);
+
             for(String pn : phoneNumber){
+                log.info("휴대폰 번호 : {}", pn );
                 Message coolsms = new Message(api_key, api_secret);
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("to", pn); //수신자 폰번호
@@ -43,7 +48,7 @@ public class SchedulerService {
                 params.put("app_version", "test app 1.2");
 
 //              주의!!!!!! 절대 주석 풀지 마세요 !!!!!!!!!!!
-                /*
+
                 try {
                     JSONObject obj = (JSONObject) coolsms.send(params);
                     System.out.println(obj.toString());
@@ -51,7 +56,7 @@ public class SchedulerService {
                     System.out.println(ex.getMessage());
                     System.out.println(ex.getCode());
                 }
-                */
+
             }
         }
     }

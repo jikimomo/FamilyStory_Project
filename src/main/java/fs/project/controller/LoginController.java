@@ -2,7 +2,7 @@ package fs.project.controller;
 
 import fs.project.domain.User;
 import fs.project.form.LoginForm;
-import fs.project.service.kakaoService;
+import fs.project.service.KakaoService;
 import fs.project.service.UserService;
 import fs.project.session.SessionConst;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import javax.validation.Valid;
 public class LoginController {
 
     private final UserService userService;
-    private final kakaoService kakaoService;
+    private final KakaoService kakaoService;
 
 
 //    @PostMapping("/")
