@@ -1,4 +1,4 @@
-package fs.project.kakalogin;
+package fs.project.controller;
 
 import fs.project.domain.User;
 import fs.project.service.UserService;
@@ -18,9 +18,9 @@ import java.util.HashMap;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class kakaoLogin {
+public class KakaoLoginController {
 
-    private final kakaoService kakaoService;
+    private final fs.project.service.kakaoService kakaoService;
     private final UserService userService;
 
     @GetMapping("/kakaoLogin")

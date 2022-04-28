@@ -1,5 +1,4 @@
-package fs.project.controller;
-import fs.project.service.UserService;
+package fs.project.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.java_sdk.api.Message;
@@ -15,7 +14,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class Scheduler {
+public class SchedulerService {
 
     private final UserService userService;
 
@@ -45,7 +44,6 @@ public class Scheduler {
                 params.put("type", "SMS");
                 params.put("text", e); //보낼 문구
                 params.put("app_version", "test app 1.2");
-
 
 //              주의!!!!!! 절대 주석 풀지 마세요 !!!!!!!!!!!
 

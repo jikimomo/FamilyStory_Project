@@ -3,6 +3,12 @@
 <head th:replace="fragments/header :: header">
     <title>Hello</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/pade.css">
+
+    <style>
+        #agoYearPhoto {position: relative; width:100px; height:50px; overflow:hidden; }
+        #agoYearPhoto img {position:absolute; left:0; top:0;}
+    </style>
 </head>
 <body>
 <div class="container">
@@ -37,8 +43,12 @@
             <hr/>
 
             <h4>1년전 우리는</h4>
+
             <div id="agoYearPhoto">
+
+
             </div>
+
             <hr/>
         </div>
 
@@ -54,7 +64,10 @@
             <hr/>
 
             <h4>게시물</h4>
+
+
             <div id="contents">
+
             </div>
             <hr/>
         </div>
@@ -366,12 +379,13 @@
         });
     }
 
+
     function showAgoYear(data){
         console.log("showAgoYear함수 안")
         var contents = document.getElementById('agoYearPhoto');
         contents.innerHTML = '';
         data.forEach(function(p){
-            var imgBox = document.createElement("div");
+                var imgBox = document.createElement("div");
                 var img = document.createElement("img");
                 img.setAttribute("src", p);
                 img.setAttribute("width", "200px");
@@ -380,13 +394,47 @@
                 contents.appendChild(imgBox);
         });
     }
+
+    $(document).ready(function() {
+        var num = 0;
+        movephoto();
+        function movephoto(){
+            {
+                $('#agoYearPhoto img').eq(num - 1).css({left: -1200});
+                setInterval(function () {
+                    slide();
+                }, 5000);
+            }
+            function slide() {
+                if (num == 2) {
+                    num = 0;
+                } else {
+                    num++;
+                }
+                $('#agoYearPhoto img').eq(num - 1).animate({left: 120}, 4000, function () {
+                    $('#agoYearPhoto img').eq(num - 1).css({left: -120});
+                });
+                $('#agoYearPhoto img').eq(num).animate({left: 0}, 4000);
+            }
+        }
+
+    });
+
+
+
     //----------------------- agoyear 함수 끝 ------------------------------------
+
+
+
+
 
     function showUserInSameTeam(data, currentTID){
         console.log('showUserInSameTeam 함수 안');
 
         var userInSameTeam = document.getElementById('userInSameTeam');
         userInSameTeam.innerHTML = '';
+
+
         data.forEach(function(item){
             var userBtn = document.createElement("button");
             userBtn.setAttribute("type", "button");
@@ -469,9 +517,29 @@
        });
     }
 
-
-
-
-
 </script>
+<script>
+    $(document).ready(function() {
+        var num = 0;
+        start();
+        function start() {
+            $('#agoYearPhoto img').eq(num - 1).css({left: -1200});
+            setInterval(function () {
+                slide();
+            }, 5000);
+        }
+        function slide() {
+            if (num == 2) {
+                num = 0;
+            } else {
+                num++;
+            }
+            $('#mainimg img').eq(num - 1).animate({left: 1200}, 4000, function () {
+                $('#mainimg img').eq(num - 1).css({left: -1200});
+            });
+            $('#mainimg img').eq(num).animate({left: 0}, 4000);
+        }
+    });
+</script>
+
 </html>
