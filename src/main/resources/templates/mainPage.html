@@ -3,9 +3,6 @@
 <head th:replace="fragments/header :: header">
     <title>Hello</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="/css/pade.css">
-    <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
 </head>
 <style>
     div>img:hover{
@@ -19,8 +16,6 @@
         opacity: 10%;
     }
 </style>
-
-
 <body>
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
@@ -62,17 +57,13 @@
         </div>
 
         <div id="contentBox">
-            <!-- 현재 무슨 팀인지 보려고 임시로 생성, 나중에 지울 것임! -->
-            <div id="curTeam">
-            </div>
-            <hr/>
 
             <div id="userData">
             </div>
-            <button id="uploadBtn" type="button">글 올리기</button>
-            <hr/>
+            <div id="uploadBtnBox">
+                <button id="uploadBtn" type="button">+</button>
+            </div>
 
-            <h4>게시물</h4>
             <div id="contents">
             </div>
             <hr/>
@@ -103,7 +94,7 @@
             initInformation(currentTID);
 
             var userData = document.getElementById('userData');
-            userData.innerHTML = "<h4>현재 로그인한 아이디 : "+data.userID+"</h4>";
+<!--            userData.innerHTML = "<h4>현재 로그인한 아이디 : "+data.userID+"</h4>";-->
         },
         error: function(request, status, error) {
             console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
@@ -165,7 +156,7 @@
         console.log(btn.getAttribute('href'));
 
         var curTeam = document.getElementById('curTeam');
-        curTeam.innerHTML = "<h4>현재 속한 그룹(이건 TID) : "+currentTID+"</h4>";
+<!--        curTeam.innerHTML = "<h4>현재 속한 그룹(이건 TID) : "+currentTID+"</h4>";-->
 
         var notice = document.getElementById('notice');
         notice.innerHTML = '';
@@ -265,7 +256,6 @@
             success: function(data) {
                 console.log("성공적으로 받아옴");
                 showAgoYear(data);
-
             },
             error: function(request, status, error) {
                 console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
@@ -289,7 +279,7 @@
 
         //현재
         var curTeam = document.getElementById('curTeam');
-        curTeam.innerHTML = "<h4>현재 속한 그룹(이건 TID) : "+currentTID+"</h4>";
+<!--        curTeam.innerHTML = "<h4>현재 속한 그룹(이건 TID) : "+currentTID+"</h4>";-->
 
         var notice = document.getElementById('notice');
         notice.innerHTML = '';
@@ -419,21 +409,13 @@
             contents.appendChild(imgBox);
         }
     }
-
-
     //----------------------- agoyear 함수 끝 ------------------------------------
-
-
-
-
 
     function showUserInSameTeam(data, currentTID){
         console.log('showUserInSameTeam 함수 안');
 
         var userInSameTeam = document.getElementById('userInSameTeam');
         userInSameTeam.innerHTML = '';
-
-
         data.forEach(function(item){
             // var userBtn = document.createElement("button");
             let memberimg = document.createElement("img")
@@ -511,25 +493,100 @@
         var contents = document.getElementById('contents');
         contents.innerHTML = '';
         data.forEach(function(item){
-            var imgBox = document.createElement("div");
+            var head = document.createElement("div");
+            head.setAttribute("class", "headerContent");
+            var userImg = document.createElement("img");
+            if(item.userImage == null){
+                 userImg.setAttribute("src", "/AdminImage/userIcon.png");
+            }
+            else{
+                userImg.setAttribute("src", item.userImage);
+            }
+            userImg.setAttribute("class", "userImage");
+            head.appendChild(userImg);
+            var headText = document.createElement("span");
+            headText.innerHTML = item.userNickname;
+            head.appendChild(headText);
 
+            var cContainer = document.createElement("div");
+            cContainer.setAttribute("class", "carousel-container");
+
+            var cSlide = document.createElement("div");
+            cSlide.setAttribute("class", "carousel-slide");
+            cSlide.setAttribute("data", 0);
+            cContainer.appendChild(cSlide);
+
+            var imgCount = 0;
             var photo = item.photoRoute.split(' ');
             photo.forEach(function(p){
                 var img = document.createElement("img");
                 img.setAttribute("src", p);
-                img.setAttribute("width", "200px");
-                img.setAttribute("height", "160px");
-                imgBox.appendChild(img);
+                img.setAttribute("class", "contentImg");
+                cSlide.appendChild(img);
+                imgCount++;
             });
+            cSlide.setAttribute("count", imgCount);
 
-            var imgText = document.createElement("span");
-            imgText.innerHTML = item.uid+"가 올림.... "+item.explanation+" "+item.location+" "+item.when;
-            imgBox.appendChild(imgText);
+            var pButton = document.createElement("button");
+            pButton.addEventListener('click', ()=> {
+                let counter = cSlide.attributes.data.value;
+                console.log(counter);
+                const size = 400;
+                cSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
 
-            contents.appendChild(imgBox);
-        });
+                console.log('p 버튼');
+                if(counter <= 0) return;
+                cSlide.style.transition = "transform 0.4s ease-in-out";
+                counter--;
+                cSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+
+                cSlide.attributes.data.value = counter;
+            });
+            pButton.setAttribute("id", "prevBtn");
+            var pBtnText = document.createTextNode("<");
+            pButton.appendChild(pBtnText);
+            cContainer.appendChild(pButton);
+
+
+            var nButton = document.createElement("button");
+            nButton.addEventListener('click', ()=> {
+                let counter = cSlide.attributes.data.value;
+                console.log(counter);
+                const size = 400;
+                cSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+
+                let imgCount = cSlide.attributes.count.value;
+                console.log('n 버튼');
+                console.log(imgCount);
+
+                if(counter >= imgCount-1) return;
+                cSlide.style.transition = "transform 0.4s ease-in-out";
+                counter++;
+                cSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+
+                cSlide.attributes.data.value = counter;
+            });
+            nButton.setAttribute("id", "nextBtn");
+            var nBtnText = document.createTextNode(">");
+            nButton.appendChild(nBtnText);
+            cContainer.appendChild(nButton);
+
+            var foot = document.createElement("div");
+            foot.setAttribute("class", "footerContent");
+            var footText = document.createElement("span");
+            footText.innerHTML = item.explanation+" "+item.location+"<br>"+item.when;
+            foot.appendChild(footText);
+
+            var content = document.createElement("div");
+            content.setAttribute("class", "content");
+
+            content.appendChild(head);
+            content.appendChild(cContainer);
+            content.appendChild(foot);
+
+            contents.appendChild(content);
+       });
     }
-
 </script>
 <script>
     $(document).ready(function() {
@@ -554,5 +611,4 @@
         }
     });
 </script>
-
 </html>

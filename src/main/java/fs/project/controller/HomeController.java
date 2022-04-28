@@ -141,6 +141,27 @@ public class HomeController {
         return "mainPage";
     }
 
+//    @GetMapping("/mainPage")
+//    public String mainPage(@Login User loginUser, Model model){
+//
+//        Long uid = loginUser.getUID();
+//        User user = userService.findUser(uid);
+//
+//        Team team = teamService.findTeam(user.getMainTid());
+//        List<Content> content = contentService.findAllByT(team.getTID());
+//        List<TeamEvent> teamEvent = mainPageService.findTeamEvent(user.getMainTid()); // 오늘 해당되는 기념일에 관한 정보
+//        List<User> userTodayBirthday = mainPageService.findBirthday(user.getMainTid()); //오늘 생일인 사람에 관한 정보
+//        List<Team> currentTeams = mainPageService.findCurrentTeamsByU(user.getUID()); //현재 로그인된 유저가 포함된 팀
+//
+//        model.addAttribute("team", team);
+//        model.addAttribute("contents", content);
+//        model.addAttribute("teamEvent", teamEvent);
+//        model.addAttribute("userTodayBirthday", userTodayBirthday);
+//        model.addAttribute("currentTeams", currentTeams);
+//        return "mainPage";
+//    }
+
+
     //로그인 정보를 전송하는 메서드
     @ResponseBody
     @GetMapping("/initMainPage/loginUser")
@@ -204,7 +225,8 @@ public class HomeController {
 
         List<Content> contents = contentService.findAllByT(Long.parseLong(tID));
         List<ContentVO> contentVO = new ArrayList<>();
-        for(Content c : contents){
+        for(int i=contents.size()-1; i>=0; i--){
+            Content c = contents.get(i);
             ContentVO cVO = new ContentVO();
             cVO.setCID(c.getCID());
             cVO.setExplanation(c.getExplanation());
@@ -284,27 +306,6 @@ public class HomeController {
 
         return userVONewRequest;
     }
-
-    @GetMapping("/mainPage")
-    public String mainPage(@Login User loginUser, Model model){
-
-        Long uid = loginUser.getUID();
-        User user = userService.findUser(uid);
-
-        Team team = teamService.findTeam(user.getMainTid());
-        List<Content> content = contentService.findAllByT(team.getTID());
-        List<TeamEvent> teamEvent = mainPageService.findTeamEvent(user.getMainTid()); // 오늘 해당되는 기념일에 관한 정보
-        List<User> userTodayBirthday = mainPageService.findBirthday(user.getMainTid()); //오늘 생일인 사람에 관한 정보
-        List<Team> currentTeams = mainPageService.findCurrentTeamsByU(user.getUID()); //현재 로그인된 유저가 포함된 팀
-
-        model.addAttribute("team", team);
-        model.addAttribute("contents", content);
-        model.addAttribute("teamEvent", teamEvent);
-        model.addAttribute("userTodayBirthday", userTodayBirthday);
-        model.addAttribute("currentTeams", currentTeams);
-        return "mainPage";
-    }
-
 
     //메인 팀의 구성원들
     @ResponseBody

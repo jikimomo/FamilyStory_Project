@@ -1,0 +1,288 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+    <div class="container">
+        <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+<!--        <h2>개인 페이지</h2>-->
+        <div id="userInfo">
+        </div>
+
+        <div id="contents">
+        </div>
+
+        <div th:replace="fragments/footer :: footer" />
+    </div> <!-- /container -->
+</body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script>
+
+    var curURL = window.location.href;
+    console.log(curURL);
+    var urlArr = curURL.split("/");
+    var tID = urlArr[urlArr.length-2];
+    var uID = urlArr[urlArr.length-1]; //현재 페이지 유저
+    var loginUID;
+    console.log(tID);
+    console.log(uID);
+
+    var userInfo = document.getElementById('userInfo');
+<!--    userInfo.innerHTML = '현재 그룹 아이디 : '+tID+'<br>';-->
+
+    //로그인 유저, 현재 페이지 유저, 컨텐츠 값을 json으로 받아오기
+    $.ajax({
+        type: "get",
+        url: "/uploadList/loginUser",
+        datatype: 'json',
+        success: function(data) {
+            console.log(data);
+            var userInfo = document.getElementById('userInfo');
+<!--            userInfo.innerHTML += '현재 로그인 아이디 : '+data.uid+'<br>';-->
+            loginUID = data.uid;
+            getData();
+        },
+        error: function(request, status, error) {
+            console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+        }
+    });
+
+    //로그인 정보를 가져 온 후에 페이지 유저와 컨텐츠 정보를 가져옴
+    function getData(){
+        $.ajax({
+            type: "get",
+            url: "/uploadList/pageUser",
+            data: {
+                uID : uID
+            },
+            datatype: 'json',
+            success: function(data) {
+                console.log(data);
+                var userInfo = document.getElementById('userInfo');
+                userInfo.innerHTML = '<div style="text-align: center; font-size: 24px;">'+data.nickName+'님의 페이지<div>';
+
+                var coverImg = document.createElement("img");
+                coverImg.setAttribute("id", "coverImg");
+                if(data.coverImage == null){
+                    coverImg.setAttribute("src", "/AdminImage/coverImageIcon.jpg");
+                }
+                else{
+                    coverImg.setAttribute("src", data.coverImage);
+                }
+                userInfo.appendChild(coverImg);
+            },
+            error: function(request, status, error) {
+                console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            url: "/uploadList/contents",
+            data: {
+                uID : uID,
+                tID : tID
+            },
+            datatype: 'json',
+            success: function(data) {
+                console.log(data);
+                showContents(data);
+            },
+            error: function(request, status, error) {
+                console.log("code: "+request.status+"\n message: "+request.reponseText+"\n error: "+error);
+            }
+        });
+    }
+
+
+    function showContents(data){
+        console.log('showContents 함수 안');
+
+        var contents = document.getElementById('contents');
+        contents.innerHTML = '';
+        data.forEach(function(item){
+            var head = document.createElement("div");
+            head.setAttribute("class", "headerContentP");
+            var userImg = document.createElement("img");
+            if(item.userImage == null){
+                 userImg.setAttribute("src", "/AdminImage/userIcon.png");
+            }
+            else{
+                userImg.setAttribute("src", item.userImage);
+            }
+            userImg.setAttribute("class", "userImageP");
+            head.appendChild(userImg);
+            var headText = document.createElement("span");
+            headText.innerHTML = item.userNickname;
+            head.appendChild(headText);
+
+            var cContainer = document.createElement("div");
+            cContainer.setAttribute("class", "carousel-containerP");
+
+            var cSlide = document.createElement("div");
+            cSlide.setAttribute("class", "carousel-slideP");
+            cSlide.setAttribute("data", 0);
+            cContainer.appendChild(cSlide);
+
+            var imgCount = 0;
+            var photo = item.photoRoute.split(' ');
+            photo.forEach(function(p){
+                var img = document.createElement("img");
+                img.setAttribute("src", p);
+                img.setAttribute("class", "contentImgP");
+                cSlide.appendChild(img);
+                imgCount++;
+            });
+            cSlide.setAttribute("count", imgCount);
+
+            var pButton = document.createElement("button");
+            pButton.addEventListener('click', ()=> {
+                let counter = cSlide.attributes.data.value;
+                console.log(counter);
+                const size = 220;
+                cSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+
+                console.log('p 버튼');
+                if(counter <= 0) return;
+                cSlide.style.transition = "transform 0.4s ease-in-out";
+                counter--;
+                cSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+
+                cSlide.attributes.data.value = counter;
+            });
+            pButton.setAttribute("id", "prevBtnP");
+            var pBtnText = document.createTextNode("<");
+            pButton.appendChild(pBtnText);
+            cContainer.appendChild(pButton);
+
+
+            var nButton = document.createElement("button");
+            nButton.addEventListener('click', ()=> {
+                let counter = cSlide.attributes.data.value;
+                console.log(counter);
+                const size = 220;
+                cSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+
+                let imgCount = cSlide.attributes.count.value;
+                console.log('n 버튼');
+                console.log(imgCount);
+
+                if(counter >= imgCount-1) return;
+                cSlide.style.transition = "transform 0.4s ease-in-out";
+                counter++;
+                cSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+
+                cSlide.attributes.data.value = counter;
+            });
+            nButton.setAttribute("id", "nextBtnP");
+            var nBtnText = document.createTextNode(">");
+            nButton.appendChild(nBtnText);
+            cContainer.appendChild(nButton);
+
+            var foot = document.createElement("div");
+            foot.setAttribute("class", "footerContentP");
+            var footText = document.createElement("span");
+            footText.innerHTML = item.explanation+" "+item.location+"<br>"+item.when;
+            foot.appendChild(footText);
+
+            if(loginUID == uID){
+                //수정버튼
+                var changeBtn = document.createElement("button");
+                changeBtn.setAttribute("type", "button");
+                changeBtn.setAttribute("class", "changeBtn");
+                changeBtn.setAttribute("id", item.cid);
+                changeBtn.addEventListener("click", changeContent);
+
+                var changeText = document.createTextNode("변경");
+                changeBtn.appendChild(changeText);
+                foot.appendChild(changeBtn);
+
+                //삭제버튼
+                var deleteBtn = document.createElement("button");
+                deleteBtn.setAttribute("type", "button");
+                deleteBtn.setAttribute("class", "deleteBtn");
+                deleteBtn.setAttribute("id", item.cid);
+                deleteBtn.addEventListener("click", deleteContent);
+
+                var deleteText = document.createTextNode("삭제");
+                deleteBtn.appendChild(deleteText);
+                foot.appendChild(deleteBtn);
+            }
+
+            var content = document.createElement("div");
+            content.setAttribute("class", "contentP");
+
+            content.appendChild(head);
+            content.appendChild(cContainer);
+            content.appendChild(foot);
+
+            contents.appendChild(content);
+       });
+
+
+
+<!--        var contents = document.getElementById('contents');-->
+<!--        contents.innerHTML = '';-->
+<!--        data.forEach(function(item){-->
+<!--            var imgBox = document.createElement("div");-->
+
+<!--            var photo = item.photoRoute.split(' ');-->
+<!--            photo.forEach(function(p){-->
+<!--                var img = document.createElement("img");-->
+<!--                img.setAttribute("src", p);-->
+<!--                img.setAttribute("width", "200px");-->
+<!--                img.setAttribute("height", "160px");-->
+<!--                imgBox.appendChild(img);-->
+<!--            });-->
+
+<!--            var imgText = document.createElement("span");-->
+<!--            imgText.innerHTML = item.explanation+" "+item.location+" "+item.when;-->
+<!--            imgBox.appendChild(imgText);-->
+
+<!--            if(loginUID == uID){-->
+<!--                //수정버튼-->
+<!--                var changeBtn = document.createElement("button");-->
+<!--                changeBtn.setAttribute("type", "button");-->
+<!--                changeBtn.setAttribute("class", "changeBtn");-->
+<!--                changeBtn.setAttribute("id", item.cid);-->
+<!--                changeBtn.addEventListener("click", changeContent);-->
+
+<!--                var changeText = document.createTextNode("변경하기");-->
+<!--                changeBtn.appendChild(changeText);-->
+<!--                imgBox.appendChild(changeBtn);-->
+
+<!--                //삭제버튼-->
+<!--                var deleteBtn = document.createElement("button");-->
+<!--                deleteBtn.setAttribute("type", "button");-->
+<!--                deleteBtn.setAttribute("class", "deleteBtn");-->
+<!--                deleteBtn.setAttribute("id", item.cid);-->
+<!--                deleteBtn.addEventListener("click", deleteContent);-->
+
+<!--                var deleteText = document.createTextNode("삭제하기");-->
+<!--                deleteBtn.appendChild(deleteText);-->
+<!--                imgBox.appendChild(deleteBtn);-->
+<!--            }-->
+
+<!--            contents.appendChild(imgBox);-->
+<!--       });-->
+    }
+
+    function changeContent(evt) {
+        var changeBtnID = $(evt.target).attr('id');
+        var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/uploadList/" + changeBtnID + "/changeForm");
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function deleteContent(evt) {
+        var deleteBtnID = $(evt.target).attr('id');
+        var form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/uploadList/" + deleteBtnID + "/delete");
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+</html>
