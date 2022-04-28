@@ -18,5 +18,6 @@ public class ContentVO {
     private LocalDateTime uploadTime;
     private String userNickname;
     private String userImage;
+    private String coverImage;
     private Long tID;
 }

@@ -71,7 +71,7 @@ public class ContentController {
 
         model.addAttribute("curTID", curTID);
         model.addAttribute("user", user);
-        model.addAttribute("teamName", team.getTeamName());
+        model.addAttribute("teamID", team.getTeamID());
 
         return "content/uploadContentForm";
     }
@@ -138,7 +138,7 @@ public class ContentController {
         }
         model.addAttribute("curTID", curTID);
 
-        return "content/uploadList";
+        return "content/personalPage";
     }
 
     //로그인 정보
@@ -155,6 +155,7 @@ public class ContentController {
         userVO.setNickName(u.getNickName());
         userVO.setBirthday(u.getBirthday());
         userVO.setUserImage(u.getUserImage());
+        userVO.setCoverImage(u.getCoverImage());
         userVO.setMainTid(u.getMainTid());
 
         return userVO;
@@ -173,6 +174,7 @@ public class ContentController {
         userVO.setNickName(u.getNickName());
         userVO.setBirthday(u.getBirthday());
         userVO.setUserImage(u.getUserImage());
+        userVO.setCoverImage(u.getCoverImage());
         userVO.setMainTid(u.getMainTid());
 
         return userVO;
@@ -185,6 +187,8 @@ public class ContentController {
         List<Content> contents = contentService.findAllByUT(Long.parseLong(uID), Long.parseLong(tID));
         List<ContentVO> contentVO = new ArrayList<>();
 
+        User pageUser = userService.findUser(Long.parseLong(uID));
+
         for(Content c : contents){
             ContentVO cVO = new ContentVO();
             cVO.setCID(c.getCID());
@@ -193,6 +197,8 @@ public class ContentController {
             cVO.setWhen(c.getWhen());
             cVO.setPhotoRoute(c.getPhotoRoute());
             cVO.setUploadTime(c.getUploadTime());
+            cVO.setUserNickname(pageUser.getNickName());
+            cVO.setUserImage(pageUser.getUserImage());
             contentVO.add(cVO);
         }
 
@@ -259,9 +265,6 @@ public class ContentController {
 
         return "redirect:/uploadList/"+tID+"/"+uID;
     }
-
-
-
 
     //1년 전에 올렸던 사진 보여주기
     @ResponseBody
