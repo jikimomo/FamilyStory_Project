@@ -4,9 +4,7 @@ import com.google.gson.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.json.simple.JSONObject; // JSON객체 생성
-import org.json.simple.parser.JSONParser; // JSON객체 파싱
-import org.json.simple.parser.ParseException; // 예외처리
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -15,7 +13,7 @@ import java.util.HashMap;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class kakaoService {
+public class KakaoService {
 
     public void kakaoLogout(String access_Token) {
         String reqURL = "https://kapi.kakao.com/v1/user/logout";

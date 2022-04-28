@@ -1,6 +1,7 @@
 package fs.project.controller;
 
 import fs.project.domain.User;
+import fs.project.service.KakaoService;
 import fs.project.service.UserService;
 import fs.project.session.SessionConst;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ import java.util.HashMap;
 @Slf4j
 public class KakaoLoginController {
 
-    private final fs.project.service.kakaoService kakaoService;
+    private final KakaoService kakaoService;
     private final UserService userService;
 
     @GetMapping("/kakaoLogin")
