@@ -281,6 +281,7 @@ public class UserService {
                 }
             }
         }
+        userRepository.deleteContentUid2(uid);
         userRepository.deleteUserUid(uid);
     }
 
