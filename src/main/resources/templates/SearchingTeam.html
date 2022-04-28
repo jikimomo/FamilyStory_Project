@@ -20,8 +20,13 @@
             text-decoration: none;
         }
         #searchbtn{
+            margin:0px;
+            padding:0px;
             background-color: #33333350;
-            border: none;
+            height:45px;
+            width:45px;
+            text-align: center;
+            box-sizing: border-box;
         }
         #searchbtn:hover{
             border: none;
@@ -107,7 +112,7 @@
                 <input class="form-control form-control-lg" type="text" name="teamId" th:value="${param.teamId}" placeholder="그룹명을 검색하세요"/>
             </div>
             <div class="col-sm-1">
-                <button id="searchbtn" type="submit" class="btn btn-success btnx-indigo"><i class="bi bi-search" style="font-size: 1.5em;"></i></button>
+                <button id="searchbtn" type="submit" class="btn btn-success"><i class="bi bi-search" style="font-size: 1.5em; "></i></button>
             </div>
         </form>
     </div>

@@ -1,0 +1,31 @@
+* java 패키지 구조
+fs.project
+ - argumentresolver : session에 들어갈 로그인 정보 가공 관련 패키지
+ - controller : controller 관련 패키지
+ - domain : domain 관련 패키지
+ - form : 사용자에게 입력 받는 데이터 폼 관련 패키지
+ - interceptor: 로그인 정보를 이용한 interceptor 관련 패키지
+ - repository : repository 관련 패키지
+ - service : service 관련 패키지
+ - session : session 정보 관련 패키지
+ - vo : vo 관련 패키지
+
+* resources 폴더 구조
+static
+ - AdminImage : view에서 사용되는 로고나 버튼 이미지
+ - css : css 파일이 저장된 폴더
+ - db : sql script가 저장된 폴더
+ - images : view에서 사용되는 로고나 버튼 이미지
+ - js : javascript 파일이 저장된 폴더
+ - notice : notice 파일이 저장 폴더
+ - TeamImage : 사용자가 입력한 그룹 대표 이미지를 저장하는 폴더
+ - uploadImage : 사용자가 업로드하는 게시물의 이미지를 저장하는 폴더
+ - userCoverImage : 사용자의 커버 이미지를 저장하는 폴더
+ - userProfileImage : 사용자의 프로필 이미지를 저장하는 폴더
+
+templates : 전체 html이 저장되어 있는 폴더
+ - content : 게시물 관련 html을 저장하는 폴더
+ - error : error관련 html을 저장하는 폴더
+ - fragments : header, footer html을 저장하는 폴더
+ - team : 그룹 관련 html을 저장하는 폴더
+ - users : 사용자 관련 html을 저장하는 폴더
