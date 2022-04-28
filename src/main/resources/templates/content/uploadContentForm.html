@@ -39,8 +39,6 @@
             <div class="textInputBox">
                 <div id="groupNameBox">
                     <h5>현재 함께하는 가족</h5>
-<!--                    현재 접속한 아이디 : <span th:text="${user.userID}"></span><br>-->
-<!--                    현재 함께하는 가족(tID) : <span th:text="${tID}"></span><br>-->
                     그룹 이름 : <span th:text="${teamID}"></span><br>
                 </div>
                 <br>
@@ -140,7 +138,6 @@ map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
 function searchEvt() {
     // 엔터키가 눌렸을 때
-    console.log('enter');
     searchPlaces();
 }
 
@@ -154,7 +151,6 @@ function searchPlaces() {
 
     var keyword = document.getElementById('keyword').value;
 
-    console.log(keyword);
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
         alert('키워드를 입력해주세요!');
         return false;
@@ -176,15 +172,11 @@ function placesSearchCB(data, status, pagination) {
         displayPagination(pagination);
 
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-
         alert('검색 결과가 존재하지 않습니다.');
         return;
-
     } else if (status === kakao.maps.services.Status.ERROR) {
-
         alert('검색 결과 중 오류가 발생했습니다.');
         return;
-
     }
 }
 
@@ -214,8 +206,6 @@ function displayPlaces(places) {
         // LatLngBounds 객체에 좌표를 추가합니다
         bounds.extend(placePosition);
 
-        console.log(placePosition);
-
         // 마커와 검색결과 항목에 mouseover 했을때
         // 해당 장소에 인포윈도우에 장소명을 표시합니다
         // mouseout 했을 때는 인포윈도우를 닫습니다
@@ -226,7 +216,6 @@ function displayPlaces(places) {
 
             kakao.maps.event.addListener(marker, 'click', function() {      //마커 클릭시 장소에 정보 입력
                 displayInfowindow(marker, title);
-                //console.log(title)
             });
 
             kakao.maps.event.addListener(marker, 'mouseout', function() {
@@ -235,7 +224,6 @@ function displayPlaces(places) {
 
             itemEl.onclick =  function () {             //목록 마우스 클릭시 장소에 정보 입력
                 displayInfowindow(marker, title);
-                //console.log(title)
             };
 
             itemEl.onmouseout =  function () {
@@ -250,7 +238,6 @@ function displayPlaces(places) {
 
     // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
     listEl.appendChild(fragment);
-<!--    menuEl.scrollTop = 0;-->
 
     // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
     map.setBounds(bounds);
@@ -344,12 +331,7 @@ function displayPagination(pagination) {
 // 인포윈도우에 장소명을 표시합니다
 function displayInfowindow(marker, title) {
     var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
-
-    //console.log(title);
     document.getElementById('location').value = title;
-
-<!--    infowindow.setContent(content);-->
-<!--    infowindow.open(map, marker);-->
 }
 
  // 검색결과 목록의 자식 Element를 제거하는 함수입니다
@@ -361,8 +343,6 @@ function removeAllChildNods(el) {
 
     var back = document.getElementById('backA');
     back.setAttribute("href", "/loginHome/"+currentTID);
-    //back.setAttribute("href", "/loginHome/"+currentTID);
-    //console.log(currentTID);
 
     const submitButton = document.querySelector('#submitButton');
     submitButton.addEventListener('click', function(evt){

@@ -36,26 +36,6 @@ public class ContentController {
 
     /* 게시물 업로드 */
     //uploadContentForm.html을 띄우는 컨트롤러 부분
-//    @GetMapping(value="/uploadContent/{tID}")
-//    public String uploadForm(@Login User loginUser, @PathVariable("tID") Long tID, Model model){
-//        User user = userService.findUser(loginUser.getUID());
-//        Team team = teamService.findTeam(tID);
-//        //System.out.println(tID);
-//
-//        Long curTID;
-//        if(user.getCurTid() == null){
-//            curTID = 0L;
-//        }else{
-//            curTID = user.getCurTid();
-//        }
-//        model.addAttribute("curTID", curTID);
-//
-//        model.addAttribute("user", user);
-//        model.addAttribute("teamName", team.getTeamName());
-//
-//        return "content/uploadContentForm";
-//    }
-
     @GetMapping(value="/uploadContent")
     public String uploadForm(@Login User loginUser, Model model){
         User user = userService.findUser(loginUser.getUID());

@@ -170,7 +170,6 @@ public class TeamSettingController {
     @PostMapping("/{tid}/updateTeamImage")
     public String updateTeamImage(@Login User loginUser, @PathVariable("tid") Long tId, @RequestParam MultipartFile file, Model model
     ) throws IOException {
-        System.out.println("upload Controller");
         if(!file.isEmpty()){
             String fileName = teamController.renameFiles(file);
             // 실제 업로드 될 파일의 경로를 지정해준다.

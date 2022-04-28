@@ -66,7 +66,6 @@
         // SDK를 초기화 합니다. 사용할 앱의 JavaScript 키를 설정해 주세요.
         Kakao.init('241e8e5d885ad576b5c291865fbe3373'); // 사용할 앱의 JavaScript키를 입력해 주세요.
         // SDK 초기화 여부를 판단합니다.
-        console.log(Kakao.isInitialized());
     </script>
 
     <script>
@@ -89,7 +88,6 @@
                         $("#check").attr('color', 'red');
                     }
                     else{
-                        console.log('아이디 가능')
                         window.location.href = data;
                     }
                 },
@@ -194,7 +192,6 @@
 
     let currentIndex = 0;
     let sliderCount = 3;
-    // let sliderCount = slider.length;
 
     setInterval(() => {
         let nextIndex = (currentIndex + 1) % sliderCount;  //0 1 2 3 4 0 1 2 3 4....
@@ -212,60 +209,3 @@
 
 </html>
 
-
-
-<!--   <div class="row">
-                <div class="col-3">
-                    <img src="../images/kakaologo.png" alt="" style=" width: 40%;">
-                </div>
-                <div class="col-9">
-                    <a href="https://kauth.kakao.com/oauth/authorize?client_id=4d6bfc510b9480c47be3a30e3ae11deb&redirect_uri=http://localhost:8080/kakaoLogin&response_type=code" style="text-decoration:none"><h7>카카오계정으로 로그인</h7></a>
-                </div>
-            </div>
-
-
-             <div class="row">
-                <div class="py-3 text-center">
-
-                    <a href = "https://kauth.kakao.com/oauth/authorize?client_id=4d6bfc510b9480c47be3a30e3ae11deb&redirect_uri=http://localhost:8080/kakaoLogin&response_type=code" id="custom-login-btn">
-                        <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" width="100%">
-                    </a>
-                </div>
-            </div>
--->
-
-
-<!--
-
-            <form action="/"  th:object="${loginForm}" method="post">
-
-                <div>
-
-                    <input type="text" id="loginId" th:field="*{loginId}" class="form-control"
-                           th:errorclass="field-error" placeholder="ID" style="margin-top: 10px;"  >
-                    <div class="field-error" th:errors="*{loginId}" />
-                </div>
-                <div>
-
-                    <input type="password" id="password" th:field="*{password}"  class="form-control"
-                           th:errorclass="field-error" placeholder="PW" style="margin-top: 10px;" >
-                    <div class="field-error" th:errors="*{password}" />
-                </div>
-                <br>
-                <div th:if="${#fields.hasGlobalErrors()}">
-                    <p class="field-error" th:each="err : ${#fields.globalErrors()}"
-                       th:text="${err}">전체 오류 메시지</p>
-                </div>
-
-                <div class="row">
-                    <div class="col-6">
-                        <button class="btn btn-outline-secondary" type="submit" style="width: 100%;"> 로그인</button>
-                    </div>
-                    <div class="col-6">
-                        <button class="btn btn-outline-secondary" style="width: 100%;"  th:onclick="|location.href='@{/}'|"
-                                type="button">취소</button>
-                    </div>
-                </div>
-
-            </form>
--->
