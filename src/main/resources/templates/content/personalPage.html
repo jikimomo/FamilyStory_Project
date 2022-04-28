@@ -5,7 +5,6 @@
     <div class="container">
         <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
-<!--        <h2>개인 페이지</h2>-->
         <div id="userInfo">
         </div>
 
@@ -19,16 +18,12 @@
 <script>
 
     var curURL = window.location.href;
-    console.log(curURL);
     var urlArr = curURL.split("/");
     var tID = urlArr[urlArr.length-2];
     var uID = urlArr[urlArr.length-1]; //현재 페이지 유저
     var loginUID;
-    console.log(tID);
-    console.log(uID);
 
     var userInfo = document.getElementById('userInfo');
-<!--    userInfo.innerHTML = '현재 그룹 아이디 : '+tID+'<br>';-->
 
     //로그인 유저, 현재 페이지 유저, 컨텐츠 값을 json으로 받아오기
     $.ajax({
@@ -36,9 +31,7 @@
         url: "/uploadList/loginUser",
         datatype: 'json',
         success: function(data) {
-            console.log(data);
             var userInfo = document.getElementById('userInfo');
-<!--            userInfo.innerHTML += '현재 로그인 아이디 : '+data.uid+'<br>';-->
             loginUID = data.uid;
             getData();
         },
@@ -57,7 +50,6 @@
             },
             datatype: 'json',
             success: function(data) {
-                console.log(data);
                 var userInfo = document.getElementById('userInfo');
                 userInfo.innerHTML = '<div style="text-align: center; font-size: 24px;">'+data.nickName+'님의 페이지<div>';
 
@@ -85,7 +77,6 @@
             },
             datatype: 'json',
             success: function(data) {
-                console.log(data);
                 showContents(data);
             },
             error: function(request, status, error) {
@@ -96,8 +87,6 @@
 
 
     function showContents(data){
-        console.log('showContents 함수 안');
-
         var contents = document.getElementById('contents');
         contents.innerHTML = '';
         data.forEach(function(item){
@@ -138,11 +127,9 @@
             var pButton = document.createElement("button");
             pButton.addEventListener('click', ()=> {
                 let counter = cSlide.attributes.data.value;
-                console.log(counter);
                 const size = 220;
                 cSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
 
-                console.log('p 버튼');
                 if(counter <= 0) return;
                 cSlide.style.transition = "transform 0.4s ease-in-out";
                 counter--;
@@ -159,13 +146,10 @@
             var nButton = document.createElement("button");
             nButton.addEventListener('click', ()=> {
                 let counter = cSlide.attributes.data.value;
-                console.log(counter);
                 const size = 220;
                 cSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
 
                 let imgCount = cSlide.attributes.count.value;
-                console.log('n 버튼');
-                console.log(imgCount);
 
                 if(counter >= imgCount-1) return;
                 cSlide.style.transition = "transform 0.4s ease-in-out";
@@ -218,53 +202,6 @@
 
             contents.appendChild(content);
        });
-
-
-
-<!--        var contents = document.getElementById('contents');-->
-<!--        contents.innerHTML = '';-->
-<!--        data.forEach(function(item){-->
-<!--            var imgBox = document.createElement("div");-->
-
-<!--            var photo = item.photoRoute.split(' ');-->
-<!--            photo.forEach(function(p){-->
-<!--                var img = document.createElement("img");-->
-<!--                img.setAttribute("src", p);-->
-<!--                img.setAttribute("width", "200px");-->
-<!--                img.setAttribute("height", "160px");-->
-<!--                imgBox.appendChild(img);-->
-<!--            });-->
-
-<!--            var imgText = document.createElement("span");-->
-<!--            imgText.innerHTML = item.explanation+" "+item.location+" "+item.when;-->
-<!--            imgBox.appendChild(imgText);-->
-
-<!--            if(loginUID == uID){-->
-<!--                //수정버튼-->
-<!--                var changeBtn = document.createElement("button");-->
-<!--                changeBtn.setAttribute("type", "button");-->
-<!--                changeBtn.setAttribute("class", "changeBtn");-->
-<!--                changeBtn.setAttribute("id", item.cid);-->
-<!--                changeBtn.addEventListener("click", changeContent);-->
-
-<!--                var changeText = document.createTextNode("변경하기");-->
-<!--                changeBtn.appendChild(changeText);-->
-<!--                imgBox.appendChild(changeBtn);-->
-
-<!--                //삭제버튼-->
-<!--                var deleteBtn = document.createElement("button");-->
-<!--                deleteBtn.setAttribute("type", "button");-->
-<!--                deleteBtn.setAttribute("class", "deleteBtn");-->
-<!--                deleteBtn.setAttribute("id", item.cid);-->
-<!--                deleteBtn.addEventListener("click", deleteContent);-->
-
-<!--                var deleteText = document.createTextNode("삭제하기");-->
-<!--                deleteBtn.appendChild(deleteText);-->
-<!--                imgBox.appendChild(deleteBtn);-->
-<!--            }-->
-
-<!--            contents.appendChild(imgBox);-->
-<!--       });-->
     }
 
     function changeContent(evt) {
