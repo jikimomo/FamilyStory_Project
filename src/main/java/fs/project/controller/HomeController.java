@@ -203,7 +203,7 @@ public class HomeController {
             tVO.setTeamID(t.getTeamID());
             tVO.setTeamName(t.getTeamName());
             if(t.getTeamImage()==null){
-                tVO.setTeamImage("/AdminImage/temp.png");
+                tVO.setTeamImage("/AdminImage/groupIcon.png");
             }else{
                 tVO.setTeamImage(t.getTeamImage());
             }
@@ -324,7 +324,7 @@ public class HomeController {
             userVO.setNickName(u.getNickName());
             userVO.setBirthday(u.getBirthday());
             if(u.getUserImage()==null){
-                userVO.setUserImage("/AdminImage/temp.png");
+                userVO.setUserImage("/AdminImage/userIcon.png");
             }else{
                 userVO.setUserImage(u.getUserImage());
             }
