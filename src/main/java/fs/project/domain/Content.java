@@ -65,16 +65,4 @@ public class Content {
 
         return content;
     }
-
-    @Data
-    public static class UploadFile {
-
-        private String uploadFileName;
-        private String storeFileName; //uuid
-
-        public UploadFile(String uploadFileName, String storeFileName){
-            this.uploadFileName = uploadFileName;
-            this.storeFileName = storeFileName;
-        }
-    }
 }

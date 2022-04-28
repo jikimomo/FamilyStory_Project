@@ -31,32 +31,27 @@ public class TeamService {
     // 팀 저장
     @Transactional
     public Long saveTeam(Team team){
-        System.out.println("saveTeam Service");
         long res = teamRepository.saveTeam(team);
         return res;
     }
     // 팀 찾기
     public Team findTeam(Long id){
-        System.out.println("findTeam Service");
         Team res = teamRepository.findTeam(id);
         return res;
     }
     // 팀 아이디로 TID 찾기
     public Long findByTeamID(String id){
-        System.out.println("findByTeamID Service");
         List<Team> lists = teamRepository.findByTeamID(id);
         return lists.get(0).getTID();
     }
 
     // 유저 찾기
     public User findUser(Long userUID) {
-        System.out.println("findUser Service");
         User res = teamRepository.findUser(userUID);
         return res;
     }
     // 유저 아이디로 유저 찾기
     public User findByUserID(String id){
-        System.out.println("findByUserID Service");
         List<User> res = teamRepository.findByUserID(id);
         return res.get(0);
     }
@@ -74,13 +69,11 @@ public class TeamService {
     // 유저팀 저장
     @Transactional
     public Long saveUserTeam(UserTeam userTeam){
-        System.out.println("saveUserTeam Service");
         Long res = teamRepository.saveUserTeam(userTeam);
         return res;
     }
     // UID로 유저팀 찾기
     public List<UserTeam> findByUID(Long uID) {
-        System.out.println("findByUID");
         List<UserTeam> lists = teamRepository.findByUID(uID);
         return lists;
     }
@@ -101,7 +94,6 @@ public class TeamService {
     @Transactional
     @Modifying
     public int removeUTID(long utid){
-        System.out.println("removeUTID");
         int res = teamRepository.removeUTID(utid);
         return res;
     }
@@ -109,17 +101,14 @@ public class TeamService {
     // 팀이벤트 저장
     @Transactional
     public Long saveTeamEvent(TeamEvent te){
-        System.out.println("saveTeamEvent Service");
         Long res = teamRepository.saveTeamEvent(te);
         return res;
     }
     // UTID로 유저팀 찾기
     @Transactional
     public UserTeam findUserTeam(Long utid){
-        System.out.println("findUserTeam");
         return teamRepository.findUserTeam(utid);
     }
-
 
     // === 유효성 체크 === //
     // 유저 아이디 체크
@@ -158,7 +147,5 @@ public class TeamService {
         }
         return cnt;
     }
-
-
 
 }

@@ -103,8 +103,6 @@ public class ContentService {
 
                 String newFileName = System.nanoTime()+originalFileExtension; //이미지 이름이 겹치지 않게 나노시간을 이름으로 사진 저장
                 File file = new File(absolutePath+File.separator+"uploadImage"+File.separator+newFileName);
-//                System.out.println(System.nanoTime()+" "+originalFileExtension);
-//                System.out.println(newFileName);
                 image.transferTo(file);
                 file.setWritable(true);
                 file.setReadable(true);

@@ -260,7 +260,7 @@ public class ContentController {
         log.info("{}", y);
         String x = s.substring(4);
         int y1 = Integer.parseInt(y);
-       // y1--;
+        y1--;
         String y2 = Integer.toString(y1);
         String when1 = y2+x;
         LocalDate when = LocalDate.parse(when1, DateTimeFormatter.ISO_DATE);//local_date로 변환

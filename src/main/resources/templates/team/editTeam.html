@@ -1,12 +1,10 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/header :: header"/>
 <head>
     <meta charset="utf-8">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Poppins:wght@200;300;400&family=Roboto+Serif:wght@800&display=swap');
-    </style>
     <style>
         * {
             font-family: "Poppins", sans-serif;
@@ -32,18 +30,16 @@
         ul {
             list-style-type: none;
             padding: 0px;
-            margin-top: -50px;
-            margin-left: -100px;
+            margin-top: -455px;
+            margin-left: -110px;
             width: auto;
             background: white;
             height: auto;
             overflow: auto;
-            position: fixed;
-            border-radius: 10px;
+            position: absolute;
+            border-radius: 5px;
             color: #333;
-            /*border: solid 1px #2D7100;*/
             border: solid 1px #33333330;
-
         }
 
         li {
@@ -61,7 +57,7 @@
         }
 
         li a:hover {
-            background: #eaea80;
+            background: #33333330;
             color: gray;
             border: solid 1px white;
             border-radius: 10px;
@@ -69,6 +65,12 @@
 
     </style>
     <script type="text/javascript">
+        function logout(){
+            const formElement = document.getElementById('form');
+            formElement.setAttribute("action", "/logout");
+            formElement.setAttribute("method", "post");
+            formElement.submit();
+        }
         $(document).ready(function(){
             $('#outTeam').click(function (evt){
                 evt.preventDefault()
@@ -76,6 +78,16 @@
                 let ans = confirm("그룹을 탈퇴하시겠습니까?")
                 if(ans){
                     location.replace("/[[${tid}]]/teamEdit2")
+                }
+            })
+
+            $('#logout').click(function (evt) {
+                let checklog = confirm("로그아웃 하시겠습니까?")
+                if (checklog) {
+                    logout()
+                } else {
+                    evt.preventDefault();
+
                 }
             })
         })
@@ -94,11 +106,22 @@
     <br>
     <br>
 
-    <ul class="menu">
-        <li><a th:href="@{/loginHome/{curTID}(curTID=${curTID})}">홈</a></li>
-        <li><a th:href="@{/users/settinguser}">내정보</a></li>
-        <li><a th:href="@{/teamEdit}">내그룹</a></li>
-    </ul>
+    <form id="form">
+        <ul class="menu">
+            <li><a th:href="@{/loginHome/{curTID}(curTID=${curTID})}">홈</a></li>
+            <li><a th:href="@{/users/settinguser}">내정보</a></li>
+            <li><a th:href="@{/teamEdit}">내그룹</a></li>
+            <li th:if="${kakaoLogin.booleanValue()==true}">
+                <a href = "https://kauth.kakao.com/oauth/logout?client_id=4d6bfc510b9480c47be3a30e3ae11deb&logout_redirect_uri=http://localhost:8080/" id="custom-logout-btn">로그아웃
+                </a>
+            </li>
+            <li th:if="${kakaoLogin.booleanValue()==false}">
+                <a id="logout">
+                    로그아웃
+                </a>
+            </li>
+        </ul>
+    </form>
 
     <div>
         <div>
