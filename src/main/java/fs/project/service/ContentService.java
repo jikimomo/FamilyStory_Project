@@ -118,4 +118,13 @@ public class ContentService {
 
         return photoRoute;
     }
+
+    public String photoRoute(LocalDate when, Long tId) {
+        List <String > cr =  contentRepository.findTid(when, tId);
+        for(String s: cr){
+            String[] s1 = s.split(" ");
+            return s1[0];
+        }
+        return "";
+    }
 }

@@ -252,7 +252,6 @@ public class ContentController {
     public String agoYear (@Login User loginUser,  @RequestParam String tID){
 
         Long tId = Long.parseLong(tID);
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date now = new Date();
         String s = sdf.format(now); //형식 변환
@@ -263,20 +262,12 @@ public class ContentController {
         y1--;
         String y2 = Integer.toString(y1);
         String when1 = y2+x;
+        log.info("When : {}", when1);
         LocalDate when = LocalDate.parse(when1, DateTimeFormatter.ISO_DATE);//local_date로 변환
-        List<String> photoRoute = contentService.findTid(when, tId); //team_event에서 오늘날짜와 같은 tid값을 받아온다.
+        String photoRoute = contentService.photoRoute(when, tId); //team_event에서 오늘날짜와 같은 tid값을 받아온다.
+        log.info("photo route {}", photoRoute);
+        if(photoRoute == null)return "";
+        else return photoRoute;
 
-        for( String pr : photoRoute){
-            log.info("photoRoute {}", pr);
-        }
-
-        if(photoRoute.isEmpty()){
-            log.info("비었음");
-            return "";
-        }
-        else {
-            log.info("사진 경로 : {}", photoRoute.get(0));
-            return photoRoute.get(0);
-        }
     }
 }
