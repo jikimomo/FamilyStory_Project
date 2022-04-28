@@ -234,12 +234,12 @@
     <br>
 
     <div>
-        <tr th:each="user:${user}">
-            <div th:id="${user.userID}" class="requestbox">
-                <td th:text="${user.name}+'('+${user.userID}+')님이 그룹가입을 요청하셨습니다. 수락하시겠습니까?'"></td>
+        <tr th:each="u:${user}">
+            <div th:id="${u.userID}" class="requestbox">
+                <td th:text="${u.name}+'('+${u.userID}+')님이 그룹가입을 요청하셨습니다. 수락하시겠습니까?'"></td>
                 &nbsp
-                <input type="button" value="수락" th:name="${user.userID}" id="accept"/>
-                <input type="button" value="거절" th:name="${user.userID}" id="deny"/><br/>
+                <input type="button" value="수락" th:name="${u.userID}" id="accept"/>
+                <input type="button" value="거절" th:name="${u.userID}" id="deny"/><br/>
             </div>
         </tr>
     </div>

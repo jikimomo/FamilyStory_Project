@@ -15,28 +15,25 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class SchedulerService {
-
     private final UserService userService;
-
     String api_key = " NCSO4XDT7CHQHZVD";  //api_key 유출되면 안됩니다.
     String api_secret = "WDBIGEVM6PYAMSDV3H27YMEAVQST8RXQ";  //api_secret 유출되면 안됩니다.
-    @Scheduled(cron = "0 0 0 * * *") //매일 00시 00분 00초에 메세지 발송
+    @Scheduled(cron = "0 42 3 * * *") //매일 00시 00분 00초에 메세지 발송
     public void cronJobSch() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         Date now = new Date();
         String strDate = sdf.format(now); //형식 변환
-        String event = strDate.substring(0,10); //yyyy-mm-dd 형식으로 문자열 자르기
-        LocalDate date = LocalDate.parse(event, DateTimeFormatter.ISO_DATE);//local_date로 변환
-        List<Long> tid = userService.findTid(date); //team_event에서 오늘날짜와 같은 tid값을 받아온다.
+        String event = strDate.substring(5,10); //yyyy-mm-dd 형식으로 문자열 자르기
+        log.info("today event {}", event);
+       // LocalDate date = LocalDate.parse(event, DateTimeFormatter.ISO_DATE);//local_date로 변환
+        List<Long> tid = userService.findTid(event); //team_event에서 오늘날짜와 같은 tid값을 받아온다.
         for (Long t : tid){
-
             //team_event에서 tid값과 같은 event 내용들을 붙여서 받아온다.
             String e = userService.findEvent(t);
             //user_team 테이블에서 tid에 속한 유저의 휴대폰 번호를 list형태로 받아온다.
             List<String> phoneNumber = userService.findPhoneNumber(t);
 
             for(String pn : phoneNumber){
-
                 Message coolsms = new Message(api_key, api_secret);
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("to", pn); //수신자 폰번호
@@ -46,7 +43,6 @@ public class SchedulerService {
                 params.put("app_version", "test app 1.2");
 
 //              주의!!!!!! 절대 주석 풀지 마세요 !!!!!!!!!!!
-
                 /*
                 try {
                     JSONObject obj = (JSONObject) coolsms.send(params);

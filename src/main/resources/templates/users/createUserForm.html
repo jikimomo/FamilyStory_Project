@@ -120,7 +120,7 @@
             })
         })
 
-        $('button').click(function (evt) {
+        $('#signUp').click(function (evt) {
             evt.preventDefault();
             if ($('#name').val() == '') {
                 $('#name').focus();
@@ -204,12 +204,10 @@
                            required>
                 </div>
 
-
-
                 <div class="row">
 
                     <div class="col">
-                        <button class="w-100 btn btn-success btn-lg" type="submit">
+                        <button class="w-100 btn btn-success btn-lg" id = "signUp" type="submit" >
                             가입
                         </button>
                     </div>

@@ -1,9 +1,6 @@
 package fs.project.service;
 
-import fs.project.domain.Content;
-import fs.project.domain.Team;
-import fs.project.domain.User;
-import fs.project.domain.UserTeam;
+import fs.project.domain.*;
 import fs.project.form.FindPwForm;
 import fs.project.form.UserSetForm;
 import fs.project.repository.*;
@@ -21,9 +18,10 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -361,9 +359,20 @@ public class UserService {
         return userPhoto;
     }
 
-    public List<Long> findTid(LocalDate date) {
-        List <Long> tid = teamEventRepository.findTid(date);
-        return tid;
+    public List<Long> findTid(String date) {
+        List <TeamEvent> teamEvents = teamEventRepository.findAll();
+        List <Long> tid = new ArrayList<>();
+
+        for(TeamEvent te : teamEvents){
+            String s= te.getEventDate().toString();
+            s = s.substring(5,10);
+            if(date.equals(s)){
+                tid.add(te.getTeam().getTID());
+            }
+        }
+        Set<Long> set = new HashSet<Long>(tid);
+        List<Long> newList =new ArrayList<Long>(set);
+        return newList;
     }
 
     public String findEvent(Long tid) {

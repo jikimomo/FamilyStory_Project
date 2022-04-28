@@ -126,8 +126,8 @@
         <tbody>
             <tr th:each="team : ${teams}" id="dataTable">
                 <th th:text="${team.getTID()}">1</th>
-                <td th:text="${team.TeamID}"></td>
-                <td><input type="button" value="가입 요청" id="join" th:name="${team.TeamID}"></td>
+                <td th:text="${team.teamID}"></td>
+                <td><input type="button" value="가입 요청" id="join" th:name="${team.teamID}"></td>
             </tr>
             <tr th:if="${teams.content.size()==0}">
                 <td colspan="3" style="text-align: center">해당하는 그룹이 존재하지 않습니다.</td>
