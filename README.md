@@ -50,3 +50,10 @@
 
 ### :clapper: 시연영상
 유튜브에 업로드할 예정입니다.
+
+### :pencil2: 역할
+저는 **게시물과 관련된 대부분의 기능**을 구현하였습니다.
+게시물을 올리고, 수정 및 삭제하는 기능을 구현하였고, 게시물을 그룹별/사용자별 보여주는 메인페이지 및 개인페이지를 구현하였습니다. 
+Controller부분에서는 ContentController, HomeController의 대부분의 코드를 작성하였습니다.
+Service부분에서는 ContentService, MainPageService의 대부분의 코드를 작성하였습니다.
+Repository부분에서는 ContentRepository, MainPageRepository의 대부분의 코드를 작성하였습니다.
