@@ -50,7 +50,7 @@
 <br>
   
 ### :clapper: 시연영상
-유튜브에 업로드할 예정입니다.
+https://youtu.be/Dfx43e7LP-A
 <br>
   
 ### :pencil2: 역할
